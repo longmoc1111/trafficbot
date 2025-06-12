@@ -1,0 +1,192 @@
+<?php
+
+namespace App\Http\Controllers;
+use App\Models\Signage;
+use File;
+use Illuminate\Http\Request;
+use App\Models\SignageType;
+use function Laravel\Prompts\search;
+
+class SignageController extends Controller
+{
+
+    //loại biển báo
+    public function listSignageTypes()
+    {
+        $signagesType = SignageType::OrderBy("created_at", "ASC")->paginate(10);
+        return view("admin.signagesManagement.signagesTypes.listSignagesTypes", compact("signagesType"));
+    }
+    public function createSignageTypes()
+    {
+        return view("admin.signagesManagement.signagesTypes.createSignagesTypes");
+    }
+    public function storeSignageTypes(Request $request)
+    {
+        $validate = $request->validate(
+            [
+                "SignagesTypeName" => "required",
+                "SignagesTypeDescription" => "required"
+            ],
+            [
+                "SignagesTypeName.required" => "Không được để trống!",
+                "SignagesTypeDescription.required" => "không được để trông!",
+            ]
+        );
+        $signages = SignageType::create($validate);
+        if ($signages) {
+            return redirect()->route("admintrafficbot.listsignagetypes")->with("create_success", "Thêm mới loại biển báo thành công!");
+        } else {
+            return redirect()->route("admintrafficbot.listsignagetypes")->with("create_fails", "Đã có lỗi xảy ra - vui lòng thêm mới sau !");
+        }
+    }
+    public function updateSignageTypes($ID, Request $request)
+    {
+        $validate = $request->validate(
+            [
+                "SignagesTypeName" => "required",
+                "SignagesTypeDescription" => "required"
+            ],
+            [
+                "SignagesTypeName.required" => "Không được để trống!",
+                "SignagesTypeDescription.required" => "không được để trông!",
+            ]
+        );
+        $signages = SignageType::find($ID);
+        if ($signages) {
+            $signages->update($validate);
+            if ($signages) {
+                return redirect()->route("admintrafficbot.listsignagetypes")->with("update_success", "cập nhật biển báo thành công!");
+            } else {
+                return redirect()->route("admintrafficbot.listsignagetypes")->with("update_fails", "Đã có lỗi xảy ra - vui lòng cập nhật lại sau !");
+            }
+        }
+    }
+
+    public function deleteSignageTypes($ID)
+    {
+        $signage = SignageType::find($ID);
+        if ($signage) {
+            $signage->delete();
+            return redirect()->route("admintrafficbot.listsignagetypes")->with("delete_success", "xóa biển báo thành công!");
+        } else {
+            return redirect()->route("admintrafficbot.listsignagetypes")->with("delete_fails", "Đã có lỗi xảy ra - vui lòng xóa lại sau !");
+
+        }
+    }
+
+
+
+    //end loại biển báo
+
+
+    //biển báo
+    public function listSignages(Request $request)
+    {
+        $signageTypes = SignageType::all();
+        $signageTypeID = SignageType::first() ?->SignageTypeID;
+        $option = $request->get("option");
+        if (!empty($option)) {
+            $signages = Signage::where("SignageTypeID", $option);
+        } else {
+            // dd("o day");
+            $signages = Signage::where("SignageTypeID", $signageTypeID)
+            ->OrderBy("SignageID", "asc")
+            ->paginate(10);
+        }
+        return view("admin.signagesManagement.signages.listSignages", compact("signages", "signageTypes","option"));
+    }
+    public function createSignages()
+    {
+        $signagesTypes = SignageType::all();
+        return view("admin.signagesManagement.signages.createSignages", compact("signagesTypes"));
+    }
+    public function storeSignages(Request $request)
+    {
+
+        $validate = $request->validate([
+            "SignageName" => "required",
+            "SignageTypeID" => "required",
+            "SignageImage" => "required",
+            "SignagesExplanation" => "required"
+        ], [
+            "SignageTypeID.required" => "Không đươc để trống!",
+            "SignageName.required" => "Không được để trống!",
+            "SignageImage.required" => "Không được để trống!",
+            "SignagesExplanation.required" => "Không được để trống"
+        ]);
+
+        if ($request->hasFile("SignageImage")) {
+            $file = $request->file("SignageImage");
+            $fileNameWithoutExt = pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME);
+            $fileNameExt = $file->getClientOriginalExtension();
+            $newFileName = $fileNameWithoutExt . "_" . time() . "." . $fileNameExt;
+            $file->move(public_path("assets/adminPage/SignagesImage"), $newFileName);
+            $validate["SignageImage"] = $newFileName;
+        }
+        if ($validate) {
+            $signage = Signage::create($validate);
+            if ($signage) {
+                return redirect()->route("admintrafficbot.listsignages")->with("create_success", "Thêm mới biển báo thành công!");
+            } else {
+                return redirect()->route("admintrafficbot.listsignages")->with("create_fails", "Đã có lỗi xảy ra, vui lòng thêm mới sau!");
+
+            }
+        }
+
+    }
+    public function deleteSignages($ID)
+    {
+        $signage = Signage::find($ID);
+        if ($signage) {
+            $signage->delete();
+            return redirect()->route("admintrafficbot.listsignages")->with("delete_success", "xóa biển báo thành công!");
+        } else {
+            return redirect()->route("admintrafficbot.listsignages")->with("delete_fails", "Xóa không thành công, vui lòng thử lại sau!");
+        }
+    }
+
+    public function updateSignages($ID, Request $request)
+    {
+        // dd($request->all());
+
+        $validate = $request->validate(
+            [
+                "SignageTypeID" => "required",
+                "SignageName" => "required",
+                "SignagesExplanation" => "required"
+            ],
+            [
+                "SignageTypeID.required" => "Không được để trống!",
+                "SignageName.required" => "Không được để trống!",
+                "SignagesExplanation.required" => "Không được để trống!",
+            ]
+        );
+        if ($request->hasFile("NewImage")) {
+
+            if ($request->get("OldImage")) {
+                $oldfile = public_path("assets/adminPage/SignagesImage/" . $request->get("OldImage"));
+                if (File::exists($oldfile)) {
+                    File::delete($oldfile);
+                }
+            }
+            $file = $request->file("NewImage");
+            $fileNameWithoutExt = pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME);
+            $fileNameExt = $file->getClientOriginalExtension();
+            $newFileName = $fileNameWithoutExt . "_" . time() . "." . $fileNameExt;
+            $file->move(public_path("assets/adminPage/SignagesImage"), "$newFileName");
+            $validate["SignageImage"] = $newFileName;
+        }
+        $signage = Signage::find($ID);
+        if ($signage) {
+            $signage->update($validate);
+            return redirect()->route("admintrafficbot.listsignages")->with("update_success", "Cập nhật biển báo thành công!");
+        } else {
+            return redirect()->route("admintrafficbot.listsignages")->with("update_fails", "Cập nhật biển báo không thành công, vui lòng thử lại sau!");
+
+        }
+    }
+
+
+
+    //end biển báo
+}

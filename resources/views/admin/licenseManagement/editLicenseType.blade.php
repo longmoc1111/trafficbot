@@ -1,0 +1,159 @@
+@extends("admin.adminPageLayout.layout")
+@section("main")
+
+    <main>
+        <form action={{ route("admintrafficbot.licensetype.update", $editLicenseType) }} method="POST">
+            @csrf
+            @method("PUT")
+            <!-- Page Title Start -->
+            <div class="flex items-center md:justify-between flex-wrap gap-2 mb-6">
+                <h4 class="text-default-900 text-lg font-medium mb-2"></h4>
+
+                <div class="md:flex hidden items-center gap-3 text-sm font-semibold">
+                    <a href="#" class="text-sm font-medium text-default-700">OpenDash</a>
+                    <i class="material-symbols-rounded text-xl flex-shrink-0 text-default-500">chevron_right</i>
+                    <a href="#" class="text-sm font-medium text-default-700">Forms</a>
+                    <i class="material-symbols-rounded text-xl flex-shrink-0 text-default-500">chevron_right</i>
+                    <a href="#" class="text-sm font-medium text-default-700" aria-current="page">Input</a>
+                </div>
+            </div>
+            <!-- Page Title End -->
+
+            <div class="flex flex-col gap-6">
+                <div class="card border rounded shadow">
+                    <div class="flex items-center justify-between px-6 py-4 border-b">
+                        <h4 class="text-lg font-semibold">Chỉnh sửa giấy phép </h4>
+                        <button type="submit"
+                            class="btn border-success text-success hover:bg-success hover:text-white">Chỉnh sửa</button>
+                    </div>
+                    <div class="p-6">
+                        <div>
+
+                        </div>
+                        <div class="grid lg:grid-cols-2 gap-6">
+                            <div>
+                                <div>
+                                    <label for="LicenseTypeName" class="text-gray-700 text-sm font-semibold mb-2 block">
+                                        Tên giấy phép
+                                    </label>
+                                    @if($errors->has("LicenseTypeName") || session("exists_license"))
+                                        <div id="dismiss-alert-2"
+                                            class="hs-removing:translate-x-5 hs-removing:opacity-0 transition duration-300 bg-red-100 border rounded-md "
+                                            role="alert">
+                                            <div class="flex items-center gap-3">
+                                                <div class="flex-shrink-0">
+                                                    <i class="i-tabler-circle-x text-red-600"></i>
+                                                </div>
+                                                <div class="flex-grow">
+                                                    @error("LicenseTypeName")
+                                                        <div class="text-sm text-red-800 font-medium">
+                                                            {{ $message }}
+                                                        </div>
+                                                    @enderror
+                                                    @if(session("exists_license"))
+                                                        <div class="text-sm text-red-800 font-medium">
+                                                            {{ session("exists_license") }}
+                                                        </div>
+                                                    @endif
+
+                                                </div>
+                                                <button data-hs-remove-element="#dismiss-alert-2" type="button"
+                                                    id="dismiss-test"
+                                                    class="ms-auto h-8 w-8 rounded-full bg-gray-200 flex justify-center items-center">
+                                                    <i class="i-tabler-x text-xl text-red-600"></i>
+                                                </button>
+                                            </div>
+                                        </div>
+
+                                    @endif
+                                    <input type="text" name="LicenseTypeName"
+                                        class="form-input w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                        value="{{ $editLicenseType->LicenseTypeName }}">
+                                    <input hidden name="oldLicenseTypeName" type="text"
+                                        value="{{ $editLicenseType->LicenseTypeName  }}">
+                                </div>
+                            </div>
+
+
+                            <div>
+                                <div class="mb-3">
+                                    <label for="example-email"
+                                        class="text-default-800 text-sm font-medium inline-block mb-2">
+                                        Mô tả giấy phép</label>
+
+                                    @error("LicenseTypeDescription")
+                                        <div id="dismiss-alert"
+                                            class="hs-removing:translate-x-5 hs-removing:opacity-0 transition duration-300 bg-red-100 border rounded-md "
+                                            role="alert">
+                                            <div class="flex items-center gap-3">
+                                                <div class="flex-shrink-0">
+                                                    <i class="i-tabler-circle-x text-red-600"></i>
+                                                </div>
+                                                <div class="flex-grow">
+                                                    <div class="text-sm text-red-800 font-medium">
+                                                        {{ $message }}
+                                                    </div>
+                                                </div>
+                                                <button data-hs-remove-element="#dismiss-alert" type="button" id="dismiss-test"
+                                                    class="ms-auto h-8 w-8 rounded-full bg-gray-200 flex justify-center items-center">
+                                                    <i class="i-tabler-x text-xl text-red-600"></i>
+                                                </button>
+                                            </div>
+                                        </div>
+
+                                    @enderror
+                                    <textarea type="text" name="LicenseTypeDescription" class="form-input text-left">
+                                                {{  $editLicenseType->LicenseTypeDescription }}</textarea>
+                                </div>
+                            </div>
+
+
+                        </div>
+                    </div>
+                </div> <!-- end card -->
+            </div>
+
+        </form>
+
+
+    </main>
+
+@endsection
+<script src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js" defer></script>
+
+@section("footer")
+    <script>
+        (function () {
+            const { element } = HSFileUpload.getInstance('#hs-file-upload-with-limited-file-size', true);
+
+            element.dropzone.on('error', (file, response) => {
+                if (file.size > element.concatOptions.maxFilesize * 1024 * 1024) {
+                    const successEls = document.querySelectorAll('[data-hs-file-upload-file-success]');
+                    const errorEls = document.querySelectorAll('[data-hs-file-upload-file-error]');
+
+                    successEls.forEach((el) => el.style.display = 'none');
+                    errorEls.forEach((el) => el.style.display = '');
+                    HSStaticMethods.autoInit(['tooltip']);
+                }
+            });
+        })();
+
+
+        // multiple select
+        function multiSelect() {
+            return {
+                open: false,
+                options: ['Option 1', 'Option 2', 'Option 3', 'Option 4', 'Option 5'],
+                selectedOptions: [],
+                toggleOption(option) {
+                    if (this.selectedOptions.includes(option)) {
+                        this.selectedOptions = this.selectedOptions.filter(item => item !== option);
+                    } else {
+                        this.selectedOptions.push(option);
+                    }
+                }
+            }
+        }
+        // end multiple select
+    </script>
+@endsection
