@@ -160,7 +160,7 @@
                             <p class="mb-0 title-content">Ôn tập nhanh với 600 câu hỏi trắc nghiệm</p>
                             <hr>
                             <div class="btn-container">
-                                <a class="btn-continue  text-center">
+                                <a href = "{{ route("userpage.collection") }}" class="btn-continue  text-center">
                                     Tiếp tục <i class="fa fa-arrow-right"></i>
                                 </a>
                             </div>

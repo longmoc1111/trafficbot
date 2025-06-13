@@ -5,19 +5,32 @@
 
         <!-- Page Title Start -->
         <div class="flex items-center md:justify-between flex-wrap gap-2 mb-6">
-            <h4 class="text-default-900 text-lg font-medium mb-2">{{ $ExamSetID->ExamSetName}}(
-                {{ $ExamSetID->licenseType_Examset->pluck("LicenseTypeName")->join(", ") }} )
-            </h4>
+            <!-- <h4 class="text-default-900 text-lg font-medium mb-2">{{ $ExamSetID->ExamSetName}}(
+                    {{ $ExamSetID->licenseType_Examset->pluck("LicenseTypeName")->join(", ") }} )
+                </h4>
 
-            <div class="md:flex hidden items-center gap-3 text-sm font-semibold">
-                <a href="#" class="text-sm font-medium text-default-700">OpenDash</a>
-                <i class="material-symbols-rounded text-xl flex-shrink-0 text-default-500">chevron_right</i>
-                <a href="#" class="text-sm font-medium text-default-700">Tables</a>
-                <i class="material-symbols-rounded text-xl flex-shrink-0 text-default-500">chevron_right</i>
-                <a href="#" class="text-sm font-medium text-default-700" aria-current="page">Basic Tables</a>
-            </div>
+                <div class="md:flex hidden items-center gap-3 text-sm font-semibold">
+                    <a href="#" class="text-sm font-medium text-default-700">OpenDash</a>
+                    <i class="material-symbols-rounded text-xl flex-shrink-0 text-default-500">chevron_right</i>
+                    <a href="#" class="text-sm font-medium text-default-700">Tables</a>
+                    <i class="material-symbols-rounded text-xl flex-shrink-0 text-default-500">chevron_right</i>
+                    <a href="#" class="text-sm font-medium text-default-700" aria-current="page">Basic Tables</a>
+                </div> -->
         </div>
         <!-- Page Title End -->
+
+        <!-- <div class="grid grid-cols-1 gap-6">
+    <div class="card">
+        <div class="card-header grid grid-cols-2 gap-x-4">
+            <p>Loại câu hỏi 1</p>
+            <p>Loại câu hỏi 2</p>
+            <p>Loại câu hỏi 3</p>
+            <p>Loại câu hỏi 4</p>
+            <p>Loại câu hỏi 5</p>
+            <p>Loại câu hỏi 6</p>
+        </div>
+    </div>
+</div> -->
 
         <div class=" gap-6 mt-8">
             <div class="card overflow-hidden">
@@ -52,9 +65,11 @@
                                     <tbody class="divide-y divide-gray-200">
                                         @foreach ($ExamSetID->question_ExamSet as $question)
                                             <tr>
-                                                <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-default-800">
+                                                <td
+                                                    class="px-6 py-4 text-sm font-medium text-default-800 whitespace-normal break-words">
                                                     {{ $question->QuestionName }}
                                                 </td>
+
                                                 <td class="px-6 py-4 whitespace-nowrap text-sm text-default-800">
                                                     {{ $question->categoryQuestion_Question->CategoryName }}
                                                 </td>

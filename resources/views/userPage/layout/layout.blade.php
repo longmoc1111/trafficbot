@@ -125,10 +125,13 @@
             </button>
             <div class="collapse navbar-collapse" id="navbarCollapse">
                 <div class="navbar-nav">
-                    <a href="{{ route("userpage.home") }}" class="nav-item nav-link active">Trang chủ</a>
+                    <a href="{{ route("userpage.home") }}"
+                        class="nav-item nav-link ">Trang
+                        chủ</a>
                     <div class="nav-item dropdown">
+                   
                         <a href="" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">Thi lý thuyết xe máy</a>
-                        <div class="dropdown-menu bg-light rounded-0 rounded-bottom m-0">
+                        <div class="dropdown-menu bg-light rounded-0 rounded-bottom m-0 ">
                             @isset($licenses)
                                 @foreach ($licenses as $license)
                                     @if($license->LicenseTypeName == "Bằng A1" || $license->LicenseTypeName == "Bằng A2")
@@ -153,13 +156,14 @@
                     </div>
 
                     <div class="nav-item dropdown">
-                        <a href="" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">Ôn tập theo chương</a>
+                        <a href="" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">Ôn tập lý thuyết</a>
                         <div class="dropdown-menu bg-light rounded-0 rounded-bottom m-0">
                             @foreach ($chapters as $chapter)
                                 <a href="{{ route("userpage.chapters", ["ID" => $chapter->CategoryID]) }}"
                                     class="dropdown-item">{{ $chapter->CategoryName }}</a>
                             @endforeach
-
+                            <a href="{{ route("userpage.collection") }}" class="dropdown-item">Ôn tập nhanh với 600 câu
+                                hỏi tổng hợp</a>
 
                         </div>
                     </div>

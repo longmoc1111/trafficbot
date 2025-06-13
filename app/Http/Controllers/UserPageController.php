@@ -31,7 +31,7 @@ class UserPageController extends Controller
         }
 
         $examSets = $licenseID->examset_LicenseType;
-        return view("userPage.practice.practiceExam", compact("examSets", "licenseID", "lastWordA"));
+        return view("userPage.quiz.practiceExam", compact("examSets", "licenseID", "lastWordA"));
     }
     public function PracticeStart($licenseID, $examsetID)
     {
@@ -45,7 +45,7 @@ class UserPageController extends Controller
         $questions = $examSet->question_Examset;
         $answers = ["A" => "", "B" => "", "C" => "", "D" => ""];
         $labels = ["A", "B", "C", "D"];
-        return view("userPage.practice.practiceStart", compact("questions", "examSet", "answers", "labels", "license", "lastWordA"));
+        return view("userPage.quiz.practiceStart", compact("questions", "examSet", "answers", "labels", "license", "lastWordA"));
     }
     public function PracticeFinish($ExamSetID, Request $request)
     {
@@ -97,7 +97,7 @@ class UserPageController extends Controller
     public function signages($SignageTypeID)
     {
         $signagesType = SignageType::find($SignageTypeID);
-        return view("userPage.trafficSigns.signages", compact("signagesType"));
+        return view("userPage.quiz.signages", compact("signagesType"));
     }
 
 
@@ -108,7 +108,7 @@ class UserPageController extends Controller
         $questions = $chapter->question_QuestionCategory;
         $answers = ["A" => "", "B" => "", "C" => "", "D" => ""];
         $labels = ["A", "B", "C", "D"];
-        return view("userPage.studyByChapter.chapter", compact("chapter","questions","answers","labels","chapters"));
+        return view("userPage.quiz.chapter", compact("chapter","questions","answers","labels","chapters"));
     }
 
 

@@ -426,9 +426,6 @@
     transition: .5s;
 }
 
-.service-item:hover .service-text h5 {
-    color: var(--primary);
-}
 .service-item-signs {
     display: flex;
     flex-direction: column;

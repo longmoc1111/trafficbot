@@ -13,6 +13,7 @@
 
     <!-- Icons css  (Mandatory in All Pages) -->
     <link href="/assets/adminPage/css/icons.min.css" rel="stylesheet" type="text/css">
+      <!-- <link href="/assets/adminPage/libs/jsvectormap/css/jsvectormap.min.css" rel="stylesheet" type="text/css"> -->
 
     <!-- App css  (Mandatory in All Pages) -->
     <link href="/assets/adminPage/css/app.min.css" rel="stylesheet" type="text/css">
@@ -38,7 +39,7 @@
                 <ul class="admin-menu hs-accordion-group flex w-full flex-col gap-1.5">
                     <li class="menu-item">
                         <a class='group flex items-center gap-x-3.5 rounded-md px-3 py-2 text-sm font-medium text-default-700 transition-all hover:bg-default-900/5'
-                            href='/opendash/'>
+                            href='{{route("admintrafficbot.dashboard")}}'>
                             <i class="i-solar-home-smile-bold-duotone text-2xl"></i>
                             Dashboard
                         </a>
@@ -271,6 +272,9 @@
     <script src="/assets/adminPage/libs/quill/quill.min.js"></script>
     <script src="/assets/adminPage/js/pages/form-editor.js"></script>
     <script src="/assets/izitoast/js/iziToast.min.js"></script>
+     <script src="/assets/adminPage/libs/apexcharts/apexcharts.min.js"></script>
+    <script src="/assets/adminPage/libs/jsvectormap/js/jsvectormap.min.js"></script>
+    <script src="/assets/adminPage/js/pages/dashboard.js"></script>
 </body>
 @yield("footer")
 @yield("izitoast")

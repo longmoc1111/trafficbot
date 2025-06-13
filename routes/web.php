@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\DashBoardController;
 use App\Http\Controllers\QuestionCategoryController;
 use App\Http\Controllers\SignageController;
 use App\Http\Controllers\UserPageController;
@@ -12,6 +13,11 @@ use App\Models\ExamSet;
 use App\Models\LicenseType;
 use Illuminate\Support\Facades\Route;
 
+
+Route::middleware("admin")->controller(DashBoardController::class)->prefix("admintrafficbot")->name("admintrafficbot")->group(function(){
+        route::get("/dashboard", "dashBoard")->name(".dashboard");
+
+}); 
 
 Route::middleware("admin")->controller(QuestionController::class)->prefix("admintrafficbot")->name("admintrafficbot")->group(function(){
     Route::get("/question", "listQuestion")->name(".question");
@@ -61,12 +67,15 @@ Route::middleware("admin")->controller(ExamSetController::class)->prefix("admint
 
 route::controller(UserPageController::class)->name("userpage")->group(function() {
     route::get("/","homePage")->name(".home");
-    route::get("/practice/{LicenseTypeID}","PracticeExam")->name(".practiceExam");
-    route::get("/practice/start/{licenseID}/{examsetID}","PracticeStart")->name(".practiceStart");
-    route::post("/practice/finish/{ExamSetID}","PracticeFinish")->name(".practicefinish");
-    route::get("/signages/{SignageTypeID}","signages")->name(".signages");
+    route::get("/quiz-practice/{LicenseTypeID}","PracticeExam")->name(".practiceExam");
+    route::get("/quiz-practice/start/{licenseID}/{examsetID}","PracticeStart")->name(".practiceStart");
+    route::post("/quiz-practice/finish/{ExamSetID}","PracticeFinish")->name(".practicefinish");
+    route::get("/quiz-signages/{SignageTypeID}","signages")->name(".signages");
 
-    route::get("/chapters/{ID}","chapters")->name(".chapters");
+    route::get("/quiz-chapters/{ID}","chapters")->name(".chapters");
+
+    route::get("/quiz-collection","collection")->name(".collection");
+    
 
 });
 

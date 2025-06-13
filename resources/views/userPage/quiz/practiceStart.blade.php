@@ -236,7 +236,7 @@
                             @endforeach
 
                             <button class="btn btn-primary mt-3" data-bs-toggle="modal" data-bs-target="#endtestModal"
-                                data-examsetid="{{ $examSet->ExamSetID }}" id="end-test">Nộp bài</button>
+                                id="end-test">Nộp bài</button>
                             <button class="btn btn-primary mt-3" hidden id="preview">Xem kết quả</button>
 
                         </div>
@@ -247,8 +247,8 @@
                 <div class="service-item position-relative h-100">
                     <div class="service-text rounded p-3">
                         <div class="d-flex align-items-center">
-                            <h4 id="question-title" class="me-2 mb-0"></h4>
-                            <p id="question-content" class="mb-0 mt-1"></p>
+                            <h5 id="question-title" class="me-2 mb-0"></h5>
+                            <!-- <p id="question-content" class="mb-0 mt-1"></p> -->
                         </div>
 
                           <div class="mt-2">
@@ -269,7 +269,6 @@
 
                 </div>
             </div>
-
 
         </div>
         <!-- modal thong báo kết quả -->
@@ -306,7 +305,7 @@
                     <h3 class="text-center">Xác nhận</h3>
                     <p class="text-center">Bạn muốn kết thúc bài thi không ?</p>
                     <div class="text-center mb-3 d-flex justify-content-center">
-                        <button id="submit-btn" class="btn btn-danger w-30 mx-2 ">kết thúc</button>
+                        <button  data-examsetid="{{ $examSet->ExamSetID }}" id="submit-btn" class="btn btn-danger w-30 mx-2 ">kết thúc</button>
                         <button data-bs-dismiss="modal" aria-label="Close" class="btn btn-primary w-30 mx-2">tiếp tục
                             thi</button>
                     </div>
@@ -319,7 +318,7 @@
 
 
     <!-- script -->
- <script src = "/assets/adminPage/practice/practice_exam.js"></script>
+ <script src = "/assets/userPage/practice/practice_exam.js"></script>
 
     <!-- end script -->
 

@@ -95,49 +95,56 @@ document.addEventListener("DOMContentLoaded", function () {
         }
     }
     //hàm đổi màu câu hỏi đúng sai
-   function changeColorResult(resultArr) {
-    resultArr.forEach((item) => {
-        const questionID = item.QuestionID;
-        const isCorrect = item.isCorrect;
-        const selectedAnswerID = item.AnswerID;
-        const correctAnswerID = item.answerCorrect;
-        const labels = ["A", "B", "C", "D"];
+    function changeColorResult(resultArr) {
+        resultArr.forEach((item) => {
+            const questionID = item.QuestionID;
+            const isCorrect = item.isCorrect;
+            const questionBtn = document.querySelector(
+                `.question-btn[data-id='${questionID}']`
+            );
+            if (!questionBtn) return;
+            // Đổi màu chỉ số câu hỏi
+            const indexBox = questionBtn.querySelector(".index-question");
+            if (indexBox) {
+                indexBox.classList.remove(
+                    "selected-question",
+                    "testimonial-item",
+                    "correct",
+                    "incorrect"
+                );
+                indexBox.classList.add(isCorrect ? "correct" : "incorrect");
+            }
+        });
+    }
+    function changeColorAnswer(questionID, resultArr) {
+        const result = resultArr.find((item) => item.QuestionID == questionID);
+        console.log(result);
+        if (!result) return;
 
-        const questionBtn = document.querySelector(`.question-btn[data-id='${questionID}']`);
-        if (!questionBtn) return;
+        const selectedAnswerID = result.AnswerID;
+        const correctAnswerID = result.answerCorrect;
+        console.log(correctAnswerID);
+        const isCorrect = result.isCorrect;
+        const labels = ["A", "B", "C", "D"];
 
         labels.forEach((label) => {
             const row = document.getElementById(`answer-row-${label}`);
             const radio = document.getElementById(`radio${label}`);
             if (!row || !radio) return;
 
-            const answerID = radio.value;
-            console.log(answerID)
-
-            // Reset class trước
+            const answerID = parseInt(radio.value); // value đã được set động khi người dùng chọn
+            console.log(answerID);
+            // Reset class
             row.classList.remove("answer-correct", "answer-wrong");
 
             // Đáp án đúng
-            if ( radio.value === correctAnswerID) {
+            if (answerID === correctAnswerID) {
                 row.classList.add("answer-correct");
-            }
-
-            // Nếu người dùng chọn sai đáp án
-            if (!isCorrect && selectedAnswerID != null && parseInt(answerID) === selectedAnswerID) {
-                row.classList.add("answer-wrong");
+            }else{
+                row.classList.add("answer-wrong");  
             }
         });
-
-        // Đổi màu chỉ số câu hỏi
-        const indexBox = questionBtn.querySelector(".index-question");
-        if (indexBox) {
-            indexBox.classList.remove("selected-question", "testimonial-item", "correct", "incorrect");
-            indexBox.classList.add(isCorrect ? "correct" : "incorrect");
-        }
-    });
-}
-
-
+    }
     //hàm hiển thị câu hỏi
     function updateAnswerDisplay(buttonElement) {
         const labels = ["A", "B", "C", "D"];
@@ -160,21 +167,21 @@ document.addEventListener("DOMContentLoaded", function () {
     function updateQuestionDisplay(buttonElement) {
         const numberQS = buttonElement.dataset.question;
         const contentQS = buttonElement.dataset.content;
-        title.innerText = `Câu ${numberQS} : `;
-        content.innerText = contentQS;    
+        title.innerText = `Câu ${numberQS} : ${contentQS} `;
+        // content.innerText = contentQS;
     }
 
-    function updateValueRadio(buttonElement){
-        const labels = ["A","B","C","D"]
-        labels.forEach(label => {
-            const answerID = buttonElement.dataset[`${label.toLowerCase()}Id`]
-            const radio = document.getElementById(`radio${label}`)
-            if(answerID && radio){
-                radio.value = answerID
-            }else{
-                radio.value = ''
+    function updateValueRadio(buttonElement) {
+        const labels = ["A", "B", "C", "D"];
+        labels.forEach((label) => {
+            const answerID = buttonElement.dataset[`${label.toLowerCase()}Id`];
+            const radio = document.getElementById(`radio${label}`);
+            if (answerID && radio) {
+                radio.value = answerID;
+            } else {
+                radio.value = "";
             }
-        })
+        });
     }
 
     //hàm submit
@@ -188,16 +195,17 @@ document.addEventListener("DOMContentLoaded", function () {
         endTtestBtn.hidden = true;
         previewBtn.hidden = false;
         const examsetID = submitBtnElement.dataset.examsetid;
+        console.log("id "+ examsetID)
         const allAnswers = {};
         buttons.forEach((btn) => {
             const questionID = btn.dataset.id;
             if (selectedAnswer[questionID]) {
                 allAnswers[questionID] = selectedAnswer[questionID];
             } else {
-                allAnswers[questionID] = null;  
+                allAnswers[questionID] = null;
             }
         });
-        fetch(`/practice/finish/${examsetID}`, {
+        fetch(`/quiz-practicep/finish/${examsetID}`, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
@@ -212,40 +220,35 @@ document.addEventListener("DOMContentLoaded", function () {
             .then((response) => response.json())
             .then((data) => {
                 console.log("phan hoi", data);
-                // const modal = document.getElementById("resultModal");
-                // const summary = document.getElementById("modal-summary")
-
                 allExplanation = data.result;
                 const iscriticalElemet =
                     document.getElementById("modal-iscritical");
                 const correctElemnt = document.getElementById("modal-correct");
                 const notcorrectElement =
                     document.getElementById("modal-notCorrect");
-                const previewBtnElement = document.getElementById("preview");
-                const explainElement = document.getElementById("explain");
                 const correctCount = data.correctCount;
                 const sumQuestion = data.result[0]?.sumQuestion ?? 0;
                 const notcorrect = sumQuestion - correctCount;
                 const iscritical = data.iscriticalWrong;
 
                 correctElemnt.innerHTML = `
-                                                                                                            <p><strong>Số câu đúng:</strong> ${correctCount}</p>
-                                                                                                            `;
+                         <p><strong>Số câu đúng:</strong> ${correctCount}</p>
+                         `;
                 notcorrectElement.innerHTML = `
-                                                                                                                <p><strong>Số câu sai:</strong>   ${notcorrect}</p>
-                                                                                                            `;
+                         <p><strong>Số câu sai:</strong>   ${notcorrect}</p>
+                        `;
                 if (iscritical == true) {
                     iscriticalElemet.innerHTML = `
-                                                                                                                <p><strong>Kết quả:</strong>  Không đạt - sai câu điểm liệt</p>
-                                                                                                            `;
+                          <p><strong>Kết quả:</strong>  Không đạt - sai câu điểm liệt</p>
+                             `;
                 } else if (iscritical == false && correctCount < 21) {
                     iscriticalElemet.innerHTML = `
-                                                                                                            <p><strong>Kết quả:</strong>  không đạt - yêu cầu tối thiểu đúng 21/25 câu</p>
-                                                                                                            `;
+                         <p><strong>Kết quả:</strong>  không đạt - yêu cầu tối thiểu đúng 21/25 câu</p>
+                         `;
                 } else if (iscritical == false && correctCount >= 21) {
                     iscriticalElemet.innerHTML = `
-                                                                                                            <p><strong>Kết quả:</strong>  đạt</strong></p>
-                                                                                                            `;
+                        <p><strong>Kết quả:</strong>  đạt</strong></p>
+                         `;
                 }
                 $("#modalResults").modal("show");
                 previewBtn.addEventListener("click", function () {
@@ -254,6 +257,7 @@ document.addEventListener("DOMContentLoaded", function () {
                 const currentID = getCurrentQuestion().id;
                 if (currentID) {
                     showExplanation(currentID, allExplanation);
+                    changeColorAnswer(currentID, allExplanation);
                 }
                 changeColorResult(data.result);
                 document
@@ -263,8 +267,6 @@ document.addEventListener("DOMContentLoaded", function () {
                     });
             });
     }
-
-    //end submmit
 
     //obj lưu đáp ấn
     const selectedAnswer = {};
@@ -281,11 +283,11 @@ document.addEventListener("DOMContentLoaded", function () {
                 const questionID = activebtn.dataset.id;
                 const selectedLabel = this.id.replace("radio", "");
                 const radio = document.getElementById(`radio${selectedLabel}`);
-                const answerID = activebtn.dataset[`${selectedLabel.toLowerCase()}Id`];
+                const answerID =
+                    activebtn.dataset[`${selectedLabel.toLowerCase()}Id`];
                 radio.value = answerID;
                 selectedAnswer[questionID] = answerID;
-                console.log(selectedAnswer)
-               
+                console.log(selectedAnswer);
             }
         });
     });
@@ -300,8 +302,7 @@ document.addEventListener("DOMContentLoaded", function () {
             //cập nhật nội dung
             updateQuestionDisplay(this);
             updateAnswerDisplay(this);
-            updateValueRadio(this)
-
+            updateValueRadio(this);
 
             document
                 .querySelectorAll('input[name="answer"]')
@@ -313,14 +314,15 @@ document.addEventListener("DOMContentLoaded", function () {
                         radio.checked = true;
                     }
                 });
-                 
+
             const currentID = getCurrentQuestion().id;
             if (currentID) {
                 console.log(
                     "exxplan" + JSON.stringify(allExplanation, null, 2)
                 );
-                console.log("id hien tai" + currentID);
+
                 showExplanation(currentID, allExplanation);
+                changeColorAnswer(currentID, allExplanation);
             }
         });
     });
@@ -342,14 +344,10 @@ document.addEventListener("DOMContentLoaded", function () {
 
         // Cập nhật nội dung câu hỏi tiếp theo
         const nextbuttons = buttons[nextIndex];
-        const number = buttons[nextIndex].dataset.question;
-        const text = buttons[nextIndex].dataset.content;
-        title.innerText = `Câu ${number}`;
-        content.innerText = text;
         updateQuestionDisplay(nextbuttons);
         updateAnswerDisplay(nextbuttons);
         console.log(selectedAnswer);
-            updateValueRadio(nextbuttons)
+        updateValueRadio(nextbuttons);
 
         document.querySelectorAll('input[name="answer"]').forEach((radio) => {
             radio.checked = false;
@@ -360,10 +358,12 @@ document.addEventListener("DOMContentLoaded", function () {
             }
         });
         const currentID = getCurrentQuestion().id;
+        console.log("id hien tai" + currentID);
         if (currentID) {
             console.log("exxplan" + JSON.stringify(allExplanation, null, 2));
-            console.log("id hien tai" + currentID);
+            
             showExplanation(currentID, allExplanation);
+            changeColorAnswer(currentID, allExplanation);
         }
     });
     if (buttons.length > 0) {
