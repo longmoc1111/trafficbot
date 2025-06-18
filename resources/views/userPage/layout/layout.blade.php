@@ -135,9 +135,9 @@
                         <div class="dropdown-menu bg-light rounded-0 rounded-bottom m-0 ">
                             @isset($licenses)
                                 @foreach ($licenses as $license)
-                                    @if($license->LicenseTypeName == "Bằng A1" || $license->LicenseTypeName == "Bằng A2")
+                                    @if($license->LicenseTypeName == "A1" || $license->LicenseTypeName == "A2")
                                         <a href="{{ route("userpage.practiceExam", $license->LicenseTypeID) }}"
-                                            class="dropdown-item">{{ $license->LicenseTypeName }}</a>
+                                            class="dropdown-item">Hạng {{ $license->LicenseTypeName }}</a>
                                     @endif
                                 @endforeach
                             @endisset
@@ -148,9 +148,9 @@
                         <a href="" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">Thi sát hạch ô tô</a>
                         <div class="dropdown-menu bg-light rounded-0 rounded-bottom m-0">
                             @foreach ($licenses as $license)
-                                @if($license->LicenseTypeName == "Bằng B1" || $license->LicenseTypeName == "Bằng B2")
+                                @if($license->LicenseTypeName == "B1" || $license->LicenseTypeName == "B2")
                                     <a href="{{ route("userpage.practiceExam", ["LicenseTypeID" => $license->LicenseTypeID]) }}"
-                                        class="dropdown-item">{{ $license->LicenseTypeName }}</a>
+                                        class="dropdown-item">Hạng {{ $license->LicenseTypeName }}</a>
                                 @endif
                             @endforeach
                         </div>
@@ -163,6 +163,7 @@
                                 <a href="{{ route("userpage.chapters", ["ID" => $chapter->CategoryID]) }}"
                                     class="dropdown-item">{{ $chapter->CategoryName }}</a>
                             @endforeach
+                               <a href="{{ route("userpage.collection") }}" class="dropdown-item">Ôn tập nhanh 250 câu lý thuyết - A1</a>
                             <a href="{{ route("userpage.collection") }}" class="dropdown-item">Ôn tập nhanh với 600 câu
                                 hỏi tổng hợp</a>
 

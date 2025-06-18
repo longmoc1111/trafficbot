@@ -25,15 +25,15 @@ class UserPageController extends Controller
 
     public function practiceExam(string $id)
     {
-        $licenseID = LicenseType::find($id);
-        $licenseName = $licenseID->LicenseTypeName;
+        $license = LicenseType::find($id);
+        $licenseName = $license->LicenseTypeName;
         if ($licenseName) {
             $wordA = explode(" ", $licenseName);
             $lastWordA = end($wordA);
         }
 
-        $examSets = $licenseID->examset_LicenseType;
-        return view("userPage.quiz.practiceExam", compact("examSets", "licenseID", "lastWordA"));
+        $examSets = $license->examset_LicenseType;
+        return view("userPage.quiz.practiceExam", compact("examSets", "license", "lastWordA"));
     }
     public function PracticeStart($licenseID, $examsetID)
     {

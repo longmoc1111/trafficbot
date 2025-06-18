@@ -155,16 +155,16 @@
                     <h1 class="display-6"><strong>Thi thử lý thuyết hạng {{ $lastWordA }}</strong></h1>
                     <div class="mb-2">
                         <p class="mb-2">Cấu trúc đề thi sát hạch giấy phép lái xe hạng {{ $lastWordA }} bao gồm
-                            {{ $examSet->Quantity }} câu hỏi, mỗi câu hỏi
+                            {{ $license->LicenseTypeQuantity }} câu hỏi, mỗi câu hỏi
                             chỉ có duy nhất một câu trả lời đúng.
-                        </p>
+                        </p> 
                         <h5>Bao gồm</h5>
                         <ul>
-                            <li>số lượng câu hỏi: <strong style="color:#ff0000"> câu</strong></li>
+                            <li>số lượng câu hỏi: <strong style="color:#ff0000"> {{ $license->LicenseTypeQuantity }} câu</strong></li>
                             <li>yêu cầu : <strong style="color:#ff0000" id="quantity-passcount"
-                                    data-quantity="{{ $examSet->Quantity }}" data-passcount="{{ $examSet->PassCount }}">đúng
-                                    {{ $examSet->PassCount}}/{{ $examSet->Quantity }} câu</strong> </li>
-                            <li>Thời gian: <strong style="color:#ff0000">{{ $examSet->Duration }} phút</strong> </li>
+                                    data-quantity="{{ $license->LicenseTypeQuantity }}" data-passcount="{{ $license->LicenseTypePassCount }}">đúng
+                                    {{ $license->LicenseTypePassCount }}/{{ $license->LicenseTypeQuantity }} câu</strong> </li>
+                            <li>Thời gian: <strong style="color:#ff0000">{{ $license->LicenseTypeDuration }} phút</strong> </li>
                         </ul>
                     </div>
                     <p class="mb-4">
@@ -200,7 +200,7 @@
 
         <div class="d-flex justify-content-between align-items-center mb-3 px-3" data-wow-delay="0.1s">
             <h3 class="display-7 mb-0 mt-2">Thi lý thuyết xe máy hạng {{ $lastWordA }} - {{ $examSet->ExamSetName }}</h3>
-            <div class="btn display-7 mb-0 mt-3" id="exam-timmer" data-duration="{{ $duration }}"
+            <div class="btn display-7 mb-0 mt-3" id="exam-timmer" data-duration="{{ $license->LicenseTypeDuration }}"
                 style="background-color:#6Fc7e7">10:00</div>
         </div>
         <hr>

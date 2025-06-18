@@ -9,12 +9,12 @@
             <h4 class="text-default-900 text-lg font-medium mb-2">Quản lý giấy phép</h4>
 
             <!-- <div class="md:flex hidden items-center gap-3 text-sm font-semibold">
-                <a href="#" class="text-sm font-medium text-default-700">OpenDash</a>
-                <i class="material-symbols-rounded text-xl flex-shrink-0 text-default-500">chevron_right</i>
-                <a href="#" class="text-sm font-medium text-default-700">Tables</a>
-                <i class="material-symbols-rounded text-xl flex-shrink-0 text-default-500">chevron_right</i>
-                <a href="#" class="text-sm font-medium text-default-700" aria-current="page">Basic Tables</a>
-            </div> -->
+                    <a href="#" class="text-sm font-medium text-default-700">OpenDash</a>
+                    <i class="material-symbols-rounded text-xl flex-shrink-0 text-default-500">chevron_right</i>
+                    <a href="#" class="text-sm font-medium text-default-700">Tables</a>
+                    <i class="material-symbols-rounded text-xl flex-shrink-0 text-default-500">chevron_right</i>
+                    <a href="#" class="text-sm font-medium text-default-700" aria-current="page">Basic Tables</a>
+                </div> -->
         </div>
         <!-- Page Title End -->
 
@@ -39,6 +39,15 @@
                                             <th scope="col" class="px-6 py-3 text-start text-sm text-default-500">
                                                 Mô tả giấy phép
                                             </th>
+                                            <th scope="col" class="px-6 py-3 text-start text-sm text-default-500">
+                                                Thời gian thi
+                                            </th>
+                                            <th scope="col" class="px-6 py-3 text-start text-sm text-default-500">
+                                                Yêu cầu đúng
+                                            </th>
+                                            <th scope="col" class="px-6 py-3 text-start text-sm text-default-500">
+                                                Số lượng câu hỏi
+                                            </th>
                                             <th scope="col" class="px-6 py-3 text-end text-sm text-default-500">
                                                 Action</th>
                                         </tr>
@@ -52,23 +61,32 @@
                                                 <td class="px-6 py-4 whitespace-nowrap text-sm text-default-800">
                                                     {{ $licensetype->LicenseTypeDescription }}
                                                 </td>
+                                                <td class="px-6 py-4 whitespace-nowrap text-sm text-default-800">
+                                                    {{ $licensetype->LicenseTypeDuration }} Phút
+                                                </td>
+                                                <td class="px-6 py-4 whitespace-nowrap text-sm text-default-800">
+                                                    {{ $licensetype->LicenseTypeQuantity }} Câu
+                                                </td>
+                                                <td class="px-6 py-4 whitespace-nowrap text-sm text-default-800">
+                                                    {{ $licensetype->LicenseTypePassCount }} Câu
+                                                </td>
                                                 <td
                                                     class="px-6 py-4 whitespace-nowrap text-end text-sm font-medium flex justify-end gap-x-2">
                                                     <div class="hs-tooltip">
-                                                            <button type="button"
-                                                                class="text-red-500 hover:text-red-800 hs-tooltip-toggle"
-                                                                data-hs-overlay="#modal_delete_{{ $licensetype->LicenseTypeID }}"
-                                                                data-fc-placement="bottom">
-                                                                <span class="material-symbols-rounded text-2xl">
-                                                                    delete_forever
-                                                                </span>
-                                                            </button>
-                                                            <span
-                                                                class="hs-tooltip-content hs-tooltip-shown:opacity-100 hs-tooltip-shown:visible opacity-0 transition-opacity inline-block absolute invisible z-10 py-1 px-2 bg-gray-900 text-xs font-medium text-white rounded shadow-sm"
-                                                                role="tooltip">
-                                                                Xóa vĩnh viễn
+                                                        <button type="button"
+                                                            class="text-red-500 hover:text-red-800 hs-tooltip-toggle"
+                                                            data-hs-overlay="#modal_delete_{{ $licensetype->LicenseTypeID }}"
+                                                            data-fc-placement="bottom">
+                                                            <span class="material-symbols-rounded text-2xl">
+                                                                delete_forever
                                                             </span>
-                                                        </div>
+                                                        </button>
+                                                        <span
+                                                            class="hs-tooltip-content hs-tooltip-shown:opacity-100 hs-tooltip-shown:visible opacity-0 transition-opacity inline-block absolute invisible z-10 py-1 px-2 bg-gray-900 text-xs font-medium text-white rounded shadow-sm"
+                                                            role="tooltip">
+                                                            Xóa vĩnh viễn
+                                                        </span>
+                                                    </div>
                                                     <div class="hs-tooltip">
                                                         <a id="open_modal_edit" href="" onclick="event.preventDefault()"
                                                             type="button" class="text-info hover:text-info hs-tooltip-toggle"
@@ -159,13 +177,55 @@
                                         class="form-input"
                                         onfocus="document.getElementById('license_type_description_errorr')?.classList.add('hidden')"></textarea>
                                 </div>
+                                <div class="mb-3">
+                                    <label for="example-email"
+                                        class="text-default-800 text-sm font-medium inline-block mb-2">
+                                        Thời gian thi</label>
+
+                                    @error("LicenseTypeDuration", 'create')
+                                        <div id="license_type_duration_errorr"
+                                            class="flex items-center bg-red-100 text-red-700 text-sm px-4 mb-2">
+                                            {{ $message }}
+                                        </div>
+                                    @enderror
+                                    <input type="number" id="" name="LicenseTypeDuration" class="form-input"
+                                        onfocus="document.getElementById('license_type_duration_errorr')?.classList.add('hidden')">
+                                </div>
+                                <div class="mb-3">
+                                    <label for="example-email"
+                                        class="text-default-800 text-sm font-medium inline-block mb-2">
+                                        Số lượng câu hỏi</label>
+
+                                    @error("LicenseTypeQuantity", 'create')
+                                        <div id="license_type_quantity_errorr"
+                                            class="flex items-center bg-red-100 text-red-700 text-sm px-4 mb-2">
+                                            {{ $message }}
+                                        </div>
+                                    @enderror
+                                    <input type="number" id="" name="LicenseTypeQuantity" class="form-input"
+                                        onfocus="document.getElementById('license_type_quantity_errorr')?.classList.add('hidden')">
+                                </div>
+                                <div class="mb-3">
+                                    <label for="example-email"
+                                        class="text-default-800 text-sm font-medium inline-block mb-2">
+                                        Số câu đúng tối thiểu</label>
+
+                                    @error("LicenseTypePasscount", 'create')
+                                        <div id="license_type_pass_count_errorr"
+                                            class="flex items-center bg-red-100 text-red-700 text-sm px-4 mb-2">
+                                            {{ $message }}
+                                        </div>
+                                    @enderror
+                                    <input type="number" id="" name="LicenseTypePassCount" class="form-input"
+                                        onfocus="document.getElementById('license_type_pass_count_errorr')?.classList.add('hidden')">
+                                </div>
                             </div>
                             <div class="flex justify-end items-center gap-x-2 py-3 px-4 border-t border-default-200">
                                 <button type="button"
                                     class="py-2 px-5 inline-flex items-center justify-center font-medium tracking-wide border align-middle duration-500 text-sm text-center bg-primary/5 hover:bg-primary border-primary/10 hover:border-primary text-primary hover:text-white rounded-md"
                                     data-hs-overlay="#create_license_type">
-                                    <i class="i-tabler-x me-1"></i>
-                                    Thoát
+                            
+                                    Đóng
                                 </button>
                                 <button type="submit"
                                     class="py-2 px-5 inline-flex items-center justify-center font-medium tracking-wide border align-middle duration-500 text-sm text-center bg-primary hover:bg-primary-700 border-primary hover:border-primary-700 text-white rounded-md">
@@ -233,13 +293,55 @@
                                                 class="form-input"
                                                 onfocus="document.getElementById('license_type_description_errorr')?.classList.add('hidden')">{{ $licensetype->LicenseTypeDescription }}</textarea>
                                         </div>
-                                    </div>
+                                        <div class="mb-3">
+                                            <label for="example-email"
+                                                class="text-default-800 text-sm font-medium inline-block mb-2">
+                                                Thời gian thi</label>
+
+                                            @error("LicenseTypeDuration", 'edit')
+                                                <div id="license_type_duration_errorr"
+                                                    class="flex items-center bg-red-100 text-red-700 text-sm px-4 mb-2">
+                                                    {{ $message }}
+                                                </div>
+                                            @enderror
+                                            <input type="number" id="" name="LicenseTypeDuration" class="form-input" value="{{ $licensetype->LicenseTypeDuration }}"
+                                                onfocus="document.getElementById('license_type_duration_errorr')?.classList.add('hidden')">
+                                        </div>
+                                        <div class="mb-3">
+                                            <label for="example-email"
+                                                class="text-default-800 text-sm font-medium inline-block mb-2">
+                                                Số lượng câu hỏi</label>
+
+                                            @error("LicenseTypeQuantity", 'edit')
+                                                <div id="license_type_quantity_errorr"
+                                                    class="flex items-center bg-red-100 text-red-700 text-sm px-4 mb-2">
+                                                    {{ $message }}
+                                                </div>
+                                            @enderror
+                                            <input type="number" id="" name="LicenseTypeQuantity" class="form-input" value="{{ $licensetype->LicenseTypeQuantity }}"
+                                                onfocus="document.getElementById('license_type_quantity_errorr')?.classList.add('hidden')">
+                                        </div>
+                                        <div class="mb-3">
+                                            <label for="example-email"
+                                                class="text-default-800 text-sm font-medium inline-block mb-2">
+                                                Số câu đúng tối thiểu</label>
+
+                                            @error("LicenseTypePasscount", 'edit')
+                                                <div id="license_type_pass_count_errorr"
+                                                    class="flex items-center bg-red-100 text-red-700 text-sm px-4 mb-2">
+                                                    {{ $message }}
+                                                </div>
+                                            @enderror
+                                            <input type="number" id="" name="LicenseTypePassCount" class="form-input" value="{{ $licensetype->LicenseTypePassCount }}"
+                                                onfocus="document.getElementById('license_type_pass_count_errorr')?.classList.add('hidden')">
+                                        </div>
+                                    </div>  
                                     <div class="flex justify-end items-center gap-x-2 py-3 px-4 border-t border-default-200">
                                         <button type="button"
                                             class="py-2 px-5 inline-flex items-center justify-center font-medium tracking-wide border align-middle duration-500 text-sm text-center bg-primary/5 hover:bg-primary border-primary/10 hover:border-primary text-primary hover:text-white rounded-md"
                                             data-hs-overlay="#modal_edit_{{ $licensetype->LicenseTypeID }}">
-                                            <i class="i-tabler-x me-1" id="icon_closed"></i>
-                                            Thoát
+                
+                                            Đóng
                                         </button>
                                         <button type="submit"
                                             class="py-2 px-5 inline-flex items-center justify-center font-medium tracking-wide border align-middle duration-500 text-sm text-center bg-primary hover:bg-primary-700 border-primary hover:border-primary-700 text-white rounded-md">
@@ -287,13 +389,35 @@
                                         <textarea readonly type="text" id="example-email" name="LicenseTypeDescription"
                                             class="form-input">{{ $licensetype->LicenseTypeDescription }}</textarea>
                                     </div>
+
+                                     <div class="mb-3">
+                                            <label for="example-email"
+                                                class="text-default-800 text-sm font-medium inline-block mb-2">
+                                                Thời gian thi</label>
+
+                                           
+                                            <input readonly type="number" id="" name="LicenseTypeDuration" class="form-input" value="{{ $licensetype->LicenseTypeDuration }}">
+                                        </div>
+                                        <div class="mb-3">
+                                            <label for="example-email"
+                                                class="text-default-800 text-sm font-medium inline-block mb-2">
+                                                Số lượng câu hỏi</label>
+                                            <input readonly type="number" id="" name="LicenseTypeQuantity" class="form-input" value="{{ $licensetype->LicenseTypeQuantity }}">
+                                        </div>
+                                        <div class="mb-3">
+                                            <label for="example-email"
+                                                class="text-default-800 text-sm font-medium inline-block mb-2">
+                                                Số câu đúng tối thiểu</label>
+                                            <input readonly type="number" id="" name="LicenseTypePassCount" class="form-input" value="{{ $licensetype->LicenseTypePassCount }}">
+                                        </div>
                                 </div>
+
                                 <div class="flex justify-end items-center gap-x-2 py-3 px-4 border-t border-default-200">
                                     <button type="button"
                                         class="py-2 px-5 inline-flex items-center justify-center font-medium tracking-wide border align-middle duration-500 text-sm text-center bg-primary/5 hover:bg-primary border-primary/10 hover:border-primary text-primary hover:text-white rounded-md"
                                         data-hs-overlay="#modal_show_{{ $licensetype->LicenseTypeID }}">
-                                        <i class="i-tabler-x me-1" id="icon_closed"></i>
-                                        Thoát
+
+                                        Đóng
                                     </button>
                                     <button type="submit"
                                         class="py-2 px-5 inline-flex items-center justify-center font-medium tracking-wide border align-middle duration-500 text-sm text-center bg-primary hover:bg-primary-700 border-primary hover:border-primary-700 text-white rounded-md">
@@ -311,9 +435,9 @@
 
 
 
-           <!-- modal xóa -->
+            <!-- modal xóa -->
             @if(!empty($ListLicenseType))
-                 @foreach ($ListLicenseType as $licensetype)
+                @foreach ($ListLicenseType as $licensetype)
                     <div id="modal_delete_{{ $licensetype->LicenseTypeID }}"
                         class="hs-overlay w-full h-full fixed top-0 left-0 z-70 transition-all duration-500 overflow-y-auto hidden pointer-events-none">
                         <div
@@ -339,7 +463,8 @@
                                         data-hs-overlay="#modal_delete_{{ $licensetype->LicenseTypeID }}">
                                         Đóng
                                     </button>
-                                    <form action="{{ route("admintrafficbot.licensetype.delete", ["ID" => $licensetype->LicenseTypeID ]) }}"
+                                    <form
+                                        action="{{ route("admintrafficbot.licensetype.delete", ["ID" => $licensetype->LicenseTypeID]) }}"
                                         method="post">
                                         @csrf
                                         @method("DELETE")
@@ -408,7 +533,7 @@
                 position: "topRight"
             })
         @endif
-    
+
 
 
     </script>

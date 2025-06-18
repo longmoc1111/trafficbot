@@ -6,6 +6,7 @@
             enctype="multipart/form-data">
             @csrf
             @method("PUT")
+            <input type="text" name = "redirect-back" hidden value = "{{ url()->current() }}">
             <!-- Page Title Start -->
             <div class="flex items-center md:justify-between flex-wrap gap-2 mb-6">
                 <h4 class="text-default-900 text-lg font-medium mb-2"></h4>

@@ -15,6 +15,9 @@ return new class extends Migration
             $table->id("LicenseTypeID");
             $table->string("LicenseTypeName");
             $table->text("LicenseTypeDescription")->nullable();
+            $table->integer("LicenseTypeDuration");
+            $table->integer("LicenseTypeQuantity");
+            $table->integer("LicenseTypePassCount");
             $table->timestamps();
         });
     }

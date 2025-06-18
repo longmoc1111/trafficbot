@@ -89,7 +89,7 @@
                                                     </td>
 
                                                     <td class="px-6 py-4 whitespace-nowrap text-sm text-default-800">
-                                                        {{ count($exam->question_Examset) }}/25
+                                                        {{ count($exam->question_Examset) }}/
                                                     </td>
                                                     <td
                                                         class="px-6 py-4 whitespace-nowrap text-end text-sm font-medium flex justify-end gap-x-2">

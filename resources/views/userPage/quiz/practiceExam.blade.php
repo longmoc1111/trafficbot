@@ -3,20 +3,20 @@
 
 @section("main")
     <!-- About Start -->
-<!-- 
+
      <div class="container-lg mt-4 mb-3" style="box-shadow: 0 0 45px rgba(0, 0, 0, .06)">
         <div class="row g-0">
             <div class="col-lg-12 wow fadeIn" data-wow-delay="0.5s">
                 <div class="bg-white rounded-top p-5">
                      <h1 class="display-6"><strong>Thi thử lý thuyết hạng {{ $lastWordA }}</strong></h1>
                     <div class="mb-2">
-                        <p class="mb-2">Cấu trúc đề thi sát hạch giấy phép lái xe hạng {{ $lastWordA }} bao gồm 25 câu hỏi, mỗi câu hỏi
+                        <p class="mb-2">Cấu trúc đề thi sát hạch giấy phép lái xe hạng {{ $lastWordA }} bao gồm {{ $license->LicenseTypeQuantity }} câu hỏi, mỗi câu hỏi
                             chỉ có duy nhất một câu trả lời đúng.</p>
                         <h5>Bao gồm</h5>
                         <ul>
-                            <li>số lượng câu hỏi: <strong style = "color:#ff0000" > câu</strong></li>
-                            <li>yêu cầu : <strong style = "color:#ff0000" >đúng 21/25 câu</strong> </li>
-                            <li>Thời gian: <strong style = "color:#ff0000" >19 phút</strong> </li>
+                            <li>số lượng câu hỏi: <strong style = "color:#ff0000" >{{ $license->LicenseTypeQuantity }}  câu </strong></li>
+                            <li>yêu cầu : <strong style = "color:#ff0000" >đúng {{ $license->LicenseTypePassCount }}/{{ $license->LicenseTypeQuantity }} câu</strong> </li>
+                            <li>Thời gian: <strong style = "color:#ff0000" >{{ $license->LicenseTypeDuration }} phút</strong> </li>
                         </ul>
                     </div>
                     <p class="mb-4">
@@ -29,7 +29,7 @@
                 </div>
             </div>
         </div>
-    </div> -->
+    </div>
 
 
     <!-- About End -->
@@ -52,7 +52,7 @@
 
                         <!-- Ví dụ: 15 thẻ -->
                         @foreach ($examSets as $examSet)
-                            <a href="{{ route("userpage.practiceStart", ["licenseID"=>$licenseID,"examsetID" => $examSet->ExamSetID]) }}" class="col-2" style="text-decoration:none">
+                            <a href="{{ route("userpage.practiceStart", ["licenseID"=>$license,"examsetID" => $examSet->ExamSetID]) }}" class="col-2" style="text-decoration:none">
                                 <div class="testimonial-item rounded text-center p-2">
                                 
                                     <p style="color:rgb(43, 39, 39);text-decoration:none" class="small mb-1">{{ $examSet->ExamSetName}}</p>

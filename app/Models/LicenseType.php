@@ -10,7 +10,7 @@ use App\Models\ExamResult;
 
 class LicenseType extends Model
 {
-    public $fillable = ["LicenseTypeID","LicenseTypeName","LicenseTypeDescription"];
+    public $fillable = ["LicenseTypeID","LicenseTypeName","LicenseTypeDescription","LicenseTypeDuration","LicenseTypeQuantity","LicenseTypePassCount"];
     protected $primaryKey = "LicenseTypeID";
     
     public function examset_LicenseType(){

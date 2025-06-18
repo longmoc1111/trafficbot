@@ -39,7 +39,7 @@ class QuestionController extends Controller
         } else {
             $Questions = Question::where("QuestionName", "like", "%" . $key . "%")
                 ->paginate(10)->appends(request()->query());
-            return view("admin.questionManagement.question.listQuestion", compact("Questions", "questionCategory","categoryKey"));
+            return view("admin.questionManagement.question.listQuestion", compact("Questions", "questionCategory", "categoryKey"));
         }
 
 
@@ -275,97 +275,126 @@ class QuestionController extends Controller
     }
     public function storeQuestion_ExamSet(string $id, Request $request)
     {
-    
-    // dd($request->all());
-    $amounts = $request->input('amounts', []);
-    $questionIdToAttach = [];
-   foreach($amounts as $categoryID => $count){
-    $questions = Question::where("CategoryID", $categoryID)
+
+        // dd($request->all());
+        $licenseTypeID = $request->get("licenseTypeID");
+        $licenseType = LicenseType::find($licenseTypeID);
+        $quantity = $licenseType->LicenseTypeQuantity;
+        ;
+        $countQuestion = 0;
+        $amounts = $request->input('amounts', []);
+        foreach ($amounts as $index => $item) {
+            $countQuestion += $item;
+        }
+            if ($countQuestion != $quantity - 1) {
+                return back()->withErrors(["quantity_error" => "Bộ đề yêu cầu số lượng $quantity câu hỏi!"]);
+            }else if($countQuestion == $quantity){
+                return back()->withErrors(["quantity_error" => "Số lượng câu hỏi đã đủ $quantity câu!"]);
+            }
+        $questionIdToAttach = [];
+        foreach ($amounts as $categoryID => $count) {
+            $questions = Question::where("CategoryID", $categoryID)
+                ->where("IsCritical", "!=", 1)
+                ->whereHas("licenseType_Question", function ($query) use ($licenseTypeID) {
+                    $query->where('question_license_types.LicenseTypeID', $licenseTypeID);
+                })
+                ->whereDoesntHave("examSet_Question")
                 ->inRandomOrder()
                 ->limit($count)
-                ->pluck("QuestionID ")
+                ->pluck("QuestionID")
                 ->toArray();
-    $questionIdToAttach = array_merge($questionIdToAttach, $questions);
-   }
-   $examset = ExamSet::find($id);
-   if($examset){
-   $examset->question_Examset()->syncWithoutDetaching($questionIdToAttach);
-      return redirect()->route("admintrafficbot.examset.show", $examset->ExamSetID)->with("create_success", "Tạo danh sách câu hỏi mới thành công!");
-   }else{
-      return redirect()->route("admintrafficbot.examset.show", $examset->ExamSetID)->with("create_fails", "Tạo danh sách câu hỏi Không thành công!");
+            $questionIdToAttach = array_merge($questionIdToAttach, $questions);
+        }
 
-   }
+        $IsCritical = Question::where("IsCritical", 1)
+                    ->whereHas("licenseType_Question", function($query) use ($licenseTypeID){
+                    $query->where("question_license_types.LicenseTypeID", $licenseTypeID);
+                 })
+                 ->whereDoesntHave("examSet_Question")
+                 ->inRandomOrder()
+                 ->first();
+        // dd($IsCritical);
+        $randomIndex = rand(0, count($questionIdToAttach));
+        array_splice($questionIdToAttach, $randomIndex, 0, [$IsCritical->QuestionID]);
+        $examset = ExamSet::find($id);
+        if ($examset) {
+            $examset->question_Examset()->syncWithoutDetaching($questionIdToAttach);
+            return redirect()->route("admintrafficbot.examset.show", $examset->ExamSetID)->with("create_success", "Tạo danh sách câu hỏi mới thành công!");
+        } else {
+            return redirect()->route("admintrafficbot.examset.show", $examset->ExamSetID)->with("create_fails", "Tạo danh sách câu hỏi Không thành công!");
 
-
-    //     $validateData = $request->validate(
-    //         [
-    //             "QuestionName" => "required",
-    //             "QuestionExplain" => "required",
-    //             "IsCritical" => "required",
-    //             "CategoryID" => "required",
-    //         ],
-    //         [
-    //             "QuestionName.required" => "Không được để trống !",
-    //             "QuestionExplain.required" => "Không được để trống!",
-    //         ]
-    //     );
-    //     $answers = $request->get('Answers'); // Mảng các đáp án
-    //     $isCorrectIndex = $request->get('IsCorrectIndex'); // Chỉ 1 index hoặc null nếu không có
-    //     if ($isCorrectIndex == null) {
-    //         return back()->with("iscorrect_null", "bạn chưa chọn đáp án đúng cho câu hỏi!");
-    //     }
-    //     $validAnswers = array_filter($answers, function ($value) {
-    //         return !is_null($value) && trim($value) !== '';
-    //     });
-    //     if (empty($validAnswers)) {
-    //         return back()->with("answer_null", "Hãy tạo ít nhất 1 câu trả lời!");
-    //     }
-    //     foreach ($answers as $index => $answerName) {
-    //         $answerFromRequest[] = [
-    //             'AnswerName' => $answerName,
-    //             'IsCorrect' => ($isCorrectIndex !== null && intval($isCorrectIndex) === $index),
-    //         ];
-    //     }
-    //     if ($request->hasFile("ImageDescription")) {
-    //         $file = $request->file("ImageDescription");
-    //         $fileNameWithoutExt = pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME);
-    //         $fileNameExt = $file->getClientOriginalExtension();
-    //         $newFileName = $fileNameWithoutExt . "_" . time() . "." . $fileNameExt;
-    //         $file->move(public_path("assets/adminPage/imageQuestion"), $newFileName);
-    //         $validateData["ImageDescription"] = $newFileName;
-    //     }
-    //     $question = Question::create([
-    //         "QuestionName" => $validateData["QuestionName"],
-    //         "QuestionExplain" => $validateData["QuestionExplain"],
-    //         "IsCritical" => $validateData["IsCritical"],
-    //         "CategoryID" => $validateData["CategoryID"],
-    //         "ImageDescription" => $validateData["ImageDescription"] ?? null,
-
-    //     ]);
+        }
 
 
-    //     $examSet = ExamSet::find($id);
-    //     $licenseType = (array) $request->get("LicenseTypeID");
-    //     if (isset($examSet)) {
-    //         $question->examSet_Question()->attach($examSet->ExamSetID);
-    //     }
-    //     if (isset($licenseType)) {
-    //         $question->licenseType_Question()->attach($licenseType);
-    //     }
+        //     $validateData = $request->validate(
+        //         [
+        //             "QuestionName" => "required",
+        //             "QuestionExplain" => "required",
+        //             "IsCritical" => "required",
+        //             "CategoryID" => "required",
+        //         ],
+        //         [
+        //             "QuestionName.required" => "Không được để trống !",
+        //             "QuestionExplain.required" => "Không được để trống!",
+        //         ]
+        //     );
+        //     $answers = $request->get('Answers'); // Mảng các đáp án
+        //     $isCorrectIndex = $request->get('IsCorrectIndex'); // Chỉ 1 index hoặc null nếu không có
+        //     if ($isCorrectIndex == null) {
+        //         return back()->with("iscorrect_null", "bạn chưa chọn đáp án đúng cho câu hỏi!");
+        //     }
+        //     $validAnswers = array_filter($answers, function ($value) {
+        //         return !is_null($value) && trim($value) !== '';
+        //     });
+        //     if (empty($validAnswers)) {
+        //         return back()->with("answer_null", "Hãy tạo ít nhất 1 câu trả lời!");
+        //     }
+        //     foreach ($answers as $index => $answerName) {
+        //         $answerFromRequest[] = [
+        //             'AnswerName' => $answerName,
+        //             'IsCorrect' => ($isCorrectIndex !== null && intval($isCorrectIndex) === $index),
+        //         ];
+        //     }
+        //     if ($request->hasFile("ImageDescription")) {
+        //         $file = $request->file("ImageDescription");
+        //         $fileNameWithoutExt = pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME);
+        //         $fileNameExt = $file->getClientOriginalExtension();
+        //         $newFileName = $fileNameWithoutExt . "_" . time() . "." . $fileNameExt;
+        //         $file->move(public_path("assets/adminPage/imageQuestion"), $newFileName);
+        //         $validateData["ImageDescription"] = $newFileName;
+        //     }
+        //     $question = Question::create([
+        //         "QuestionName" => $validateData["QuestionName"],
+        //         "QuestionExplain" => $validateData["QuestionExplain"],
+        //         "IsCritical" => $validateData["IsCritical"],
+        //         "CategoryID" => $validateData["CategoryID"],
+        //         "ImageDescription" => $validateData["ImageDescription"] ?? null,
 
-    //     $answerFilter = array_filter($answerFromRequest, function ($value) {
-    //         return !is_null($value) && $value["AnswerName"] != null;
-    //     });
-    //     $labels = ["A", "B", "C", "D"];
-    //     $labelForQS = array_slice($labels, 0, count($answerFilter));
-    //     foreach ($answerFilter as $index => $data) {
-    //         Answer::create([
-    //             "AnswerName" => $data["AnswerName"],
-    //             "IsCorrect" => $data["IsCorrect"],
-    //             "AnswerLabel" => $labelForQS[$index],
-    //             "QuestionID" => $question->QuestionID,
-    //         ]);
-    //     }
-    //     return redirect()->route("admintrafficbot.examset.show", $examSet->ExamSetID)->with("add_question_success", "thêm mới câu hỏi cho $examSet->ExamSetName thành công !");
+        //     ]);
+
+
+        //     $examSet = ExamSet::find($id);
+        //     $licenseType = (array) $request->get("LicenseTypeID");
+        //     if (isset($examSet)) {
+        //         $question->examSet_Question()->attach($examSet->ExamSetID);
+        //     }
+        //     if (isset($licenseType)) {
+        //         $question->licenseType_Question()->attach($licenseType);
+        //     }
+
+        //     $answerFilter = array_filter($answerFromRequest, function ($value) {
+        //         return !is_null($value) && $value["AnswerName"] != null;
+        //     });
+        //     $labels = ["A", "B", "C", "D"];
+        //     $labelForQS = array_slice($labels, 0, count($answerFilter));
+        //     foreach ($answerFilter as $index => $data) {
+        //         Answer::create([
+        //             "AnswerName" => $data["AnswerName"],
+        //             "IsCorrect" => $data["IsCorrect"],
+        //             "AnswerLabel" => $labelForQS[$index],
+        //             "QuestionID" => $question->QuestionID,
+        //         ]);
+        //     }
+        //     return redirect()->route("admintrafficbot.examset.show", $examSet->ExamSetID)->with("add_question_success", "thêm mới câu hỏi cho $examSet->ExamSetName thành công !");
     }
 }
