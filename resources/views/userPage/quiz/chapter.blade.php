@@ -1,5 +1,5 @@
 @extends("userPage.layout.layout")
-@section("title", "thi thử bằng ")
+@section("title", "Ôn tập")
 
 @section("main")
     <!-- About Start -->
@@ -55,10 +55,10 @@
         }
 
         /* .selected-question {
-                                                background-color: #DCFCE7;
-                                                color: black !important;
-                                                border-color: #4ade80;
-                                            } */
+                                                            background-color: #DCFCE7;
+                                                            color: black !important;
+                                                            border-color: #4ade80;
+                                                        } */
 
         .index-question.correct {
             background-color: #DCFCE7;
@@ -145,6 +145,17 @@
         }
 
 
+        .service-item img {
+            display: block;
+            margin: 0 auto;
+            min-width: 150px;
+            min-height: 150px;
+            max-width: 100%;
+            object-fit: contain;
+        }
+
+
+
 
         /*  */
     </style>
@@ -158,8 +169,8 @@
 
     <!-- practice Start -->
     <!-- <div class="text-center mb-4">
-                                                                                                <button id="start-btn" class="btn btn-success">Bắt đầu làm bài</button>
-                                                                                            </div> -->
+                                                                                                            <button id="start-btn" class="btn btn-success">Bắt đầu làm bài</button>
+                                                                                                        </div> -->
 
     <div class="container-lg mt-5 mb-5 " id="exam-section" style="box-shadow: 0 0 45px rgba(0, 0, 0, .06)">
 
@@ -196,7 +207,7 @@
                                 <div class="col-2 col-sm-1 col-md-3  col-lg-2">
                                     <a href="#" style="color:rgb(43, 39, 39); border-color:red" class="question-btn small"
                                         data-question="{{ $index + 1 }}" data-id={{ $question->QuestionID }}
-                                        data-explanation="{{ $question->QuestionExplain }}"
+                                        data-explanation="{{ $question->QuestionExplain }}" data-img="{{ $question->ImageDescription }}"
                                         data-content="{{ $question->QuestionName }}" data-a-id="{{ $answers['A_ID'] ?? ''  }}"
                                         data-b-id="{{ $answers['B_ID'] ?? '' }}" data-c-id="{{ $answers['C_ID'] ?? ''  }}"
                                         data-d-id="{{ $answers['D_ID'] ?? ''  }}" data-a-name="{{ $answers['A_NAME'] ?? ''  }}"
@@ -228,6 +239,11 @@
                             <h6 id="question-title" class="me-2 mb-0"></h6>
                             <p id="question-content" class="mb-0 mt-1"></p>
                         </div>
+                        <div id="div-image"
+                            class="mt-2 d-flex align-items-center align-items-start mb-2 answer-item d-none">
+                            <img id="question-image" src="" alt="">
+                        </div>
+
 
                         <div class="mt-2">
                             @foreach ($labels as $label)
@@ -280,6 +296,8 @@
         const content = document.getElementById("question-content")
         const prevButton = document.getElementById("prevButton");
         const nextButton = document.getElementById("nextButton");
+        const image = document.getElementById("question-image")
+        const divImage = document.getElementById("div-image")
 
 
         //hàm hiển thị đáp án
@@ -303,8 +321,17 @@
         function updateQuestionDisplay(buttonElement) {
             const numberQS = buttonElement.dataset.question
             const contentQS = buttonElement.dataset.content
+            const imageSrc = buttonElement.dataset.img;
             console.log(numberQS)
             title.innerText = `Câu ${numberQS} : ${contentQS} `
+            if (imageSrc) {
+
+                image.src = imageSrc;
+                divImage.classList.remove("d-none")
+            } else {
+                image.src = ""
+                divImage.classList.add("d-none")
+            }
             // content.innerText = 
         }
         function getCorrectAnswer(buttonELement) {

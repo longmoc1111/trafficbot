@@ -12,7 +12,13 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('exam_results', function (Blueprint $table) {
-            $table->id();
+            $table->id("ResultID");
+            $table->unsignedBigInteger("userID");
+            $table->unsignedBigInteger("LicenseTypeID");
+            $table->float("score");
+            $table->boolean("passed");
+            $table->foreign("userID")->references("userID")->on("users");
+            $table->foreign("LicenseTypeID")->references("LicenseTypeID")->on("license_types");
             $table->timestamps();
         });
     }

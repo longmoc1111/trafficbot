@@ -1,388 +1,250 @@
 @extends("admin.adminPageLayout.layout")
+@section("title", "Bảng điều khiển")
 @section("main")
 
-   <main>
 
-                <!-- Page Title Start -->
-                <div class="flex items-center md:justify-between flex-wrap gap-2 mb-6">
-                    <h4 class="text-default-900 text-lg font-medium mb-2">Dashboard</h4>
+    <main>
 
-                    <div class="md:flex hidden items-center gap-3 text-sm font-semibold">
-                        <a href="#" class="text-sm font-medium text-default-700">OpenDash</a>
-                        <i class="material-symbols-rounded text-xl flex-shrink-0 text-default-500">chevron_right</i>
-                        <a href="#" class="text-sm font-medium text-default-700">Menu</a>
-                        <i class="material-symbols-rounded text-xl flex-shrink-0 text-default-500">chevron_right</i>
-                        <a href="#" class="text-sm font-medium text-default-700" aria-current="page">Dashboard</a>
-                    </div>
-                </div>
-                <!-- Page Title End -->
-<!-- 
-                <div class="grid xl:grid-cols-3 md:grid-cols-2 gap-6 mb-6">
-                    <div class="card group overflow-hidden transition-all duration-500 hover:shadow-lg hover:-translate-y-0.5">
-                        <div class="card-body">
-                            <div class="flex items- justify-between">
-                                <div>
-                                    <p class="text-base mb-1">Total Order</p>
-                                    <h4 class="text-xl">2415</h4>
-                                </div>
+        <!-- Page Title Start -->
+        <div class="flex items-center md:justify-between flex-wrap gap-2 mb-6">
+            <h4 class="text-default-900 text-lg font-medium mb-2">Bảng điều khiển</h4>
 
-                                <div
-                                    class="rounded-lg flex justify-center items-center size-16 bg-success/10 text-success">
-                                    <i
-                                        class="material-symbols-rounded text-4xl transition-all group-hover:fill-1">shopping_bag</i>
-                                </div>
-                            </div>
-                        </div>
-                        <div id="total-order"></div>
-                    </div>
-                    
-                    <div class="card group overflow-hidden transition-all duration-500 hover:shadow-lg hover:-translate-y-0.5">
-                        <div class="card-body">
-                            <div class="flex items- justify-between">
-                                <div>
-                                    <p class="text-base mb-1">Total Sale</p>
-                                    <h4 class="text-xl">$78.5K</h4>
-                                </div>
+            <!-- <div class="md:flex hidden items-center gap-3 text-sm font-semibold">
+                            <a href="#" class="text-sm font-medium text-default-700">OpenDash</a>
+                            <i class="material-symbols-rounded text-xl flex-shrink-0 text-default-500">chevron_right</i>
+                            <a href="#" class="text-sm font-medium text-default-700">Menu</a>
+                            <i class="material-symbols-rounded text-xl flex-shrink-0 text-default-500">chevron_right</i>
+                            <a href="#" class="text-sm font-medium text-default-700" aria-current="page">Dashboard</a>
+                        </div> -->
+        </div>
+        <!-- Page Title End -->
+        <!-- 
+                    <div class="grid xl:grid-cols-3 md:grid-cols-2 gap-6 mb-6">
+                        <div class="card group overflow-hidden transition-all duration-500 hover:shadow-lg hover:-translate-y-0.5">
+                            <div class="card-body">
+                                <div class="flex items- justify-between">
+                                    <div>
+                                        <p class="text-base mb-1">Total Order</p>
+                                        <h4 class="text-xl">2415</h4>
+                                    </div>
 
-                                <div
-                                    class="rounded-lg flex justify-center items-center size-16 bg-primary/10 text-primary">
-                                    <i
-                                        class="material-symbols-rounded text-4xl transition-all group-hover:fill-1">payments</i>
+                                    <div
+                                        class="rounded-lg flex justify-center items-center size-16 bg-success/10 text-success">
+                                        <i
+                                            class="material-symbols-rounded text-4xl transition-all group-hover:fill-1">shopping_bag</i>
+                                    </div>
                                 </div>
                             </div>
+                            <div id="total-order"></div>
                         </div>
-                        <div id="total-sale"></div>
-                    </div>
 
-                    <div class="card group overflow-hidden transition-all duration-500 hover:shadow-lg hover:-translate-y-0.5">
-                        <div class="card-body">
-                            <div class="flex items- justify-between">
-                                <div>
-                                    <p class="text-base mb-1">Total Visits</p>
-                                    <h4 class="text-xl">145.2K</h4>
-                                </div>
+                        <div class="card group overflow-hidden transition-all duration-500 hover:shadow-lg hover:-translate-y-0.5">
+                            <div class="card-body">
+                                <div class="flex items- justify-between">
+                                    <div>
+                                        <p class="text-base mb-1">Total Sale</p>
+                                        <h4 class="text-xl">$78.5K</h4>
+                                    </div>
 
-                                <div class="rounded-lg flex justify-center items-center size-16 bg-info/10 text-info">
-                                    <i
-                                        class="material-symbols-rounded text-4xl transition-all group-hover:fill-1">visibility</i>
+                                    <div
+                                        class="rounded-lg flex justify-center items-center size-16 bg-primary/10 text-primary">
+                                        <i
+                                            class="material-symbols-rounded text-4xl transition-all group-hover:fill-1">payments</i>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
-                        <div id="total-visits"></div>
-                    </div>
-                </div> -->
-
-                <div class="">
-                    <!-- <div class="card">
-                        <div class="card-header flex justify-between items-center">
-                            <h4 class="card-title">Last Month Sales</h4>
-                            <a href="#!" class="btn btn-sm bg-light !text-sm text-gray-800 ">Export</a>
+                            <div id="total-sale"></div>
                         </div>
 
-                        <div class="card-body">
-                            <div id="month-sales-chart" class="apex-charts"></div>
-                        </div>
+                        <div class="card group overflow-hidden transition-all duration-500 hover:shadow-lg hover:-translate-y-0.5">
+                            <div class="card-body">
+                                <div class="flex items- justify-between">
+                                    <div>
+                                        <p class="text-base mb-1">Total Visits</p>
+                                        <h4 class="text-xl">145.2K</h4>
+                                    </div>
 
-                        <div class="border-t border-default-200 border-dashed card-body">
-                            <div class="flex items-center justify-center gap-3">
-                                <div class="flex items-center gap-1">
-                                    <div class="size-3 rounded-full bg-primary"></div>
-                                    <p class="text-sm text-default-700">Online</p>
-                                </div>
-
-                                <div class="flex items-center gap-1">
-                                    <div class="size-3 rounded-full bg-danger"></div>
-                                    <p class="text-sm text-default-700">Offlne</p>
-                                </div>
-
-                                <div class="flex items-center gap-1">
-                                    <div class="size-3 rounded-full bg-info"></div>
-                                    <p class="text-sm text-default-700">Retail</p>
+                                    <div class="rounded-lg flex justify-center items-center size-16 bg-info/10 text-info">
+                                        <i
+                                            class="material-symbols-rounded text-4xl transition-all group-hover:fill-1">visibility</i>
+                                    </div>
                                 </div>
                             </div>
+                            <div id="total-visits"></div>
                         </div>
                     </div> -->
 
-                    <div class="xl:col-span-2">
-                        <div class="card">
-                            <div class="card-header">
-                                <h5 class="text-base">Revenue</h5>
+        <div class="grid xl:grid-cols-3 md:grid-cols-2 gap-6 mb-6">
+            <div class="card">
+                <div class="card-header flex justify-between items-center">
+                    <h4 class="card-title">Tổng số lượng đạt - không đạt</h4>
+                    <!-- <a href="#!" class="btn btn-sm bg-light !text-sm text-gray-800 ">Export</a> -->
+                </div>
+
+                <div class="card-body">
+                    <div id="month-sales-chart" class="apex-charts"></div>
+                </div>
+
+                <div class="border-t border-default-200 border-dashed card-body">
+                    <div class="flex items-center justify-center gap-3">
+                        <div class="flex items-center gap-1">
+                            <div class="size-3 rounded-full" style="background-color:#22c55e;"></div>
+                            <p class="text-sm text-default-700">đạt</p>
+                        </div>
+
+                        <div class="flex items-center gap-1">
+                            <div class="size-3 rounded-full bg-danger" style="background-color:#fa5944;"></div>
+                            <p class="text-sm text-default-700">không đạt</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="xl:col-span-2">
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="text-base">Số lượng người thi trong tháng</h5>
+                    </div>
+                    <div class="card-body">
+                        <div id="revenue-chart" class="apex-charts"></div>
+                    </div>
+                </div>
+            </div>
+
+
+        </div>
+
+
+        <div class="grid xl:grid-cols-12 md:grid-cols-12 gap-6 mb-6">
+
+            <div class="card overflow-hidden">
+                <div class="card-header flex justify-between items-center">
+                    <h4 class="card-title">Danh sách thi</h4>
+                </div>
+
+                <div class="overflow-x-auto custom-scroll">
+                    <div class="min-w-full inline-block align-middle whitespace-nowrap">
+                        <div class="overflow-hidden">
+                            <table class="min-w-full">
+                                <thead class="bg-light/40 border-b border-gray-200">
+                                    <tr>
+                                        <th class="px-6 py-3 text-start">Tên</th>
+                                        <th class="px-6 py-3 text-start">Giấy phép</th>
+                                        <th class="px-6 py-3 text-start">Thời gian thi</th>
+                                        <th class="px-6 py-3 text-start">Điểm</th>
+                                        <th class="px-6 py-3 text-start">Kết quả</th>
+
+                                    </tr>
+                                </thead>
+                                <tbody>
+
+                                    @foreach($results as $result)
+                                        <tr class="border-b border-gray-200">
+                                            <td class="px-6 py-3">{{ optional($result->user_Result)->name ?? 'Khách' }}</td>
+                                            <td class="px-6 py-3">
+                                                {{ optional($result->licenseType_Result)->LicenseTypeName ?? '' }}</td>
+                                            <td class="px-6 py-3">{{ gmdate("i:s", $result->duration) }}</td>
+                                            <td class="px-6 py-3">{{ $result->score }}</td>
+                                            <td class="px-6 py-3">
+
+                                                @if($result->passed == true)
+                                                    <span class="px-2 py-1 bg-success/10 text-success text-xs rounded">đạt</span>
+                                                @else
+                                                    <span class="px-2 py-1 bg-red-100 text-red-500 text-xs rounded"
+                                                        style="white-space:nowrap">Không đạt</span>
+                                                @endif
+                                            </td>
+
+                                        </tr>
+                                    @endforeach
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="flex items-center justify-between border-t border-gray-200 bg-white px-4 py-3 sm:px-6">
+                            <!-- Showing -->
+                            <div>
+                                <p class="text-sm text-gray-700">
+                                    <span class="font-medium">{{ $results->firstItem() }}</span>
+                                    ->
+                                    <span class="font-medium">{{ $results->lastItem() }}</span>
+                                    of
+                                    <span class="font-medium">{{ $results->total() }}</span>
+                                </p>
                             </div>
-                            <div class="card-body">
-                                <div id="revenue-chart" class="apex-charts"></div>
+
+                            <!-- Pagination -->
+                            <div class="flex flex-wrap items-center gap-1">
+                                {{-- Previous Page --}}
+                                @if ($results->onFirstPage())
+                                    <span
+                                        class="px-3 py-1 text-gray-400 bg-gray-100 rounded border border-gray-300">Trước</span>
+                                @else
+                                    <a href="{{ $results->previousPageUrl() }}"
+                                        class="px-3 py-1 text-gray-700 bg-white rounded border border-gray-300 hover:bg-gray-50">Trước</a>
+                                @endif
+
+                                {{-- Page Numbers --}}
+                                @php
+                                    $start = max($results->currentPage() - 2, 1);
+                                    $end = min($results->currentPage() + 2, $results->lastPage());
+                                @endphp
+
+                                {{-- First Page Link --}}
+                                @if ($start > 1)
+                                    <a href="{{ $results->url(1) }}"
+                                        class="px-3 py-1 text-gray-700 bg-white rounded border border-gray-300 hover:bg-gray-50">1</a>
+                                    @if ($start > 2)
+                                        <span class="px-2 text-gray-500">...</span>
+                                    @endif
+                                @endif
+
+                                {{-- Page Links --}}
+                                @for ($page = $start; $page <= $end; $page++)
+                                    @if ($page == $results->currentPage())
+                                        <span
+                                            class="px-3 py-1 bg-primary/25 text-primary rounded border border-indigo-600">{{ $page }}</span>
+                                    @else
+                                        <a href="{{ $results->url($page) }}"
+                                            class="px-3 py-1 text-gray-700 bg-white rounded border border-gray-300 hover:bg-gray-50">{{ $page }}</a>
+                                    @endif
+                                @endfor
+
+                                {{-- Last Page Link --}}
+                                @if ($end < $results->lastPage())
+                                    @if ($end < $results->lastPage() - 1)
+                                        <span class="px-2 text-gray-500">...</span>
+                                    @endif
+                                    <a href="{{ $results->url($results->lastPage()) }}"
+                                        class="px-3 py-1 text-gray-700 bg-white rounded border border-gray-300 hover:bg-gray-50">{{ $results->lastPage() }}</a>
+                                @endif
+
+                                {{-- Next Page --}}
+                                @if ($results->hasMorePages())
+                                    <a href="{{ $results->nextPageUrl() }}"
+                                        class="px-3 py-1 text-gray-700 bg-white rounded border border-gray-300 hover:bg-gray-50">Sau</a>
+                                @else
+                                    <span class="px-3 py-1 text-gray-400 bg-gray-100 rounded border border-gray-300">Sau</span>
+                                @endif
                             </div>
                         </div>
                     </div>
-
-
                 </div>
-<!-- 
-                <div class="grid xl:grid-cols-2 gap-6">
+            </div>
+        </div>
+    </main>
 
-                    <div class="card overflow-hidden">
-                        <div class="card-header flex justify-between items-center">
-                            <h4 class="card-title">Recent Buyers</h4>
-                            <a href="#!" class="btn btn-sm bg-light !text-sm text-gray-800 ">Export</a>
-                        </div>
-
-                        <div class="overflow-x-auto custom-scroll">
-                            <div class="min-w-full inline-block align-middle whitespace-nowrap">
-                                <div class="overflow-hidden">
-                                    <table class="min-w-full">
-                                        <thead class="bg-light/40 border-b border-gray-200">
-                                            <tr>
-                                                <th class="px-6 py-3 text-start">Product</th>
-                                                <th class="px-6 py-3 text-start">Customers</th>
-                                                <th class="px-6 py-3 text-start">Categories</th>
-                                                <th class="px-6 py-3 text-start">Popularity</th>
-                                                <th class="px-6 py-3 text-start">Amount</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            <tr class="border-b border-gray-200">
-                                                <td class="px-6 py-3">iPhone X</td>
-                                                <td class="px-6 py-3">Tiffany W. Yang</td>
-                                                <td class="px-6 py-3">
-                                                    <span
-                                                        class="px-2 py-1 bg-success/10 text-success text-xs rounded">Mobile</span>
-                                                </td>
-                                                <td class="px-6 py-3">
-                                                    <div
-                                                        class="flex w-full h-1.5 bg-light rounded-full overflow-hidden">
-                                                        <div class="progress-bar progress-bar-striped bg-success"
-                                                            role="progressbar" aria-valuenow="85" aria-valuemin="20"
-                                                            aria-valuemax="100" style="width:85%"></div>
-                                                    </div>
-                                                </td>
-                                                <td class="px-6 py-3">$ 1200.00</td>
-                                            </tr>
-                                            <tr class="border-b border-gray-200">
-                                                <td class="px-6 py-3">iPad</td>
-                                                <td class="px-6 py-3">Dale P. Warman</td>
-                                                <td class="px-6 py-3">
-                                                    <span
-                                                        class="px-2 py-1 bg-success/10 text-success text-xs rounded">Tablet</span>
-                                                </td>
-                                                <td class="px-6 py-3">
-                                                    <div
-                                                        class="flex w-full h-1.5 bg-light rounded-full overflow-hidden">
-                                                        <div class="progress-bar progress-bar-striped bg-success"
-                                                            role="progressbar" aria-valuenow="72" aria-valuemin="20"
-                                                            aria-valuemax="100" style="width:72%"></div>
-                                                    </div>
-                                                </td>
-                                                <td class="px-6 py-3">$ 1190.00</td>
-                                            </tr>
-                                            <tr class="border-b border-gray-200">
-                                                <td class="px-6 py-3">OnePlus</td>
-                                                <td class="px-6 py-3">Garth J. Terry</td>
-                                                <td class="px-6 py-3">
-                                                    <span
-                                                        class="px-2 py-1 bg-success/10 text-success text-xs rounded">Electronics</span>
-                                                </td>
-                                                <td class="px-6 py-3">
-                                                    <div
-                                                        class="flex w-full h-1.5 bg-light rounded-full overflow-hidden">
-                                                        <div class="progress-bar progress-bar-striped bg-success"
-                                                            role="progressbar" aria-valuenow="43" aria-valuemin="20"
-                                                            aria-valuemax="100" style="width:43%"></div>
-                                                    </div>
-                                                </td>
-                                                <td class="px-6 py-3">$ 999.00</td>
-                                            </tr>
-                                            <tr class="border-b border-gray-200">
-                                                <td class="px-6 py-3">ZenPad</td>
-                                                <td class="px-6 py-3">Marilyn D. Bailey</td>
-                                                <td class="px-6 py-3">
-                                                    <span
-                                                        class="px-2 py-1 bg-success/10 text-success text-xs rounded">Cosmetics</span>
-                                                </td>
-                                                <td class="px-6 py-3">
-                                                    <div
-                                                        class="flex w-full h-1.5 bg-light rounded-full overflow-hidden">
-                                                        <div class="progress-bar progress-bar-striped bg-success"
-                                                            role="progressbar" aria-valuenow="37" aria-valuemin="20"
-                                                            aria-valuemax="100" style="width:37%"></div>
-                                                    </div>
-                                                </td>
-                                                <td class="px-6 py-3">$ 1150.00</td>
-                                            </tr>
-                                            <tr class="border-b border-gray-200">
-                                                <td class="px-6 py-3">Pixel 2</td>
-                                                <td class="px-6 py-3">Denise R. Vaughan</td>
-                                                <td class="px-6 py-3">
-                                                    <span
-                                                        class="px-2 py-1 bg-success/10 text-success text-xs rounded">Appliences</span>
-                                                </td>
-                                                <td class="px-6 py-3">
-                                                    <div
-                                                        class="flex w-full h-1.5 bg-light rounded-full overflow-hidden">
-                                                        <div class="progress-bar progress-bar-striped bg-success"
-                                                            role="progressbar" aria-valuenow="82" aria-valuemin="20"
-                                                            aria-valuemax="100" style="width:82%"></div>
-                                                    </div>
-                                                </td>
-                                                <td class="px-6 py-3">$ 1180.00</td>
-                                            </tr>
-                                            <tr>
-                                                <td class="px-6 py-3">Pixel 2</td>
-                                                <td class="px-6 py-3">Jeffery R. Wilson</td>
-                                                <td class="px-6 py-3">
-                                                    <span
-                                                        class="px-2 py-1 bg-success/10 text-success text-xs rounded">Mobile</span>
-                                                </td>
-                                                <td class="px-6 py-3">
-                                                    <div
-                                                        class="flex w-full h-1.5 bg-light rounded-full overflow-hidden">
-                                                        <div class="progress-bar progress-bar-striped bg-success"
-                                                            role="progressbar" aria-valuenow="36" aria-valuemin="20"
-                                                            aria-valuemax="100" style="width:36%"></div>
-                                                    </div>
-                                                </td>
-                                                <td class="px-6 py-3">$ 1180.00</td>
-                                            </tr>
-                                        </tbody>
-                                    </table>
-                                </div>
-                            </div>
-                        </div>
-                    </div> 
-
-                    <div class="card overflow-hidden">
-                        <div class="card-header flex justify-between items-center">
-                            <h4 class="card-title">Account Transactions</h4>
-                            <a href="#!" class="btn btn-sm bg-light !text-sm text-gray-800 ">Export</a>
-                        </div>
-
-                        <div class="overflow-x-auto">
-                            <div class="min-w-full inline-block align-middle whitespace-nowrap">
-                                <div class="overflow-hidden">
-                                    <table class="min-w-full text-sm">
-                                        <tbody>
-                                            <tr class="border-b border-gray-200">
-                                                <td class="px-6 py-3">
-                                                    <div class="font-medium">4257 **** **** 7852</div>
-                                                    <div class="text-xs">11 April 2023</div>
-                                                </td>
-                                                <td class="px-6 py-3">
-                                                    <div class="font-medium">$79.49</div>
-                                                    <div class="text-xs">Amount</div>
-                                                </td>
-                                                <td class="px-6 py-3">
-                                                    <div class="font-medium">Visa</div>
-                                                    <div class="text-xs">Card</div>
-                                                </td>
-                                                <td class="px-6 py-3">
-                                                    <div class="font-medium">Helen Warren</div>
-                                                    <div class="text-xs">Pay</div>
-                                                </td>
-                                            </tr>
-                                            <tr class="border-b border-gray-200">
-                                                <td class="px-6 py-3">
-                                                    <div class="font-medium">4427 **** **** 4568</div>
-                                                    <div class="text-xs">28 Jan 2023</div>
-                                                </td>
-                                                <td class="px-6 py-3">
-                                                    <div class="font-medium">$1254.00</div>
-                                                    <div class="text-xs">Amount</div>
-                                                </td>
-                                                <td class="px-6 py-3">
-                                                    <div class="font-medium">Visa</div>
-                                                    <div class="text-xs">Card</div>
-                                                </td>
-                                                <td class="px-6 py-3">
-                                                    <div class="font-medium">Kayla Lambie</div>
-                                                    <div class="text-xs">Pay</div>
-                                                </td>
-                                            </tr>
-                                            <tr class="border-b border-gray-200">
-                                                <td class="px-6 py-3">
-                                                    <div class="font-medium">4265 **** **** 0025</div>
-                                                    <div class="text-xs">08 Dec 2022</div>
-                                                </td>
-                                                <td class="px-6 py-3">
-                                                    <div class="font-medium">$784.25</div>
-                                                    <div class="text-xs">Amount</div>
-                                                </td>
-                                                <td class="px-6 py-3">
-                                                    <div class="font-medium">Master</div>
-                                                    <div class="text-xs">Card</div>
-                                                </td>
-                                                <td class="px-6 py-3">
-                                                    <div class="font-medium">Hugo Lavarack</div>
-                                                    <div class="text-xs">Pay</div>
-                                                </td>
-                                            </tr>
-                                            <tr class="border-b border-gray-200">
-                                                <td class="px-6 py-3">
-                                                    <div class="font-medium">7845 **** **** 5214</div>
-                                                    <div class="text-xs">03 Dec 2022</div>
-                                                </td>
-                                                <td class="px-6 py-3">
-                                                    <div class="font-medium">$485.24</div>
-                                                    <div class="text-xs">Amount</div>
-                                                </td>
-                                                <td class="px-6 py-3">
-                                                    <div class="font-medium">Stripe</div>
-                                                    <div class="text-xs">Card</div>
-                                                </td>
-                                                <td class="px-6 py-3">
-                                                    <div class="font-medium">Amber Scurry</div>
-                                                    <div class="text-xs">Pay</div>
-                                                </td>
-                                            </tr>
-                                            <tr>
-                                                <td class="px-6 py-3">
-                                                    <div class="font-medium">4257 **** **** 7852</div>
-                                                    <div class="text-xs">12 Nov 2022</div>
-                                                </td>
-                                                <td class="px-6 py-3">
-                                                    <div class="font-medium">$8964.04</div>
-                                                    <div class="text-xs">Amount</div>
-                                                </td>
-                                                <td class="px-6 py-3">
-                                                    <div class="font-medium">Maestro</div>
-                                                    <div class="text-xs">Card</div>
-                                                </td>
-                                                <td class="px-6 py-3">
-                                                    <div class="font-medium">Caitlyn Gibney</div>
-                                                    <div class="text-xs">Pay</div>
-                                                </td>
-                                            </tr>
-                                        </tbody>
-                                    </table>
-                                </div>
-                            </div>
-                        </div>
-                    </div> 
-                </div> -->
-            </main>
 @endsection
+<script>
+    const charData = @json($charData);
+    const peopleData = charData.map(item => item.people);
+    const passed = charData.map(item => item.passed);
+    const notPassed = charData.map(item => item.notPassed);
+    const countPasser = passed.reduce((sum, value) => sum + value, 0);
+    const countNotPassed = notPassed.reduce((sum, value) => sum + value, 0);
+    console.log(countPasser)
+
+
+</script>
 
 @section("footer")
-@endsection
-
-@section("izitoast")
-    <script>
-        @if(session("update_success"))
-            iziToast.success({
-                message: "{{ session("update_success") }}",
-                position: "topRight"
-            })
-        @endif
-
-        @if(session("add_examset"))
-            iziToast.success({
-                message: "{{ session("add_examset") }}",
-                position: "topRight"
-            })
-        @endif
-        @if(session("delete_exam"))
-            iziToast.success({
-                message: "{{ session("delete_exam") }}",
-                position: "topRight"
-            })
-        @endif
-    </script>
-
 @endsection

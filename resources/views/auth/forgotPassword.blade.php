@@ -2,17 +2,11 @@
 @section("title", "forgot_password")
 @section("main")
 
+	<style>
+	
+	</style>
+
 	<body>
-		<!--[if lt IE 8]>
-			<p class="browserupgrade">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
-		<![endif]-->
-		<div id="preloader" class="preloader">
-			<div class='inner'>
-				<div class='line1'></div>
-				<div class='line2'></div>
-				<div class='line3'></div>
-			</div>
-		</div>
 		<section class="fxt-template-animation fxt-template-layout11">
 			<div class="container">
 				<div class="row align-items-center justify-content-center">
@@ -71,7 +65,9 @@
 				position: "topRight"
 			})
 		@endif
-	
+
+
+		
 	</script>
 
 @endsection

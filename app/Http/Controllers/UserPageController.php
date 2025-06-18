@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\ExamResult;
 use App\Models\Question;
 use App\Models\QuestionCategory;
+use Auth;
 use Illuminate\Http\Request;
 use App\Models\LicenseType;
 use App\Models\ExamSet;
@@ -18,7 +20,7 @@ class UserPageController extends Controller
     {
         $chapter = QuestionCategory::get()->first();
         $signage = SignageType::get()->first();
-        return view("userPage.home.home", compact("chapter","signage"));
+        return view("userPage.home.home", compact("chapter", "signage"));
     }
 
     public function practiceExam(string $id)
@@ -36,6 +38,8 @@ class UserPageController extends Controller
     public function PracticeStart($licenseID, $examsetID)
     {
         $examSet = ExamSet::find($examsetID);
+        $duration = $examSet->Duration;
+        $quantity = $examSet->Quantity;
         $license = LicenseType::find($licenseID);
         $licenseName = $license->LicenseTypeName;
         if ($licenseName) {
@@ -45,14 +49,19 @@ class UserPageController extends Controller
         $questions = $examSet->question_Examset;
         $answers = ["A" => "", "B" => "", "C" => "", "D" => ""];
         $labels = ["A", "B", "C", "D"];
-        return view("userPage.quiz.practiceStart", compact("questions", "examSet", "answers", "labels", "license", "lastWordA"));
+        return view("userPage.quiz.practiceStart", compact("questions", "examSet", "answers", "labels", "license", "lastWordA", "duration"));
     }
-    public function PracticeFinish($ExamSetID, Request $request)
+    public function PracticeFinish($licenseTypeID, $ExamSetID, Request $request)
     {
         $submittedAnswers = $request->input("answers");
+        $timefinish = $request->input("timeFinish");
         $isCriticalWrong = false;
         $correctCount = 0;
         $sumQuestion = count($submittedAnswers);
+        $score = $sumQuestion - $correctCount;
+        $examset = ExamSet::find($ExamSetID);
+        $passCount = $examset->PassCount;
+        $passed = false;
         foreach ($submittedAnswers as $questionID => $answerID) {
             $question = Question::find($questionID);
             $answer = Answer::where("AnswerID", $answerID)
@@ -79,10 +88,39 @@ class UserPageController extends Controller
                 "isCorrect" => $isCorrect,
                 "labelCorrect" => $labelCorrect,
                 "answerCorrect" => $answerCorrect,
-                "sumQuestion" => $sumQuestion
+                "sumQuestion" => $sumQuestion,
+                "time" => $timefinish,
+                // "name"=>$name
 
             ];
         }
+
+        if ($score >= $passCount && $isCorrect == true) {
+            $passed = true;
+        } else {
+            $passed = false;
+        }
+
+
+        if (Auth::check()) {
+            $exam_reult = ExamResult::create([
+                "userID" => Auth::user()->userID,
+                "LicenseTypeID" => $licenseTypeID,
+                "score" => $score,
+                "passed" => $passed,
+                "duration" => $timefinish
+
+            ]);
+        } else {
+            $exam_reult = ExamResult::create([
+                "userID" => null,
+                "LicenseTypeID" => $licenseTypeID,
+                "score" => $score,
+                "passed" => $passed,
+                "duration" => $timefinish
+            ]);
+        }
+
         return response()->json([
             'message' => 'Dữ liệu đã nhận thành công',
             'examsetID' => $ExamSetID,
@@ -97,7 +135,7 @@ class UserPageController extends Controller
     public function signages($SignageTypeID)
     {
         $signagesType = SignageType::find($SignageTypeID);
-        return view("userPage.quiz.signages", compact("signagesType"));
+        return view("userPage.trafficSigns.signages", compact("signagesType"));
     }
 
 
@@ -108,7 +146,15 @@ class UserPageController extends Controller
         $questions = $chapter->question_QuestionCategory;
         $answers = ["A" => "", "B" => "", "C" => "", "D" => ""];
         $labels = ["A", "B", "C", "D"];
-        return view("userPage.quiz.chapter", compact("chapter","questions","answers","labels","chapters"));
+        return view("userPage.quiz.chapter", compact("chapter", "questions", "answers", "labels", "chapters"));
+    }
+
+    public function collection()
+    {
+        $questions = Question::all();
+        $answers = ["A" => "", "B" => "", "C" => "", "D" => ""];
+        $labels = ["A", "B", "C", "D"];
+        return view("userPage.quiz.collection", data: compact("questions", "answers", "labels"));
     }
 
 

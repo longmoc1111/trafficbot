@@ -19,10 +19,11 @@ document.addEventListener("DOMContentLoaded", function () {
     const title = document.getElementById("question-title");
     const content = document.getElementById("question-content");
     const nextBtn = document.getElementById("next-btn");
-    const answerA = document.getElementById("answerA");
-    const answerB = document.getElementById("answerB");
-    const answerC = document.getElementById("answerC");
-    const answerD = document.getElementById("answerD");
+    const image = document.getElementById("question-image")
+    const divImage = document.getElementById("div-image")
+ 
+
+//    console.log("day la licenid " + dataset.licenseid);
 
     // lấy toàn bộ data được gửi lại
     let allExplanation = [];
@@ -42,7 +43,9 @@ document.addEventListener("DOMContentLoaded", function () {
     //
 
     //set thời gian làm bài
-    let countdownSeconds = 1140;
+    let countdownSeconds = parseInt(document.getElementById("exam-timmer").dataset.duration) * 60;
+    const timeStart = countdownSeconds;
+    let endCountdownSeconds = ""
     let timeInterval;
     function startCountdown() {
         updatateTimeDisplay(countdownSeconds);
@@ -55,6 +58,7 @@ document.addEventListener("DOMContentLoaded", function () {
             } else {
                 countdownSeconds--;
                 updatateTimeDisplay(countdownSeconds);
+                endCountdownSeconds = timeStart - countdownSeconds
             }
         }, 1000);
     }
@@ -167,7 +171,17 @@ document.addEventListener("DOMContentLoaded", function () {
     function updateQuestionDisplay(buttonElement) {
         const numberQS = buttonElement.dataset.question;
         const contentQS = buttonElement.dataset.content;
+        const imageSrc = buttonElement.dataset.img;
         title.innerText = `Câu ${numberQS} : ${contentQS} `;
+        
+        if(imageSrc){
+            
+            image.src = imageSrc;
+            divImage.classList.remove("d-none")
+        }else{
+            image.src = ""
+            divImage.classList.add("d-none")
+        }
         // content.innerText = contentQS;
     }
 
@@ -194,8 +208,8 @@ document.addEventListener("DOMContentLoaded", function () {
         if (modal) modal.hide();
         endTtestBtn.hidden = true;
         previewBtn.hidden = false;
+        const licenseTypeID = submitBtnElement.dataset.liecenid;
         const examsetID = submitBtnElement.dataset.examsetid;
-        console.log("id "+ examsetID)
         const allAnswers = {};
         buttons.forEach((btn) => {
             const questionID = btn.dataset.id;
@@ -205,7 +219,7 @@ document.addEventListener("DOMContentLoaded", function () {
                 allAnswers[questionID] = null;
             }
         });
-        fetch(`/quiz-practicep/finish/${examsetID}`, {
+        fetch(`/quiz-practice/finish/${licenseTypeID}/${examsetID}`, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
@@ -215,10 +229,14 @@ document.addEventListener("DOMContentLoaded", function () {
             },
             body: JSON.stringify({
                 answers: allAnswers,
+                timeFinish: endCountdownSeconds
             }),
         })
             .then((response) => response.json())
             .then((data) => {
+                const quantity = document.getElementById("quantity-passcount").dataset.quantity
+                const passCount = document.getElementById("quantity-passcount").dataset.passcount
+                console.log("soos luong" + passCount)
                 console.log("phan hoi", data);
                 allExplanation = data.result;
                 const iscriticalElemet =
@@ -241,11 +259,11 @@ document.addEventListener("DOMContentLoaded", function () {
                     iscriticalElemet.innerHTML = `
                           <p><strong>Kết quả:</strong>  Không đạt - sai câu điểm liệt</p>
                              `;
-                } else if (iscritical == false && correctCount < 21) {
+                } else if (iscritical == false && correctCount < passCount) {
                     iscriticalElemet.innerHTML = `
-                         <p><strong>Kết quả:</strong>  không đạt - yêu cầu tối thiểu đúng 21/25 câu</p>
+                         <p><strong>Kết quả:</strong>  không đạt - yêu cầu tối thiểu đúng ${passCount}/${quantity} câu</p>
                          `;
-                } else if (iscritical == false && correctCount >= 21) {
+                } else if (iscritical == false && correctCount >= passCount) {
                     iscriticalElemet.innerHTML = `
                         <p><strong>Kết quả:</strong>  đạt</strong></p>
                          `;

@@ -1,5 +1,5 @@
 @extends("userPage.layout.layout")
-@section("title", "thi thử bằng $lastWordA" )
+@section("title", "thi thử bằng $lastWordA")
 
 @section("main")
     <!-- About Start -->
@@ -17,7 +17,7 @@
         }
 
         .question-btn.active .question-item {
-            background-color:rgb(156, 179, 213);
+            background-color: rgb(156, 179, 213);
             color: white !important;
 
         }
@@ -77,7 +77,7 @@
         .hidden-question {
             display: none !important;
         }
-        
+
         #explanation-container {
             border: 2px solid #ccc;
             border-radius: 8px;
@@ -119,20 +119,29 @@
             border-radius: 5px;
             padding: 5px;
         }
+
         .answer-correct {
-    background-color: #d4edda;
-    color: #155724;
-    padding: 5px;
-    border-radius: 5px;
-}
+            background-color: #d4edda;
+            color: #155724;
+            padding: 5px;
+            border-radius: 5px;
+        }
 
-.answer-wrong {
-    background-color: #f8d7da;
-    color: #721c24;
-    padding: 5px;
-    border-radius: 5px;
-}
+        .answer-wrong {
+            background-color: #f8d7da;
+            color: #721c24;
+            padding: 5px;
+            border-radius: 5px;
+        }
 
+        .service-item img {
+            display: block;
+            margin: 0 auto;
+            min-width: 150px;
+            min-height: 150px;
+            max-width: 100%;
+            object-fit: contain;
+        }
 
 
 
@@ -145,13 +154,17 @@
                 <div class="bg-white rounded-top p-5">
                     <h1 class="display-6"><strong>Thi thử lý thuyết hạng {{ $lastWordA }}</strong></h1>
                     <div class="mb-2">
-                        <p class="mb-2">Cấu trúc đề thi sát hạch giấy phép lái xe hạng {{ $lastWordA }} bao gồm 25 câu hỏi, mỗi câu hỏi
-                            chỉ có duy nhất một câu trả lời đúng.</p>
+                        <p class="mb-2">Cấu trúc đề thi sát hạch giấy phép lái xe hạng {{ $lastWordA }} bao gồm
+                            {{ $examSet->Quantity }} câu hỏi, mỗi câu hỏi
+                            chỉ có duy nhất một câu trả lời đúng.
+                        </p>
                         <h5>Bao gồm</h5>
                         <ul>
                             <li>số lượng câu hỏi: <strong style="color:#ff0000"> câu</strong></li>
-                            <li>yêu cầu : <strong style="color:#ff0000">đúng 21/25 câu</strong> </li>
-                            <li>Thời gian: <strong style="color:#ff0000">19 phút</strong> </li>
+                            <li>yêu cầu : <strong style="color:#ff0000" id="quantity-passcount"
+                                    data-quantity="{{ $examSet->Quantity }}" data-passcount="{{ $examSet->PassCount }}">đúng
+                                    {{ $examSet->PassCount}}/{{ $examSet->Quantity }} câu</strong> </li>
+                            <li>Thời gian: <strong style="color:#ff0000">{{ $examSet->Duration }} phút</strong> </li>
                         </ul>
                     </div>
                     <p class="mb-4">
@@ -180,14 +193,15 @@
 
     <!-- practice Start -->
     <!-- <div class="text-center mb-4">
-            <button id="start-btn" class="btn btn-success">Bắt đầu làm bài</button>
-        </div> -->
+                        <button id="start-btn" class="btn btn-success">Bắt đầu làm bài</button>
+                    </div> -->
 
     <div class="container-lg d-none" id="exam-section" style="box-shadow: 0 0 45px rgba(0, 0, 0, .06)">
 
         <div class="d-flex justify-content-between align-items-center mb-3 px-3" data-wow-delay="0.1s">
             <h3 class="display-7 mb-0 mt-2">Thi lý thuyết xe máy hạng {{ $lastWordA }} - {{ $examSet->ExamSetName }}</h3>
-            <div class="btn display-7 mb-0 mt-3" id="exam-timmer" style="background-color:#6Fc7e7">10:00</div>
+            <div class="btn display-7 mb-0 mt-3" id="exam-timmer" data-duration="{{ $duration }}"
+                style="background-color:#6Fc7e7">10:00</div>
         </div>
         <hr>
         <div class="row g-4 d-flex">
@@ -203,29 +217,30 @@
                             @foreach ($questions as $index => $question)
 
                                 <!-- 
-                                                                        @php
-                                                                            $answers = [];
+                                                                                                @php
+                                                                                                    $answers = [];
 
-                                                                            foreach ($question->answer_Question as $answer) {
-                                                                                $key = strtoupper($answer->AnswerLabel); // Đảm bảo là A, B, C, D
+                                                                                                    foreach ($question->answer_Question as $answer) {
+                                                                                                        $key = strtoupper($answer->AnswerLabel); // Đảm bảo là A, B, C, D
 
-                                                                                if (in_array($key, ["A", "B", "C", "D"])) {
-                                                                                    $answers[$key . '_ID'] = $answer->AnswerID;     // Gán ID
-                                                                                    $answers[$key . '_NAME'] = $answer->AnswerName; // Hiển thị nội dung nếu cần
-                                                                                }
-                                                                            }
-                                                                        @endphp 
-                                                                        -->
+                                                                                                        if (in_array($key, ["A", "B", "C", "D"])) {
+                                                                                                            $answers[$key . '_ID'] = $answer->AnswerID;     // Gán ID
+                                                                                                            $answers[$key . '_NAME'] = $answer->AnswerName; // Hiển thị nội dung nếu cần
+                                                                                                        }
+                                                                                                    }
+                                                                                                @endphp 
+                                                                                                -->
 
-                                <div class="col-2 col-sm-1 col-md-3  col-lg-2" >
-                                    <a href="#" style="color:rgb(43, 39, 39); border-color:red" class="question-btn small"
-                                        data-question="{{ $index + 1 }}" data-id={{ $question->QuestionID }}
-                                        data-content="{{ $question->QuestionName }}" data-a-id="{{ $answers['A_ID'] ?? ''  }}"
-                                        data-b-id="{{ $answers['B_ID'] ?? '' }}" data-c-id="{{ $answers['C_ID'] ?? ''  }}"
-                                        data-d-id="{{ $answers['D_ID'] ?? ''  }}" data-a-name="{{ $answers['A_NAME'] ?? ''  }}"
-                                        data-b-name="{{ $answers['B_NAME'] ?? '' }}"
-                                        data-c-name="{{ $answers['C_NAME'] ?? ''  }}"
-                                        data-d-name="{{ $answers['D_NAME'] ?? ''  }}">
+                                    <div class="col-2 col-sm-1 col-md-3  col-lg-2">
+                                        <a href="#" style="color:rgb(43, 39, 39); border-color:red" class="question-btn small"
+                                            data-question="{{ $index + 1 }}" data-id={{ $question->QuestionID }}
+                                            data-img="{{ $question->ImageDescription }}"
+                                            data-content="{{ $question->QuestionName }}" data-a-id="{{ $answers['A_ID'] ?? ''  }}"
+                                            data-b-id="{{ $answers['B_ID'] ?? '' }}" data-c-id="{{ $answers['C_ID'] ?? ''  }}"
+                                            data-d-id="{{ $answers['D_ID'] ?? ''  }}" data-a-name="{{ $answers['A_NAME'] ?? ''  }}"
+                                            data-b-name="{{ $answers['B_NAME'] ?? '' }}"
+                                            data-c-name="{{ $answers['C_NAME'] ?? ''  }}"
+                                            data-d-name="{{ $answers['D_NAME'] ?? ''  }}">
 
                                         <p class="index-question question-item rounded text-center"
                                             style="box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);">
@@ -251,16 +266,21 @@
                             <!-- <p id="question-content" class="mb-0 mt-1"></p> -->
                         </div>
 
-                          <div class="mt-2">
+                        <div id = "div-image" class="mt-2 d-flex align-items-center align-items-start mb-2 answer-item d-none">
+                                <img id = "question-image"  src="" alt="">
+                        </div>
+
+                        <div class="mt-2">
                             @foreach ($labels as $label)
-                                <div class="d-flex align-items-center align-items-start mb-2 answer-item" id="answer-row-{{ $label }}">
+                                <div class="d-flex align-items-center align-items-start mb-2 answer-item"
+                                    id="answer-row-{{ $label }}">
                                     <input type="radio" name="answer" id="radio{{ $label }}" value="" class="me-2 mb-0 mt-1">
                                     <p class="mb-0" id="answer{{$label}}"> {{$answers[$label . '_NAME'] ?? ''}} :
-                                    </p> 
+                                    </p>
                                 </div>
 
                             @endforeach
-                            <div id="explanation-container" class = "d-none"></div>
+                            <div id="explanation-container" class="d-none"></div>
 
                         </div>
                         <button class="btn btn-primary mt-3" id="next-btn">Tiếp theo</button>
@@ -289,8 +309,8 @@
                     <hr>
                     <div class="text-center mb-3 d-flex justify-content-center">
                         <a href="{{ route('userpage.home') }}" class="btn btn-primary w-30 mx-2 b1">Trang chủ</a>
-                        <a href="{{ route("userpage.practiceStart", ["licenseID"=>$license->LicenseTypeID, "examsetID"=>$examSet->ExamSetID])}}"
-                            class="btn btn-primary w-30 mx-2 b1">Làm lại</a>
+                        <a href="{{ route("userpage.practiceStart", ["licenseID" => $license->LicenseTypeID, "examsetID" => $examSet->ExamSetID])}}"
+                            class="btn btn-primary w-30 mx-2 b1">Thi lại</a>
                     </div>
                 </div>
             </div>
@@ -305,7 +325,8 @@
                     <h3 class="text-center">Xác nhận</h3>
                     <p class="text-center">Bạn muốn kết thúc bài thi không ?</p>
                     <div class="text-center mb-3 d-flex justify-content-center">
-                        <button  data-examsetid="{{ $examSet->ExamSetID }}" id="submit-btn" class="btn btn-danger w-30 mx-2 ">kết thúc</button>
+                        <button data-examsetid="{{ $examSet->ExamSetID }}" data-liecenid="{{ $license->LicenseTypeID }}"
+                            id="submit-btn" class="btn btn-danger w-30 mx-2 ">kết thúc</button>
                         <button data-bs-dismiss="modal" aria-label="Close" class="btn btn-primary w-30 mx-2">tiếp tục
                             thi</button>
                     </div>
@@ -318,7 +339,7 @@
 
 
     <!-- script -->
- <script src = "/assets/userPage/practice/practice_exam.js"></script>
+    <script src="/assets/userPage/practice/practice_exam.js"></script>
 
     <!-- end script -->
 

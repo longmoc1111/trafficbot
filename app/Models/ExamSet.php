@@ -9,7 +9,7 @@ use App\Models\Question;
 
 class ExamSet extends Model
 {   
-    public $fillable = ["ExamSetID","ExamSetName"];
+    public $fillable = ["ExamSetID","ExamSetName","Quantity","duration","PassCount"];
     protected $primaryKey = "ExamSetID";
 
     public function licenseType_Examset(){

@@ -8,19 +8,29 @@
         <div class="flex items-center md:justify-between flex-wrap gap-2 mb-6">
             <h4 class="text-default-900 text-lg font-medium mb-2">Phân loại câu hỏi</h4>
 
-            <div class="md:flex hidden items-center gap-3 text-sm font-semibold">
+            <!-- <div class="md:flex hidden items-center gap-3 text-sm font-semibold">
                 <a href="#" class="text-sm font-medium text-default-700">OpenDash</a>
                 <i class="material-symbols-rounded text-xl flex-shrink-0 text-default-500">chevron_right</i>
                 <a href="#" class="text-sm font-medium text-default-700">Tables</a>
                 <i class="material-symbols-rounded text-xl flex-shrink-0 text-default-500">chevron_right</i>
                 <a href="#" class="text-sm font-medium text-default-700" aria-current="page">Basic Tables</a>
-            </div>
+            </div> -->
         </div>
         <!-- Page Title End -->
 
         <div class=" gap-6 mt-8">
             <div class="card overflow-hidden">
-                <div class="card-header flex justify-end">
+                <div class="card-header flex justify-between items-center">
+                  <div class="items-center relative">
+                        <div class="absolute inset-y-0 start-0 flex items-center ps-3 pointer-events-none">
+                            <i class="i-ph-magnifying-glass text-base"></i>
+                        </div>
+                        <form action="{{ route('admintrafficbot.question.category.search') }}" method="get">
+                        <input type="search" name = "search"
+                            class="form-input px-10 rounded-lg  bg-gray-500/10 border-transparent focus:border-transparent w-80"
+                            placeholder="Search...">
+                        </form>
+                    </div>
                     <div class="flex gap-2">
                         <button id="open_modal_create"
                             class="btn bg-primary/25 text-primary hover:bg-primary hover:text-white"
@@ -49,7 +59,8 @@
                                         @foreach ($categories as $category)
 
                                             <tr>
-                                                <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-default-800">
+                                                 <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-default-800"
+                                                        style="white-space: normal; word-wrap: break-word; max-width: 300px;">
                                                     {{$category->CategoryName}}
                                                 </td>
 
@@ -87,11 +98,12 @@
                                                         </span>
                                                     </div>
                                                     <div class="hs-tooltip">
-                                                        <a href="" type="button"
+                                                        <a href="" type="button" onclick = "event.preventDefault()"
                                                             class="text-blue-500 hover:text-blue-700 hs-tooltip-toggle"
+                                                            data-hs-overlay="#modal-show_{{ $category->CategoryID }}"
                                                             data-fc-placement="top">
                                                             <span class="material-symbols-rounded text-2xl">
-                                                                arrow_right_alt
+                                                                 visibility
                                                             </span>
                                                         </a>
                                                         <span
@@ -246,7 +258,7 @@
                                         Tên loại câu hỏi
                                     </label>
                                     @error('CategoryName', 'create')
-                                        <div id="role-error"
+                                        <div id="create_errpr"
                                             class="flex items-center bg-red-100 text-red-700 text-sm px-4 mb-2">
                                             {{ $message }}
                                         </div>
@@ -299,8 +311,8 @@
                                             <label for="SignageName" class="text-default-800 text-sm font-semibold mb-2 block">
                                                 Tên loại câu hỏi
                                             </label>
-                                            @error('CategoryName')
-                                                <div id="role-error"
+                                            @error('CategoryName', "edit")
+                                                <div id="edit-error"
                                                     class="flex items-center bg-red-100 text-red-700 text-sm px-4 mb-2">
                                                     {{ $message }}
                                                 </div>
@@ -329,6 +341,53 @@
                 @endforeach
             @endif
             <!-- end modal edit-->
+  @if(!empty($categories))
+                @foreach ($categories as $category)
+                        <div id="modal-show_{{ $category->CategoryID }}"
+                            class="hs-overlay w-full h-full fixed top-0 left-0 z-70 transition-all duration-500 overflow-y-auto hidden pointer-events-none flex items-center justify-center">
+                            <div
+                                class="translate-y-10 hs-overlay-open:translate-y-0 hs-overlay-open:opacity-100 opacity-0 ease-in-out transition-all duration-500 sm:max-w-lg sm:w-full my-8 sm:mx-auto flex flex-col bg-white shadow-sm rounded">
+                                <div class="flex flex-col border border-default-200 shadow-sm rounded-lg  pointer-events-auto">
+                                    <div class="flex justify-between items-center py-3 px-4 border-b border-default-200">
+                                        <h3 class="text-lg font-medium text-default-900 ">
+                                            Chi tiết loại câu hỏi
+                                        </h3>
+                                        <button type="button" class="text-default-600 cursor-pointer"
+                                            data-hs-overlay="#modal-show_{{ $category->CategoryID }}">
+                                            <i class="i-tabler-x text-lg"></i>
+                                        </button>
+                                    </div>
+                                    <div class="p-4 overflow-y-auto">
+                                        <div class="mb-3">
+                                            <label for="SignageName" class="text-default-800 text-sm font-semibold mb-2 block">
+                                                Tên loại câu hỏi
+                                            </label>
+                                        
+                                            <textarea type="text" id="CategoryName" name="CategoryName"
+                                                class="form-input w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"> {{ $category->CategoryName }}</textarea>
+                                        </div>
+                                    </div>
+                                    <div class="flex justify-end items-center gap-x-2 py-3 px-4 border-t border-default-200">
+                                        <button type="button"
+                                            class="py-2 px-5 inline-flex items-center justify-center font-medium tracking-wide border align-middle duration-500 text-sm text-center bg-primary/5 hover:bg-primary border-primary/10 hover:border-primary text-primary hover:text-white rounded-md"
+                                            data-hs-overlay="#modal-show_{{ $category->CategoryID }}">
+                                            đóng
+                                        </button>
+                                        <button type="submit"
+                                            class="py-2 px-5 inline-flex items-center justify-center font-medium tracking-wide border align-middle duration-500 text-sm text-center bg-primary hover:bg-primary-700 border-primary hover:border-primary-700 text-white rounded-md">
+                                            Chỉnh sửa
+                                        </button>
+
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                
+                @endforeach
+            @endif
+
+         
+
 
 
         </div>

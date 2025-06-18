@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\ChatBotController;
 use App\Http\Controllers\DashBoardController;
 use App\Http\Controllers\QuestionCategoryController;
 use App\Http\Controllers\SignageController;
@@ -21,6 +22,7 @@ Route::middleware("admin")->controller(DashBoardController::class)->prefix("admi
 
 Route::middleware("admin")->controller(QuestionController::class)->prefix("admintrafficbot")->name("admintrafficbot")->group(function(){
     Route::get("/question", "listQuestion")->name(".question");
+    Route::get("/question/serach", "serachQuestion")->name(".question.search");
     Route::get("/question/create","createQuestion")->name(".question.create");
     Route::post("question/store","storeQuestion")->name(".question.store");
     Route::delete("question/delete/{QuestionID}","deleteQuestion")->name(".question.delete");
@@ -30,11 +32,13 @@ Route::middleware("admin")->controller(QuestionController::class)->prefix("admin
     Route::get("/examset/show/create_question/{ExamSetID}","createQuestion_ExamSet")->name(".examset_question.create");
     Route::post("/examset/show/store_question/{ExamSetID}","storeQuestion_ExamSet")->name(".examset_question.store");   
     Route::get("question/show/edit_question/{QuestionID}","editQuestion")->name(".question.edit_question");
+    
 
 });
 
 Route::middleware("admin")->controller(QuestionCategoryController::class)->prefix("admintrafficbot")->name("admintrafficbot")->group(function(){
      route::get("question/category","questionCategory")->name(".question.category");
+     route::get("question/category/search","searchCategory")->name(".question.category.search");
      route::get("question/category/create","createCategory")->name(".question.createcategory");
      route::post("question/category/store","storeCategory")->name(".question.storecategory");
      route::post("question/category/update/{ID}","updateCategory")->name(".question.updatecategory");
@@ -65,18 +69,27 @@ Route::middleware("admin")->controller(ExamSetController::class)->prefix("admint
     Route::get("/exam_set/show/{ExamSetID}","showExamSet")->name(".examset.show");
 });
 
+Route::middleware("admin")->controller(ChatBotController::class)->prefix("admintrafficbot")->name("admintrafficbot")->group(function(){
+   route::get("/chat_bot","dataList")->name(".chatbot");
+   route::post("/chat_bot/store","storeChatBot")->name(".chatbot.store");
+   route::post("/chat_bot/update/{ID}","updateChatBot")->name(".chatbot.update");
+   route::delete("/churi: at_bot/delete/{ID}","deleteChatBot")->name(".chatbot.delete");
+
+
+
+});
+
+
 route::controller(UserPageController::class)->name("userpage")->group(function() {
     route::get("/","homePage")->name(".home");
     route::get("/quiz-practice/{LicenseTypeID}","PracticeExam")->name(".practiceExam");
     route::get("/quiz-practice/start/{licenseID}/{examsetID}","PracticeStart")->name(".practiceStart");
-    route::post("/quiz-practice/finish/{ExamSetID}","PracticeFinish")->name(".practicefinish");
-    route::get("/quiz-signages/{SignageTypeID}","signages")->name(".signages");
+    route::post("/quiz-practice/finish/{licenseTypeID}/{ExamSetID}","PracticeFinish")->name(".practicefinish");
+    route::get("/signages/{SignageTypeID}","signages")->name(".signages");
 
     route::get("/quiz-chapters/{ID}","chapters")->name(".chapters");
 
     route::get("/quiz-collection","collection")->name(".collection");
-    
-
 });
 
  
@@ -84,6 +97,7 @@ route::controller(UserPageController::class)->name("userpage")->group(function()
 
 route::middleware("admin")->controller(SignageController::class)->prefix("admintrafficbot")->name("admintrafficbot")->group(function(){
       route::get("/signages/type/list","listSignageTypes")->name(".listsignagetypes");
+      route::get("/signages/type/list/search","searchSignageTypes")->name(".signagetypes.sarch");
       route::get("/signages/type/list/create","createSignageTypes")->name(".signagestype.create");
       route::post("/signages/type/list/store","storeSignageTypes")->name(".signagestype.store");
        route::post("/signages/type/list/update/{ID}","updateSignageTypes")->name(".signagestype.update");
@@ -91,6 +105,7 @@ route::middleware("admin")->controller(SignageController::class)->prefix("admint
 
 
       route::get("/signages/list","listSignages")->name(".listsignages");
+      route::get("/signages/list/search","searchSignage")->name(".signage.sarch");
       route::get("/signages/list/create","createSignages")->name(".signages.create");
       route::post("/signages/list/store","storeSignages")->name(".signages.store");
       route::post("/signages/list/update{ID}","updateSignages")->name(".signages.update");

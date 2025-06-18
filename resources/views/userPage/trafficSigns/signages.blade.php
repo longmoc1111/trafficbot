@@ -1,5 +1,5 @@
 @extends("userPage.layout.layout")
-@section("title", "học biển báo ")
+@section("title", "học biển báo")
 
 @section("main")
     <!-- Service Start -->

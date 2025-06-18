@@ -14,6 +14,16 @@ class QuestionCategoryController extends Controller
         $categories = QuestionCategory::orderBy("created_at", "ASC")->paginate(10);
         return view("admin.questionManagement.category.list", compact("categories"));
     }
+
+    public function searchCategory()
+    {
+        $key = request("search");
+        if ($key) {
+            $categories = QuestionCategory::where("CategoryName", "like" , "%" . $key . "%")->paginate(10);
+            return view("admin.questionManagement.category.list", compact("categories"));
+
+        }
+    }
     public function createCategory()
     {
         return view("admin.questionManagement.category.create");
@@ -31,7 +41,7 @@ class QuestionCategoryController extends Controller
         );
 
         if ($validate->fails()) {
-            return back()->withErrors($validate, "edit")->withInput();
+            return back()->withErrors($validate, "create")->withInput();
         }
         $Category = QuestionCategory::create($validate->validated());
         if ($Category) {
@@ -48,7 +58,7 @@ class QuestionCategoryController extends Controller
             "CategoryName.required" => "Không được để trống!"
         ]);
         if ($validator->fails()) {
-            return back()->withErrors($validator, "create")->withInput();
+            return back()->withErrors($validator, "edit")->withInput();
         }
         $Category = QuestionCategory::find($ID);
 

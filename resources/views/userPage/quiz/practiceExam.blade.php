@@ -3,7 +3,7 @@
 
 @section("main")
     <!-- About Start -->
-
+<!-- 
      <div class="container-lg mt-4 mb-3" style="box-shadow: 0 0 45px rgba(0, 0, 0, .06)">
         <div class="row g-0">
             <div class="col-lg-12 wow fadeIn" data-wow-delay="0.5s">
@@ -29,7 +29,7 @@
                 </div>
             </div>
         </div>
-    </div>
+    </div> -->
 
 
     <!-- About End -->

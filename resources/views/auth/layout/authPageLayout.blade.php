@@ -1,4 +1,3 @@
-
 <!doctype html>
 <html class="no-js" lang="">
 
@@ -21,24 +20,28 @@
 	<!-- Google Web Fonts -->
 	<link href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap" rel="stylesheet">
 	<!-- iziToast -->
-    <link href="/assets/izitoast/css/iziToast.min.css" rel="stylesheet" type="text/css">
+	<link href="/assets/izitoast/css/iziToast.min.css" rel="stylesheet" type="text/css">
 	<!-- Custom CSS -->
 	<link rel="stylesheet" href="/assets/auth/css/style.css">
 </head>
-
+<div id="spinner"
+	class="show bg-white position-fixed translate-middle w-100 vh-100 top-50 start-50 d-flex align-items-center justify-content-center">
+	<div class="spinner-border text-primary" role="status" style="width: 3rem; height: 3rem;"></div>
+</div>
 @yield("main")
 
 <!-- jquery-->
-	<script src="/assets/auth/js/jquery.min.js"></script>
-	<!-- Bootstrap js -->
-	<script src="/assets/bootstrap/bootstrap-5.3.0/js/bootstrap.min.js"></script>
-	<!-- Imagesloaded js -->
-	<script src="/assets/auth/js/imagesloaded.pkgd.min.js"></script>
-	<!-- Validator js -->
-	<script src="/assets/auth/js/validator.min.js"></script>
-	<!-- Custom Js -->
-	<script src="/assets/auth/js/main.js"></script>
-	<!-- iziToast js -->
-    <script src="/assets/izitoast/js/iziToast.min.js"></script>
+<script src="/assets/auth/js/jquery.min.js"></script>
+<!-- Bootstrap js -->
+<script src="/assets/bootstrap/bootstrap-5.3.0/js/bootstrap.min.js"></script>
+<!-- Imagesloaded js -->
+<script src="/assets/auth/js/imagesloaded.pkgd.min.js"></script>
+<!-- Validator js -->
+<script src="/assets/auth/js/validator.min.js"></script>
+<!-- Custom Js -->
+<script src="/assets/auth/js/main.js"></script>
+<!-- iziToast js -->
+<script src="/assets/izitoast/js/iziToast.min.js"></script>
 @yield("izitoast")
+
 </html>

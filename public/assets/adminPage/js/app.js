@@ -4,6 +4,7 @@ class App {
       (this.config = {}),
       (this.defaultConfig = window.config);
   }
+  
   initComponents() {
     Waves.init();
   }
@@ -59,6 +60,7 @@ class App {
     }
     return null;
   }
+  
   initfullScreenListener() {
     var e = document.querySelector('[data-toggle="fullscreen"]');
     e &&
@@ -87,7 +89,18 @@ class App {
   init() {
     this.initComponents(), this.initSidenav(), this.initfullScreenListener();
   }
+}function showSpinner() {
+    $('#spinner').addClass('show');
 }
+
+function hideSpinner() {
+    $('#spinner').removeClass('show');
+}
+
+
+$(window).on('load', function () {
+    setTimeout(hideSpinner, 150); 
+});
 new App().init();
 
 

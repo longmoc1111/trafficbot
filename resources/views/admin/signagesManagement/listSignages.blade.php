@@ -1,39 +1,54 @@
 @extends("admin.adminPageLayout.layout")
+@section("title", "quản lý biển báo")
 @section("main")
 
     <main>
 
         <!-- Page Title Start -->
         <div class="flex items-center md:justify-between flex-wrap gap-2 mb-6">
-            <h4 class="text-default-900 text-lg font-medium mb-2">Danh sách bộ đề</h4>
+            <h4 class="text-default-900 text-lg font-medium mb-2">Danh sách biển báo</h4>
 
-            <div class="md:flex hidden items-center gap-3 text-sm font-semibold">
-                <a href="#" class="text-sm font-medium text-default-700">OpenDash</a>
-                <i class="material-symbols-rounded text-xl flex-shrink-0 text-default-500">chevron_right</i>
-                <a href="#" class="text-sm font-medium text-default-700">Tables</a>
-                <i class="material-symbols-rounded text-xl flex-shrink-0 text-default-500">chevron_right</i>
-                <a href="#" class="text-sm font-medium text-default-700" aria-current="page">Basic Tables</a>
-            </div>
+            <!-- <div class="md:flex hidden items-center gap-3 text-sm font-semibold">
+                            <a href="#" class="text-sm font-medium text-default-700">OpenDash</a>
+                            <i class="material-symbols-rounded text-xl flex-shrink-0 text-default-500">chevron_right</i>
+                            <a href="#" class="text-sm font-medium text-default-700">Tables</a>
+                            <i class="material-symbols-rounded text-xl flex-shrink-0 text-default-500">chevron_right</i>
+                            <a href="#" class="text-sm font-medium text-default-700" aria-current="page">Basic Tables</a>
+                        </div> -->
         </div>
         <!-- Page Title End -->
 
         <div class=" gap-6 mt-8">
             <div class="card overflow-hidden">
-                <div class="card-header flex justify-end">
-                    <div class="flex gap-2 ">
-                        <div>
+                <div class="card overflow-hidden">
+                    <div class="card-header flex justify-between items-center">
+                        <div class="items-center relative">
+                            <div class="absolute inset-y-0 start-0 flex items-center ps-3 pointer-events-none">
+                                <i class="i-ph-magnifying-glass text-base"></i>
+                            </div>
+                            <form action="{{ route("admintrafficbot.signage.sarch") }}">
+                                <input type="search" name="search"
+                                    class="form-input px-10 rounded-lg bg-gray-500/10 border-transparent focus:border-transparent w-80"
+                                    placeholder="Search...">
+                            </form>
+
+                        </div>
+                        <div class="flex items-center gap-3">
                             <form action="{{route("admintrafficbot.listsignages")}}">
                                 <select name="option" class="form-select" id="example-select" onchange="this.form.submit()">
                                     @foreach ($signageTypes as $type)
-                                        <option value="{{ $type->SignageTypeID }}" {{$type->SignageTypeID == $option ? "selected" : ''}}>{{ $type->SignagesTypeName }}</option>
+                                        <option value="{{ $type->SignageTypeID }}" {{!empty($option) && $option == $type->SignageTypeID ? "selected" : "" }}>{{ $type->SignagesTypeName }}
+                                        </option>
                                     @endforeach
                                 </select>
                             </form>
+
+
+                            <button class="btn bg-primary/25 text-primary hover:bg-primary hover:text-white"
+                                data-fc-placement="top" data-hs-overlay="#create_signage">
+                                Thêm biển báo
+                            </button>
                         </div>
-                        <button class="btn bg-primary/25 text-primary hover:bg-primary hover:text-white"
-                            data-fc-placement="top" data-hs-overlay="#create_signage">
-                            Thêm biển báo
-                        </button>
                     </div>
                 </div>
                 <div>

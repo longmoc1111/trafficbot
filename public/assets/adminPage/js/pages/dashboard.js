@@ -1,4 +1,5 @@
-var options = {
+ 
+ var options = {
     series: [{ name: "Total Order", data: [4, 10, 25, 12, 25, 18, 40, 22, 7] }],
     chart: {
       height: 105,
@@ -182,9 +183,9 @@ var options = {
           },
         },
       },
-      series: [150, 135, 90, 56],
-      labels: ["Electronics", "Stationery", "Beauty", "Home & Kitchen"],
-      colors: ["#22c55e", "#efb540", "#4ecac2", "#fa5944"],
+      series: [countPasser,countNotPassed],
+      labels: ["đạt", "Không đạt"],
+      colors: ["#22c55e", "#fa5944"],
       dataLabels: { enabled: !1 },
     }),
   options =
@@ -195,14 +196,14 @@ var options = {
     {
       series: [
         {
-          name: "Đạt",
+          name: "Số lượng người thi",
           type: "bar",
-          data: [52, 34, 68, 46, 63, 42, 70, 61, 49, 67, 44, 78],
+          data: peopleData,
         },
         {
-          name: "Order",
+          name: "Đạt",
           type: "area",
-          data: [29, 5, 12, 7, 11, 35, 8, 21, 9, 17, 12, 7],
+          data: passed,
         },
       ],
       chart: { height: 313, type: "line", toolbar: { show: !1 } },
@@ -221,18 +222,18 @@ var options = {
       markers: { size: [0, 0], strokeWidth: 2, hover: { size: 4 } },
       xaxis: {
         categories: [
-          "1",
-          "2",
-          "3",
-          "4",
-          "5",
-          "6",
-          "7",
-          "8",
-          "9",
-          "10",
-          "11",
-          "12",
+          "Th1",
+          "Th2",
+          "Th3",
+          "Th4",
+          "Th5",
+          "Th6",
+          "Th7",
+          "Th8",
+          "Th9",
+          "Th10",
+          "Th11",
+          "Th12",
         ],
         axisTicks: { show: !1 },
         axisBorder: { show: !1 },
@@ -256,18 +257,18 @@ var options = {
       plotOptions: {
         bar: { columnWidth: "30%", barHeight: "70%", borderRadius: 10 },
       },
-      colors: ["#8b5cf6", "#fa5944"],
+      colors: ["#8b5cf6","#198754"],
       tooltip: {
         shared: !0,
         y: [
           {
             formatter: function (e) {
-              return void 0 !== e ? e.toFixed(1) + "k" : e;
+              return e !== undefined ?  ": " + e  : e ;
             },
           },
           {
             formatter: function (e) {
-              return void 0 !== e ? e.toFixed(1) + "k" : e;
+              return e !== undefined ?  ": " + e  : e ;
             },
           },
         ],

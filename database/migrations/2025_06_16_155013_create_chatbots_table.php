@@ -11,12 +11,11 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('exam_sets', function (Blueprint $table) {
-            $table->id("ExamSetID");
-            $table->string("ExamSetName");
-            $table->integer("Quantity");
-            $table->integer("Duration");
-            $table->integer("PassCount");
+        Schema::create('chat_bots', function (Blueprint $table) {
+            $table->id("ChatbotID");
+            $table->text("FileName");
+            $table->text("FileDesciption");
+            $table->text("File");
             $table->timestamps();
         });
     }
@@ -26,6 +25,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('exam_sets');
+        Schema::dropIfExists('chatbots');
     }
 };

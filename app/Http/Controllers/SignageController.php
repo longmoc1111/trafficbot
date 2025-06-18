@@ -14,12 +14,26 @@ class SignageController extends Controller
     public function listSignageTypes()
     {
         $signagesType = SignageType::OrderBy("created_at", "ASC")->paginate(10);
-        return view("admin.signagesManagement.signagesTypes.listSignagesTypes", compact("signagesType"));
+        return view("admin.signagesManagement.listSignagesTypes", compact("signagesType"));
     }
-    public function createSignageTypes()
+
+    public function searchSignageTypes()
     {
-        return view("admin.signagesManagement.signagesTypes.createSignagesTypes");
+        $key = request("search");
+        if ($key && trim($key) != null) {
+            $signagesType = SignageType::where("SignagesTypeName", "like", "%" . $key . "%")
+                ->orWhere("SignagesTypeDescription", "like", "%" . $key . "%")
+                ->paginate(10)->appends(request()->query());
+            return view("admin.signagesManagement.listSignagesTypes", compact("signagesType"));
+        } else {
+            $signagesType = SignageType::OrderBy("created_at", "ASC")->paginate(10);
+            return view("admin.signagesManagement.listSignagesTypes", compact("signagesType"));
+        }
     }
+    // public function createSignageTypes()
+    // {
+    //     return view("admin.signagesManagement.signagesTypes.createSignagesTypes");
+    // }
     public function storeSignageTypes(Request $request)
     {
         $validate = $request->validate(
@@ -80,26 +94,38 @@ class SignageController extends Controller
 
 
     //biển báo
-    public function listSignages(Request $request)
+    public function listSignages()
     {
         $signageTypes = SignageType::all();
-        $signageTypeID = SignageType::first() ?->SignageTypeID;
-        $option = $request->get("option");
-        if (!empty($option)) {
-            $signages = Signage::where("SignageTypeID", $option);
+        $option = request("option");
+        if ($option) {
+            $signages = Signage::where("SignageTypeID", "like", "%" . $option . "%")->OrderBy("created_at", "asc")->paginate(10);
+            return view("admin.signagesManagement.listSignages", compact("signages", "signageTypes", "option"));
         } else {
-            // dd("o day");
-            $signages = Signage::where("SignageTypeID", $signageTypeID)
-            ->OrderBy("SignageID", "asc")
-            ->paginate(10);
+            $signages = Signage::OrderBy("created_at", "asc")->paginate(10);
+            return view("admin.signagesManagement.listSignages", compact("signages", "signageTypes", "option"));
         }
-        return view("admin.signagesManagement.signages.listSignages", compact("signages", "signageTypes","option"));
+
     }
-    public function createSignages()
+
+    public function searchSignage()
     {
-        $signagesTypes = SignageType::all();
-        return view("admin.signagesManagement.signages.createSignages", compact("signagesTypes"));
+        $signageTypes = SignageType::all();
+        $key = request("search");
+        if ($key && trim($key) != null) {
+            $signages = Signage::where("SignageName", "like", "%" . $key . "%")
+                ->orWhere("SignagesExplanation", "like", "%" . $key . "%")->paginate(10)->appends(request()->query());
+            return view("admin.signagesManagement.listSignages", compact("signages", "signageTypes"));
+        } else {
+            $signages = Signage::OrderBy("created_at", "asc")->paginate(10);
+            return view("admin.signagesManagement.listSignages", compact("signages", "signageTypes"));
+        }
     }
+    // public function createSignages()
+    // {
+    //     $signagesTypes = SignageType::all();
+    //     return view("admin.signagesManagement.signages.createSignages", compact("signagesTypes"));
+    // }
     public function storeSignages(Request $request)
     {
 

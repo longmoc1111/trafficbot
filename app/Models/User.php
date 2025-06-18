@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use App\Models\Role;
+use App\Models\ExamResult;
 
 class User extends Authenticatable
 {
@@ -31,6 +32,9 @@ class User extends Authenticatable
     protected $primaryKey = "userID";
     public function role_User(){
         return $this->belongsTo(Role::class,"roleID","roleID");
+    }
+    public function result_User(){
+        return $this->hasMany(ExamResult::class, "userID", "userID");
     }
 
     /**

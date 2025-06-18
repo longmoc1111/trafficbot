@@ -39,7 +39,7 @@
                     </div>
                     <a href="{{ route("admintrafficbot.examset_question.create", $ExamSetID->ExamSetID) }}"
                         class="btn bg-primary/25 text-primary hover:bg-primary hover:text-white">
-                        Thêm câu hỏi mới
+                        Tạo
                     </a>
 
                 </div>
@@ -65,21 +65,23 @@
                                     <tbody class="divide-y divide-gray-200">
                                         @foreach ($ExamSetID->question_ExamSet as $question)
                                             <tr>
-                                                <td
-                                                    class="px-6 py-4 text-sm font-medium text-default-800 whitespace-normal break-words">
+                                                <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-default-800"
+                                                        style="white-space: normal; word-wrap: break-word; max-width: 300px;">
                                                     {{ $question->QuestionName }}
                                                 </td>
 
-                                                <td class="px-6 py-4 whitespace-nowrap text-sm text-default-800">
+                                                 <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-default-800"
+                                                        style="white-space: normal; word-wrap: break-word; max-width: 250px;">
                                                     {{ $question->categoryQuestion_Question->CategoryName }}
                                                 </td>
                                                 @if($question->IsCritical == true)
                                                     <td class="px-6 py-4 whitespace-nowrap text-sm text-default-800">
-                                                        có
+                                                         <span class="px-2 py-1 bg-success/10 text-success text-xs rounded">có</span>
                                                     </td>
                                                 @else
                                                     <td class="px-6 py-4 whitespace-nowrap text-sm text-default-800">
-                                                        không
+                                                         <span class="px-2 py-1 bg-red-100 text-red-500 text-xs rounded"
+                                                        style="white-space:nowrap">Không</span>
                                                     </td>
                                                 @endif
                                                 <td

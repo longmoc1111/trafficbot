@@ -13,8 +13,8 @@
 
     <!-- Icons css  (Mandatory in All Pages) -->
     <link href="/assets/adminPage/css/icons.min.css" rel="stylesheet" type="text/css">
-      <!-- <link href="/assets/adminPage/libs/jsvectormap/css/jsvectormap.min.css" rel="stylesheet" type="text/css"> -->
-
+    <!-- <link href="/assets/adminPage/libs/jsvectormap/css/jsvectormap.min.css" rel="stylesheet" type="text/css"> -->
+    <title>admin page</title>
     <!-- App css  (Mandatory in All Pages) -->
     <link href="/assets/adminPage/css/app.min.css" rel="stylesheet" type="text/css">
     <link href="/assets/izitoast/css/iziToast.min.css" rel="stylesheet" type="text/css">
@@ -22,9 +22,12 @@
 </head>
 
 <body>
+    <!-- Tailwind spinner -->
+    <div id="spinner" class="fixed inset-0 bg-white z-50 flex items-center justify-center show">
+        <div class="loader"></div>
+    </div>
 
     <div class="wrapper">
-
         <!-- Start Sidebar -->
         <aside id="app-menu"
             class="hs-overlay fixed inset-y-0 start-0 z-60 hidden w-sidenav min-w-sidenav bg-white border-e border-default-200 overflow-y-auto -translate-x-full transform transition-all duration-300 hs-overlay-open:translate-x-0 lg:bottom-0 lg:end-auto lg:z-30 lg:block lg:translate-x-0 rtl:translate-x-full rtl:hs-overlay-open:translate-x-0 rtl:lg:translate-x-0 print:hidden [--body-scroll:true] [--overlay-backdrop:true] lg:[--overlay-backdrop:false]">
@@ -41,7 +44,7 @@
                         <a class='group flex items-center gap-x-3.5 rounded-md px-3 py-2 text-sm font-medium text-default-700 transition-all hover:bg-default-900/5'
                             href='{{route("admintrafficbot.dashboard")}}'>
                             <i class="i-solar-home-smile-bold-duotone text-2xl"></i>
-                            Dashboard
+                            Bảng điều khiển
                         </a>
                     </li>
 
@@ -148,7 +151,7 @@
                                     <a class='flex items-center gap-x-3.5 rounded-md px-5 py-2 text-sm font-medium text-default-700 hover:bg-default-900/5'
                                         href='/opendash/ui-avatars'>
                                         <i class="i-tabler-circle-filled scale-[.25] text-lg opacity-75"></i>
-                                       Phân quyền tài khoản
+                                        Phân quyền tài khoản
                                     </a>
                                 </li>
                                 <!-- <li class="menu-item">
@@ -160,6 +163,16 @@
                                 </li> -->
                             </ul>
                         </div>
+                    </li>
+
+                    <li class="px-5 py-2 text-sm font-medium text-default-600">Quản lý chatbot</li>
+
+                    <li class="menu-item">
+                        <a class='group flex items-center gap-x-3.5 rounded-md px-3 py-2 text-sm font-medium text-default-700 transition-all hover:bg-default-900/5 hs-accordion-active:bg-default-900/5'
+                            href='{{ route("admintrafficbot.chatbot") }}'>
+                            <i class="i-solar-file-bold-duotone text-2xl"></i>
+                            <span class="menu-text">Danh sách dữ liệu</span>
+                        </a>
                     </li>
                 </ul>
             </div>
@@ -173,9 +186,9 @@
                 class="app-header sticky top-0 z-50 h-topbar flex items-center px-5 bg-white border-b border-default-200">
                 <div class="container flex items-center gap-4">
                     <!-- Topbar Brand Logo -->
-                    <a class='md:hidden flex' href='/opendash/'>
+                    <!-- <a class='md:hidden flex' href='/opendash/'>
                         <img src="assets/images/logo-sm.png" class="h-6" alt="Small logo">
-                    </a>
+                    </a> -->
 
                     <!-- Sidenav Menu Toggle Button -->
                     <button id="button-toggle-menu"
@@ -206,27 +219,35 @@
                     <!-- Profile Dropdown Button -->
                     <div class="relative">
                         <div class="hs-dropdown relative inline-flex [--placement:bottom-right]">
-                            <button type="button" class="hs-dropdown-toggle">
-                                @if(!empty(Auth::user()->avatar))
-                                    <img src="/assets/adminPage/avatar_user/{{ Auth::user()->avatar }}" alt="user-image"
-                                        class="rounded-full h-10">
-                                @else
-                                    <img src="/assets/adminPage/avatar_user/avatar_default.jpg" alt="user-image"
-                                        class="rounded-full h-10">
-                                @endif
-                            </button>
+                            <div class="flex items-center space-x-3 bg-white rounded-xl shadow-md p-2"
+                                style="width: 150px;">
+                                <button type="button" class="hs-dropdown-toggle focus:outline-none">
+                                    @if(!empty(Auth::user()->avatar))
+                                        <img src="/assets/adminPage/avatar_user/{{ Auth::user()->avatar }}" alt="user-image"
+                                            class="rounded-full h-10 w-10 object-cover border-2 border-red-500">
+                                    @else
+                                        <img src="/assets/adminPage/avatar_user/avatar_default.jpg" alt="user-image"
+                                            class="rounded-full h-10 w-10 object-cover border-2 border-gray-300">
+                                    @endif
+                                </button>
+                                <p class="text-gray-800 font-semibold truncate">{{ Auth::user()->name }}</p>
+                            </div>
+
+
+
                             <div
-                                class="hs-dropdown-menu duration mt-2 min-w-48 rounded-lg border border-default-200 bg-white p-2 opacity-0 shadow-md transition-[opacity,margin] hs-dropdown-open:opacity-100 hidden">
-                                <a class="flex items-center py-2 px-3 rounded-md text-sm text-default-800 hover:bg-gray-100"
+                                class="hs-dropdown-menu absolute mt-2 min-w-48 rounded-lg border border-gray-200 bg-white p-2 opacity-0 shadow-md transition-[opacity,margin] hs-dropdown-open:opacity-100 hidden">
+                                <a class="flex items-center py-2 px-3 rounded-md text-sm text-gray-800 hover:bg-gray-100"
                                     href="#">
                                     Thông tin cá nhân
                                 </a>
                                 <hr class="my-2">
-                                <form
-                                    class="flex items-center py-2 px-3 rounded-md text-sm text-default-800 hover:bg-gray-100"
-                                    action="{{ route("logout.post") }}" method="post">
+                                <form class="w-full" action="{{ route('logout.post') }}" method="post">
                                     @csrf
-                                    <button type="submit">Đăng xuất</button>
+                                    <button type="submit"
+                                        class="w-full text-left flex items-center py-2 px-3 rounded-md text-sm text-red-600 hover:bg-red-50 hover:text-red-700">
+                                        Đăng xuất
+                                    </button>
                                 </form>
                             </div>
                         </div>
@@ -272,7 +293,7 @@
     <script src="/assets/adminPage/libs/quill/quill.min.js"></script>
     <script src="/assets/adminPage/js/pages/form-editor.js"></script>
     <script src="/assets/izitoast/js/iziToast.min.js"></script>
-     <script src="/assets/adminPage/libs/apexcharts/apexcharts.min.js"></script>
+    <script src="/assets/adminPage/libs/apexcharts/apexcharts.min.js"></script>
     <script src="/assets/adminPage/libs/jsvectormap/js/jsvectormap.min.js"></script>
     <script src="/assets/adminPage/js/pages/dashboard.js"></script>
 </body>

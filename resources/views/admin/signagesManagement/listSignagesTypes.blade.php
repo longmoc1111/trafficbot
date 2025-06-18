@@ -1,26 +1,39 @@
 @extends("admin.adminPageLayout.layout")
+@section("title", "Phân loại biển báo")
+
 @section("main")
 
     <main>
 
         <!-- Page Title Start -->
         <div class="flex items-center md:justify-between flex-wrap gap-2 mb-6">
-            <h4 class="text-default-900 text-lg font-medium mb-2">Danh sách bộ đề</h4>
+            <h4 class="text-default-900 text-lg font-medium mb-2">Phân loại biển báo</h4>
 
-            <div class="md:flex hidden items-center gap-3 text-sm font-semibold">
-                <a href="#" class="text-sm font-medium text-default-700">OpenDash</a>
-                <i class="material-symbols-rounded text-xl flex-shrink-0 text-default-500">chevron_right</i>
-                <a href="#" class="text-sm font-medium text-default-700">Tables</a>
-                <i class="material-symbols-rounded text-xl flex-shrink-0 text-default-500">chevron_right</i>
-                <a href="#" class="text-sm font-medium text-default-700" aria-current="page">Basic Tables</a>
-            </div>
+            <!-- <div class="md:flex hidden items-center gap-3 text-sm font-semibold">
+                    <a href="#" class="text-sm font-medium text-default-700">OpenDash</a>
+                    <i class="material-symbols-rounded text-xl flex-shrink-0 text-default-500">chevron_right</i>
+                    <a href="#" class="text-sm font-medium text-default-700">Tables</a>
+                    <i class="material-symbols-rounded text-xl flex-shrink-0 text-default-500">chevron_right</i>
+                    <a href="#" class="text-sm font-medium text-default-700" aria-current="page">Basic Tables</a>
+                </div> -->
         </div>
         <!-- Page Title End -->
 
         <div class=" gap-6 mt-8">
             <div class="card overflow-hidden">
-                <div class="card-header flex justify-end">
-                    <div class="flex gap-2">
+                <div class="card-header flex justify-between items-center">
+                    <div class="items-center relative">
+                        <div class="absolute inset-y-0 start-0 flex items-center ps-3 pointer-events-none">
+                            <i class="i-ph-magnifying-glass text-base"></i>
+                        </div>
+                        <form action="{{ route("admintrafficbot.signagetypes.sarch") }}">
+                            <input type="search" name="search"
+                                class="form-input px-10 rounded-lg bg-gray-500/10 border-transparent focus:border-transparent w-80"
+                                placeholder="Search...">
+                        </form>
+
+                    </div>
+                    <div class="flex items-center gap-3">
                         <button class="btn bg-primary/25 text-primary hover:bg-primary hover:text-white"
                             data-hs-overlay="#modal-create" data-fc-placement="bottom">
 
@@ -53,8 +66,9 @@
                                                 </td>
 
 
-                                                <td class="px-6 py-4 whitespace-nowrap text-sm text-default-800">
-                                                    {{ $signage->SignagesTypeDescript }}
+                                                <td class="px-6 py-4 whitespace-normal text-sm text-default-800"
+                                                    style="max-width: 250px; word-wrap: break-word;">
+                                                    {{ $signage->SignagesTypeDescription }}
                                                 </td>
                                                 <td
                                                     class="px-6 py-4 whitespace-nowrap text-end text-sm font-medium flex justify-end gap-x-2">
@@ -107,6 +121,25 @@
                                                             xem chi tiết
                                                         </span>
                                                     </div>
+                                                    <div class="hs-tooltip">
+
+                                                        <a href="{{ route("admintrafficbot.listsignages") }}" type="button" 
+                                                            class="text-blue-500 hover:text-blue-700 hs-tooltip-toggle"
+                                                            data-fc-placement="top">
+                                                            <span class="material-symbols-rounded text-2xl">
+                                                                <span class="material-symbols-rounded">
+                                                                    arrow_right_alt
+
+                                                                </span>
+                                                            </span>
+                                                        </a>
+                                                        <span
+                                                            class="hs-tooltip-content hs-tooltip-shown:opacity-100 hs-tooltip-shown:visible opacity-0 transition-opacity inline-block absolute invisible z-10 py-1 px-2 bg-gray-900 text-xs font-medium text-white rounded shadow-sm"
+                                                            role="tooltip">
+                                                            Đến liên kết
+                                                        </span>
+                                                    </div>
+
                                                 </td>
                                             </tr>
 
@@ -117,7 +150,7 @@
                         </div>
                     </div>
                 </div>
-                  <div class="flex items-center justify-between border-t border-gray-200 bg-white px-4 py-3 sm:px-6">
+                <div class="flex items-center justify-between border-t border-gray-200 bg-white px-4 py-3 sm:px-6">
                     <!-- Showing -->
                     <div>
                         <p class="text-sm text-gray-700">
@@ -157,7 +190,8 @@
                         {{-- Page Links --}}
                         @for ($page = $start; $page <= $end; $page++)
                             @if ($page == $signagesType->currentPage())
-                                <span class="px-3 py-1 bg-primary/25 text-primary rounded border border-indigo-600">{{ $page }}</span>
+                                <span
+                                    class="px-3 py-1 bg-primary/25 text-primary rounded border border-indigo-600">{{ $page }}</span>
                             @else
                                 <a href="{{ $signagesType->url($page) }}"
                                     class="px-3 py-1 text-gray-700 bg-white rounded border border-gray-300 hover:bg-gray-50">{{ $page }}</a>
@@ -230,7 +264,7 @@
 
                                     <input type="text" id="LicenseTypeName" name="SignagesTypeName"
                                         class="form-input w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500
-                                                                {{ $errors->has('LicenseTypeName') ? 'border-red-500 focus:ring-red-500' : 'border-gray-300' }}"
+                                                                    {{ $errors->has('LicenseTypeName') ? 'border-red-500 focus:ring-red-500' : 'border-gray-300' }}"
                                         value="{{ old('LicenseTypeName') }}">
                                 </div>
 
@@ -437,53 +471,53 @@
 
             <!-- modal show -->
             @foreach ($signagesType as $signage)
-                    <!-- modal chỉnh sửa câu loại biển báo -->
-                    <div id="show-{{ $signage->SignageTypeID }}"
-                        class="hs-overlay w-full h-full fixed top-0 left-0 z-70 transition-all duration-500 overflow-y-auto hidden pointer-events-none flex items-center justify-center">
-                        <div
-                            class="translate-y-10 hs-overlay-open:translate-y-0 hs-overlay-open:opacity-100 opacity-0 ease-in-out transition-all duration-500 sm:max-w-lg sm:w-full my-8 sm:mx-auto flex flex-col bg-white shadow-sm rounded">
-                            <div class="flex flex-col border border-default-200 shadow-sm rounded-lg  pointer-events-auto">
-                                <div class="flex justify-between items-center py-3 px-4 border-b border-default-200">
-                                    <h3 class="text-lg font-medium text-default-900 ">
-                                        Chi tiết loại biển báo
-                                    </h3>
-                                    <button type="button" class="text-default-600 cursor-pointer"
-                                        data-hs-overlay="#show-{{ $signage->SignageTypeID }}">
-                                        <i class="i-tabler-x text-lg"></i>
-                                    </button>
+                <!-- modal chỉnh sửa câu loại biển báo -->
+                <div id="show-{{ $signage->SignageTypeID }}"
+                    class="hs-overlay w-full h-full fixed top-0 left-0 z-70 transition-all duration-500 overflow-y-auto hidden pointer-events-none flex items-center justify-center">
+                    <div
+                        class="translate-y-10 hs-overlay-open:translate-y-0 hs-overlay-open:opacity-100 opacity-0 ease-in-out transition-all duration-500 sm:max-w-lg sm:w-full my-8 sm:mx-auto flex flex-col bg-white shadow-sm rounded">
+                        <div class="flex flex-col border border-default-200 shadow-sm rounded-lg  pointer-events-auto">
+                            <div class="flex justify-between items-center py-3 px-4 border-b border-default-200">
+                                <h3 class="text-lg font-medium text-default-900 ">
+                                    Chi tiết loại biển báo
+                                </h3>
+                                <button type="button" class="text-default-600 cursor-pointer"
+                                    data-hs-overlay="#show-{{ $signage->SignageTypeID }}">
+                                    <i class="i-tabler-x text-lg"></i>
+                                </button>
+                            </div>
+                            <div class="p-4 overflow-y-auto">
+                                <div class="mb-3">
+                                    <label for="LicenseTypeName" class="text-gray-700 text-sm font-semibold mb-2 block">
+                                        Tên biển báo
+                                    </label>
+                                    <input readonly type="text" id="LicenseTypeName" name="SignagesTypeName"
+                                        value="{{ $signage->SignagesTypeName }}"
+                                        class="form-input w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
                                 </div>
-                                <div class="p-4 overflow-y-auto">
-                                    <div class="mb-3">
-                                        <label for="LicenseTypeName" class="text-gray-700 text-sm font-semibold mb-2 block">
-                                            Tên biển báo
-                                        </label>
-                                        <input readonly type="text" id="LicenseTypeName" name="SignagesTypeName"
-                                            value="{{ $signage->SignagesTypeName }}"
-                                            class="form-input w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
-                                    </div>
 
-                                    <div class="mb-3">
-                                        <label for="example-email" class="text-default-800 text-sm font-medium inline-block mb-2">Mô
-                                            Mô tả loại biển báo</label>
-                                        <textarea readonly type="text" id="example-email" name="SignagesTypeDescription"
-                                            class="form-input">{{ $signage->SignagesTypeDescription }}</textarea>
-                                    </div>
+                                <div class="mb-3">
+                                    <label for="example-email" class="text-default-800 text-sm font-medium inline-block mb-2">Mô
+                                        Mô tả loại biển báo</label>
+                                    <textarea readonly type="text" id="example-email" name="SignagesTypeDescription"
+                                        class="form-input">{{ $signage->SignagesTypeDescription }}</textarea>
+                                </div>
 
-                                </div>
-                                <div class="flex justify-end items-center gap-x-2 py-3 px-4 border-t border-default-200">
-                                    <button type="button"
-                                        class="py-2 px-5 inline-flex items-center justify-center font-medium tracking-wide border align-middle duration-500 text-sm text-center bg-primary/5 hover:bg-primary border-primary/10 hover:border-primary text-primary hover:text-white rounded-md"
-                                        data-hs-overlay="#show-{{ $signage->SignageTypeID }}">
-                                        <i class="i-tabler-x me-1"></i>
-                                        Thoát
-                                    </button>
-                                </div>
+                            </div>
+                            <div class="flex justify-end items-center gap-x-2 py-3 px-4 border-t border-default-200">
+                                <button type="button"
+                                    class="py-2 px-5 inline-flex items-center justify-center font-medium tracking-wide border align-middle duration-500 text-sm text-center bg-primary/5 hover:bg-primary border-primary/10 hover:border-primary text-primary hover:text-white rounded-md"
+                                    data-hs-overlay="#show-{{ $signage->SignageTypeID }}">
+                                    <i class="i-tabler-x me-1"></i>
+                                    Thoát
+                                </button>
                             </div>
                         </div>
                     </div>
-                
+                </div>
+
             @endforeach
-        <!-- end modal-->
+            <!-- end modal-->
 
 
         </div>
