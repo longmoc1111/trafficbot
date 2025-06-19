@@ -226,7 +226,7 @@
                                         <img src="/assets/adminPage/avatar_user/{{ Auth::user()->avatar }}" alt="user-image"
                                             class="rounded-full h-10 w-10 object-cover border-2 border-red-500">
                                     @else
-                                        <img src="/assets/adminPage/avatar_user/avatar_default.jpg" alt="user-image"
+                                        <img src="{{ asset('storage/uploads/avatar/avatar_default.jpg') }}" alt="user-image"
                                             class="rounded-full h-10 w-10 object-cover border-2 border-gray-300">
                                     @endif
                                 </button>

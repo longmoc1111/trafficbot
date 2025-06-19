@@ -83,7 +83,7 @@
                                                     </td>
                                                     <td class="px-6 py-4 whitespace-nowrap text-sm text-default-800">
                                                         <img style="max-width: 100px;" class=""
-                                                            src="/assets/adminPage/SignagesImage/{{ $signage->SignageImage }}"
+                                                            src="{{ asset("storage/uploads/imageSignage/$signage->SignageImage")}}"
                                                             alt="">
                                                     </td>
                                                     <td

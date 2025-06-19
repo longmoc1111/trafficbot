@@ -146,7 +146,7 @@ class SignageController extends Controller
             $fileNameWithoutExt = pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME);
             $fileNameExt = $file->getClientOriginalExtension();
             $newFileName = $fileNameWithoutExt . "_" . time() . "." . $fileNameExt;
-            $file->move(public_path("assets/adminPage/SignagesImage"), $newFileName);
+            $file->move(storage_path("app/public/uploads/imageSignage"), $newFileName);
             $validate["SignageImage"] = $newFileName;
         }
         if ($validate) {
@@ -190,7 +190,7 @@ class SignageController extends Controller
         if ($request->hasFile("NewImage")) {
 
             if ($request->get("OldImage")) {
-                $oldfile = public_path("assets/adminPage/SignagesImage/" . $request->get("OldImage"));
+                $oldfile = storage_path("app/public/uploads/imageSignage" . $request->get("OldImage"));
                 if (File::exists($oldfile)) {
                     File::delete($oldfile);
                 }
@@ -199,7 +199,7 @@ class SignageController extends Controller
             $fileNameWithoutExt = pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME);
             $fileNameExt = $file->getClientOriginalExtension();
             $newFileName = $fileNameWithoutExt . "_" . time() . "." . $fileNameExt;
-            $file->move(public_path("assets/adminPage/SignagesImage"), "$newFileName");
+            $file->move(storage_path("app/public/uploads/imageSignage"),"$newFileName");
             $validate["SignageImage"] = $newFileName;
         }
         $signage = Signage::find($ID);

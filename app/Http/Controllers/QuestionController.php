@@ -87,7 +87,7 @@ class QuestionController extends Controller
             $fileNameWithoutExt = pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME);
             $fileNameExt = $file->getClientOriginalExtension();
             $newFileName = $fileNameWithoutExt . "_" . time() . "." . $fileNameExt;
-            $file->move(public_path("assets/adminPage/imageQuestion"), $newFileName);
+            $file->move(storage_path("app/public/uploads/imageQuestion"), $newFileName);
             $validateData["ImageDescription"] = $newFileName;
         }
         $question = Question::create([
@@ -204,7 +204,7 @@ class QuestionController extends Controller
         }
         if ($request->hasFile("ImageDescription")) {
             if ($request->hasfile("OldImageDescription")) {
-                $oldfile = public_path("assets/adminPage/iamgeQuestion" . $request->get("oldImageDescription"));
+                $oldfile = storage_path("app/public/uplaods/imageQuestion" . $request->get("oldImageDescription"));
                 if (File::exists($oldfile)) {
                     File::delete($oldfile);
                 }
@@ -214,7 +214,7 @@ class QuestionController extends Controller
             $fileNameExt = $file->getClientOriginalExtension();
             $newfileName = $fileNameWithoutExt . "_" . time() . "." . $fileNameExt;
             $validateData["ImageDescription"] = $newfileName;
-            $file->move(public_path("assets/adminPage/imageQuestion"), $newfileName);
+            $file->move(storage_path("app/public/uploads/imageQuestion"), $newfileName);
         }
         $question->update([
             "QuestionName" => $validateData["QuestionName"],
