@@ -29,15 +29,16 @@ class AuthController extends Controller
             "password" => "required",
         ]);
         $check = User::where("email", $validate["email"])->first();
-        if (!$check) {
-            return back();
+        // if (!$check) {
+        //     return back();
+        // }
+          if (!$check) {
+            return redirect()->route("login")->with("err_login", "Email chưa được đăng ký !");
         }
         if ($check->status != "active") {
             return redirect()->route("login")->with("err_login", "Tài khoản chưa được kích hoạt !");
         }
-        if (!$check) {
-            return redirect()->route("login")->with("err_login", "Email chưa được đăng ký !");
-        }
+      
         $credentials = $request->only("email", "password");
         if (Auth::attempt($credentials)) {
             $user = Auth::user();

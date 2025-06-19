@@ -1,7 +1,7 @@
 @extends("auth.layout.authPageLayout");
 @section("title", "Login")
 @section("main")
-
+ 
 	<body>
 		<section class="fxt-template-animation fxt-template-layout11">
 			<div class="container">

@@ -38,20 +38,25 @@ class ViewServiceProvider extends ServiceProvider
             foreach ($signages as $signage) {
                 $signagesData[] = [
                     "SignageName" => $signage->SignageName,
-                    "SignagesExplanation"=> $signage->SignagesExplanation,               
+                    "SignagesExplanation" => $signage->SignagesExplanation,
                     "SignageImage" => $signage->SignageImage,
                 ];
             }
-        $view->with("signagesData",$signagesData);
+            if (!empty($signagesData)) {
+                $view->with("signagesData", $signagesData);
+            }
         });
         view::composer("userPage.layout.layout", function ($view) {
             $data = ChatBot::all();
-            foreach($data as $item){
-            $pdfs[] = [
-                "file" => $item->File
-            ];
+            foreach ($data as $item) {
+                $pdfs[] = [
+                    "file" => $item->File
+                ];
             }
+            if(!empty($pdfs)){
             $view->with("pdfs", $pdfs);
+
+            }
         });
     }
-} 
+}
