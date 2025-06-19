@@ -14,6 +14,7 @@ return new class extends Migration
         Schema::create('signages', function (Blueprint $table) {
             $table->id("SignageID");
             $table->text("SignageName");
+            $table->text("SignageImage");
             $table->text("SignagesExplanation");
             $table->unsignedBigInteger("SignageTypeID");
             $table->foreign("SignageTypeID")->references("SignageTypeID")->on("signage_types");
