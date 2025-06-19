@@ -51,10 +51,11 @@ Route::middleware("admin")->controller(SignageController::class)->prefix("admint
 });
 Route::middleware("admin")->controller(LicenseTypeController::class)->prefix("admintrafficbot")->name("admintrafficbot")->group(function(){
     Route::get("/license/list", "listLicenseType")->name(".listlicensetype");
-    Route::get("/license/list/add","createLicenseType")->name(".licensetype.create");
+    Route::get("/license/list/create","createLicenseType")->name(".licensetype.create");
+    Route::get("/license/list/edit/{ID}","editLicenseType")->name(".licensetype.edit");
     Route::post("/license/list/store","storeLicenseType")->name(".licensetype.store");
     Route::delete("/license/list/delete/{ID}","deleteLicenseType")->name(".licensetype.delete");
-    Route::post("/license/list/update/{ID}","updateLicenseType")->name(".licensetype.update");
+    Route::put("/license/list/update/{ID}","updateLicenseType")->name(".licensetype.update");
 
 
 
@@ -84,6 +85,7 @@ route::controller(UserPageController::class)->name("userpage")->group(function()
     route::get("/","homePage")->name(".home");
     route::get("/quiz-practice/{LicenseTypeID}","PracticeExam")->name(".practiceExam");
     route::get("/quiz-practice/start/{licenseID}/{examsetID}","PracticeStart")->name(".practiceStart");
+    route::get("/quiz-practice/start-random/{licenseID}","PracticeStartRandom")->name(".practice.start.random");
     route::post("/quiz-practice/finish/{licenseTypeID}/{ExamSetID}","PracticeFinish")->name(".practicefinish");
     route::get("/signages/{SignageTypeID}","signages")->name(".signages");
 

@@ -41,7 +41,49 @@
                             class="btn border-success text-success hover:bg-success hover:text-white">Tạo</button>
                     </div>
 
-                    @error("quantity_error")
+                    @error("quantity_error" || "question_created" || "iscritical_null") 
+                        <div id="dismiss-alert_1"
+                            class="hs-removing:translate-x-5 hs-removing:opacity-0 transition duration-300 bg-red-100 border rounded-md "
+                            role="alert">
+                            <div class="flex items-center gap-3">
+                                <div class="flex-shrink-0">
+                                    <i class="i-tabler-circle-x text-red-600"></i>
+                                </div>
+                                <div class="flex-grow">
+                                    <div class="text-sm text-red-800 font-medium">
+                                        {{ $message }}
+                                    </div>
+                                </div>
+                                <button data-hs-remove-element="#dismiss-alert_1" type="button" id="dismiss-test"
+                                    class="ms-auto h-8 w-8 rounded-full bg-gray-200 flex justify-center items-center">
+                                    <i class="i-tabler-x text-xl text-red-600"></i>
+                                </button>
+                            </div>
+                        </div>
+
+                    @enderror
+                      @error("question_created") 
+                        <div id="dismiss-alert_1"
+                            class="hs-removing:translate-x-5 hs-removing:opacity-0 transition duration-300 bg-red-100 border rounded-md "
+                            role="alert">
+                            <div class="flex items-center gap-3">
+                                <div class="flex-shrink-0">
+                                    <i class="i-tabler-circle-x text-red-600"></i>
+                                </div>
+                                <div class="flex-grow">
+                                    <div class="text-sm text-red-800 font-medium">
+                                        {{ $message }}
+                                    </div>
+                                </div>
+                                <button data-hs-remove-element="#dismiss-alert_1" type="button" id="dismiss-test"
+                                    class="ms-auto h-8 w-8 rounded-full bg-gray-200 flex justify-center items-center">
+                                    <i class="i-tabler-x text-xl text-red-600"></i>
+                                </button>
+                            </div>
+                        </div>
+
+                    @enderror  
+                    @error( "iscritical_null") 
                         <div id="dismiss-alert_1"
                             class="hs-removing:translate-x-5 hs-removing:opacity-0 transition duration-300 bg-red-100 border rounded-md "
                             role="alert">
@@ -71,24 +113,29 @@
                                 </label>
 
                                 @foreach ($questionCategory as $category)
+                                @php
+                                    $categoryID = $category->CategoryID;
+                                    $quantity = $categoryQuantity[$categoryID] ?? null;
+                                @endphp
                                     <div class="flex items-center mb-2 w-full gap-2">
                                         <!-- Checkbox -->
                                         <div class="w-1/12 flex justify-center category-checkbox">
                                             <input type="checkbox" name="selected_categories[]"
-                                                id="checkbox-{{ $category->CategoryID }}" value="{{ $category->CategoryID }}"
-                                                class="form-checkbox text-blue-600 w-5 h-5">
+                                                id="checkbox-{{ $categoryID }}" value="{{ $categoryID}}"
+                                                class="form-checkbox text-blue-600 w-5 h-5"
+                                                {{ $quantity !== null ? "checked" : "" }}>
                                         </div>
 
                                         <!-- Label -->
-                                        <label for="checkbox-{{ $category->CategoryID }}"
+                                        <label for="checkbox-{{ $categoryID}}"
                                             class="w-7/12 text-sm font-medium text-gray-800">
                                             {{ $category->CategoryName }}
                                         </label>
 
                                         <!-- Input số lượng -->
                                         <div class="w-4/12">
-                                            <input type="number" name="amounts[{{ $category->CategoryID }}]" min="0"
-                                                placeholder="Số lượng"
+                                            <input type="number" name="amounts[{{ $categoryID}}]" min="0"
+                                                placeholder="Số lượng" value = {{ $quantity ?? 'null' }}
                                                 class="category-input form-input w-full border border-gray-300 rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition duration-200">
                                         </div>
                                     </div>

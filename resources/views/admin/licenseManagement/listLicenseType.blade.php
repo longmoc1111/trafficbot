@@ -20,11 +20,17 @@
 
         <div class=" gap-6 mt-8">
             <div class="card overflow-hidden">
-                <div class="card-header flex justify-end">
+                <!-- <div class="card-header flex justify-end">
                     <button id="open_modal_create" class="btn bg-primary/25 text-primary hover:bg-primary hover:text-white"
                         data-hs-overlay="#create_license_type" data-fc-placement="bottom">
                         Thêm giấy phép
                     </button>
+
+                </div> -->
+                 <div class="card-header flex justify-end">
+                    <a href="{{ route("admintrafficbot.licensetype.create") }}" class="btn bg-primary/25 text-primary hover:bg-primary hover:text-white">
+                        Thêm giấy phép
+                    </a>
 
                 </div>
                 <div>
@@ -70,6 +76,7 @@
                                                 <td class="px-6 py-4 whitespace-nowrap text-sm text-default-800">
                                                     {{ $licensetype->LicenseTypePassCount }} Câu
                                                 </td>
+                                              
                                                 <td
                                                     class="px-6 py-4 whitespace-nowrap text-end text-sm font-medium flex justify-end gap-x-2">
                                                     <div class="hs-tooltip">
@@ -88,10 +95,7 @@
                                                         </span>
                                                     </div>
                                                     <div class="hs-tooltip">
-                                                        <a id="open_modal_edit" href="" onclick="event.preventDefault()"
-                                                            type="button" class="text-info hover:text-info hs-tooltip-toggle"
-                                                            data-hs-overlay="#modal_edit_{{ $licensetype->LicenseTypeID }}"
-                                                            data-fc-placement="bottom">
+                                                        <a href = "{{ route("admintrafficbot.licensetype.edit", ["ID"=>$licensetype->LicenseTypeID]) }}" type="button" class="text-info hover:text-info hs-tooltip-toggle">
                                                             <span class="material-symbols-rounded text-2xl">
                                                                 edit
                                                             </span>
@@ -107,7 +111,7 @@
                                                             class="text-blue-500 hover:text-blue-700 hs-tooltip-toggle"
                                                             data-fc-placement="top"
                                                             data-hs-overlay="#modal_show_{{ $licensetype->LicenseTypeID }}">
-                                                            <span class="material-symbols-rounded text-2xl">
+                                                             <span class="material-symbols-rounded text-2xl">
                                                                 visibility
                                                             </span>
                                                         </a>

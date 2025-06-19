@@ -11,23 +11,22 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('questions', function (Blueprint $table) {
-            $table->id("QuestionID");
-            $table->text("QuestionName");
-            $table->text("ImageDescription")->nullable();
-            $table->boolean("IsCritical");
-            $table->text("QuestionExplain")->nullable();
+        Schema::create('license_type_question_category', function (Blueprint $table) {
+            $table->id("LicenseQuestionTypeID");
+            $table->unsignedBigInteger("LicenseTypeID");
             $table->unsignedBigInteger("CategoryID");
+            $table->foreign("LicenseTypeID")->references("LicenseTypeID")->on("license_types");
             $table->foreign("CategoryID")->references("CategoryID")->on("question_categories");
+            $table->integer("Quantity");
             $table->timestamps();
         });
-    } 
+    }
 
     /**
      * Reverse the migrations.
      */
     public function down(): void
     {
-        Schema::dropIfExists('questions');
+        Schema::dropIfExists('license_type_question_category');
     }
 };

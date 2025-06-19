@@ -19,7 +19,7 @@ return new class extends Migration
             $table->integer("LicenseTypeQuantity");
             $table->integer("LicenseTypePassCount");
             $table->timestamps();
-        });
+        }); 
     }
 
     /**

@@ -28,75 +28,95 @@
 
                     <div class="p-6">
                         <div class="grid lg:grid-cols-2 gap-6">
-                            <div>
-
-
-
-
-
-                                <label for="LicenseTypeName" class="text-gray-700 text-sm font-semibold mb-2 block">
-                                    Tên giấy phép
-                                </label>
-                                @error('LicenseTypeName')
-                                    <div id="dismiss-alert" role="alert">
-                                        <div class="flex items-center">
-                                            <div class="flex-shrink-0">
-                                                <i class="i-tabler-circle-x text-xl text-red-600"></i>
-                                            </div>
-                                            <div class="flex-grow">
-                                                <div
-                                                    class="flex items-center bg-red-100 text-red-700 text-sm px-4 rounded mb-2">
-                                                    {{ $message }}
-                                                    <button data-hs-remove-element="#dismiss-alert" type="button"
-                                                        id="dismiss-test"
-                                                        class="ms-auto h-6 w-6 rounded-full bg-gray-200 flex justify-center items-center">
-                                                        <i class="i-tabler-x text-red-600"></i>
-                                                    </button>
-                                                </div>
-                                            </div>
-
-                                        </div>
-                                    </div>
-                                @enderror
-
-                                <input type="text" id="LicenseTypeName" name="LicenseTypeName"
-                                    class="form-input w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500
-                                        {{ $errors->has('LicenseTypeName') ? 'border-red-500 focus:ring-red-500' : 'border-gray-300' }}" value="{{ old('LicenseTypeName') }}">
-                            </div>
-
-
-
-                            <div>
-                                <label for="example-email" class="text-default-800 text-sm font-medium inline-block mb-2">Mô
-                                    tả giấy
-                                    phép</label>
-                                @error("LicenseTypeDescription")
-                                    @error("LicenseTypeDescription")
-                                        <div id="dismiss-alert_2" role="alert">
-                                            <div class="flex items-center">
-                                                <div class="flex-shrink-0">
-                                                    <i class="i-tabler-circle-x text-red-600"></i>
-                                                </div>
-                                                <div class="flex-grow">
-                                                    <div
-                                                        class="flex items-center bg-red-100 text-red-700 text-sm px-4 rounded mb-2">
-                                                        {{ $message }}
-                                                        <button data-hs-remove-element="#dismiss-alert_2" type="button"
-                                                            id="dismiss-test"
-                                                            class="ms-auto h-6 w-6 rounded-full bg-gray-200 flex justify-center items-center">
-                                                            <i class="i-tabler-x text-red-600"></i>
-                                                        </button>
-                                                    </div>
-                                                </div>
-                                            </div>
+                            <div class="p-4 overflow-y-auto">
+                                <div class="mb-3">
+                                    <label for="LicenseTypeName" class="text-gray-700 text-sm font-semibold mb-2 block">
+                                        Tên giấy phép
+                                    </label>
+                                    @error('LicenseTypeName', 'create')
+                                        <div id="license_Type_error"
+                                            class="flex items-center bg-red-100 text-red-700 text-sm px-4 mb-2">
+                                            {{ $message }}
                                         </div>
                                     @enderror
 
-                                @enderror
-                                <textarea type="text" id="example-email" name="LicenseTypeDescription"
-                                    class="form-input"></textarea>
-                            </div>
+                                    <input type="text" id="LicenseTypeName" name="LicenseTypeName" value=""
+                                        onfocus="document.getElementById('license_Type_error')?.classList.add('hidden')"
+                                        class="form-input w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                                </div>
 
+                                <div class="mb-3">
+                                    <label for="example-email"
+                                        class="text-default-800 text-sm font-medium inline-block mb-2">
+                                        Mô tả giấy phép</label>
+
+                                    @error("LicenseTypeDescription", 'create')
+                                        <div id="license_type_description_errorr"
+                                            class="flex items-center bg-red-100 text-red-700 text-sm px-4 mb-2">
+                                            {{ $message }}
+                                        </div>
+                                    @enderror
+                                    <textarea type="text" id="example-email" name="LicenseTypeDescription"
+                                        class="form-input"
+                                        onfocus="document.getElementById('license_type_description_errorr')?.classList.add('hidden')"></textarea>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="example-email"
+                                        class="text-default-800 text-sm font-medium inline-block mb-2">
+                                        Thời gian thi</label>
+
+                                    @error("LicenseTypeDuration", 'create')
+                                        <div id="license_type_duration_errorr"
+                                            class="flex items-center bg-red-100 text-red-700 text-sm px-4 mb-2">
+                                            {{ $message }}
+                                        </div>
+                                    @enderror
+                                    <input type="number" id="" name="LicenseTypeDuration" class="form-input"
+                                        onfocus="document.getElementById('license_type_duration_errorr')?.classList.add('hidden')">
+                                </div>
+                                <div class="mb-3">
+                                    <label for="example-email"
+                                        class="text-default-800 text-sm font-medium inline-block mb-2">
+                                        Số lượng câu hỏi</label>
+
+                                    @error("LicenseTypeQuantity", 'create')
+                                        <div id="license_type_quantity_errorr"
+                                            class="flex items-center bg-red-100 text-red-700 text-sm px-4 mb-2">
+                                            {{ $message }}
+                                        </div>
+                                    @enderror
+                                    <input type="number" id="" name="LicenseTypeQuantity" class="form-input"
+                                        onfocus="document.getElementById('license_type_quantity_errorr')?.classList.add('hidden')">
+                                </div>
+                                <div class="">
+                                    <label for="example-email"
+                                        class="text-default-800 text-sm font-medium inline-block mb-2">
+                                        Số câu đúng tối thiểu</label>
+
+                                    @error("LicenseTypePasscount", 'create')
+                                        <div id="license_type_pass_count_errorr"
+                                            class="flex items-center bg-red-100 text-red-700 text-sm px-4 mb-2">
+                                            {{ $message }}
+                                        </div>
+                                    @enderror
+                                    <input type="number" id="" name="LicenseTypePassCount" class="form-input"
+                                        onfocus="document.getElementById('license_type_pass_count_errorr')?.classList.add('hidden')">
+                                </div>
+                            </div>
+                            <div class="p-4 overflow-y-auto">
+                                @foreach($QuestionCategory as $category)
+                                    <div class="mb-3">
+                                        <label for="questionCategory" class="text-gray-700 text-sm font-semibold mb-2 block">
+                                            {{ $category->CategoryName }}
+                                        </label>
+                                        <input type="number" id="questionCategory"
+                                             name="questionCategory[{{ $category->CategoryID }}]"
+                                            placeholder="Số lượng câu hỏi"
+                                            onfocus="document.getElementById('license_Type_error')?.classList.add('hidden')"
+                                            class="form-input w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                                    </div>
+                                @endforeach
+                            </div>
 
                         </div>
                     </div>

@@ -6,6 +6,8 @@ use Illuminate\Database\Eloquent\Model;
 use App\Models\ExamSet;
 use App\Models\Question;
 use App\Models\ExamResult;
+use App\Models\QuestionCategory;
+
 
 
 class LicenseType extends Model
@@ -21,5 +23,9 @@ class LicenseType extends Model
     }
     public function result_LicenseType(){
         return $this->hasMany(ExamResult::class , "LicenseTypeID","LicenseTypeID");
+    }
+    public function questionCategory_LicenseType(){
+        return $this->belongsToMany(QuestionCategory::class, "license_type_question_category", "LicenseTypeID", "CategoryID")
+                    ->withPivot("Quantity");
     }
 }

@@ -3,7 +3,7 @@
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
-
+ 
 return new class extends Migration
 {
     /**
@@ -17,6 +17,7 @@ return new class extends Migration
             $table->unsignedBigInteger("LicenseTypeID");
             $table->float("score");
             $table->boolean("passed");
+            $table->float("Duration");
             $table->foreign("userID")->references("userID")->on("users");
             $table->foreign("LicenseTypeID")->references("LicenseTypeID")->on("license_types");
             $table->timestamps();

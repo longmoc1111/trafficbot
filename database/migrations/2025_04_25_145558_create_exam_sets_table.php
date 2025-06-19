@@ -6,7 +6,7 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
-    /**
+    /** 
      * Run the migrations.
      */
     public function up(): void
@@ -14,9 +14,6 @@ return new class extends Migration
         Schema::create('exam_sets', function (Blueprint $table) {
             $table->id("ExamSetID");
             $table->string("ExamSetName");
-            $table->integer("Quantity");
-            $table->integer("Duration");
-            $table->integer("PassCount");
             $table->timestamps();
         });
     }

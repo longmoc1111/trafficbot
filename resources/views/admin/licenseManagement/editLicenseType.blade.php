@@ -2,7 +2,7 @@
 @section("main")
 
     <main>
-        <form action={{ route("admintrafficbot.licensetype.update", $editLicenseType) }} method="POST">
+        <form action={{ route("admintrafficbot.licensetype.update", ["ID"=>$editLicenseType->LicenseTypeID]) }} method="POST">
             @csrf
             @method("PUT")
             <!-- Page Title Start -->
@@ -19,99 +19,122 @@
             </div>
             <!-- Page Title End -->
 
-            <div class="flex flex-col gap-6">
+               <div class="flex flex-col gap-6">
                 <div class="card border rounded shadow">
                     <div class="flex items-center justify-between px-6 py-4 border-b">
-                        <h4 class="text-lg font-semibold">Chỉnh sửa giấy phép </h4>
+                        <h4 class="text-lg font-semibold">Thêm mới giấy phép</h4>
                         <button type="submit"
-                            class="btn border-success text-success hover:bg-success hover:text-white">Chỉnh sửa</button>
+                            class="btn border-success text-success hover:bg-success hover:text-white">Tạo</button>
                     </div>
+                   
                     <div class="p-6">
-                        <div>
-
-                        </div>
                         <div class="grid lg:grid-cols-2 gap-6">
-                            <div>
-                                <div>
+                            <div class="p-4 overflow-y-auto">
+                                @if($errors->any())
+    <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-2 rounded mb-4">
+        <ul class="list-disc pl-5 text-sm">
+            @foreach($errors->all() as $error)
+                <li>{{ $error }}</li>
+            @endforeach
+        </ul>
+    </div>
+@endif
+                                <div class="mb-3">
                                     <label for="LicenseTypeName" class="text-gray-700 text-sm font-semibold mb-2 block">
                                         Tên giấy phép
                                     </label>
-                                    @if($errors->has("LicenseTypeName") || session("exists_license"))
-                                        <div id="dismiss-alert-2"
-                                            class="hs-removing:translate-x-5 hs-removing:opacity-0 transition duration-300 bg-red-100 border rounded-md "
-                                            role="alert">
-                                            <div class="flex items-center gap-3">
-                                                <div class="flex-shrink-0">
-                                                    <i class="i-tabler-circle-x text-red-600"></i>
-                                                </div>
-                                                <div class="flex-grow">
-                                                    @error("LicenseTypeName")
-                                                        <div class="text-sm text-red-800 font-medium">
-                                                            {{ $message }}
-                                                        </div>
-                                                    @enderror
-                                                    @if(session("exists_license"))
-                                                        <div class="text-sm text-red-800 font-medium">
-                                                            {{ session("exists_license") }}
-                                                        </div>
-                                                    @endif
-
-                                                </div>
-                                                <button data-hs-remove-element="#dismiss-alert-2" type="button"
-                                                    id="dismiss-test"
-                                                    class="ms-auto h-8 w-8 rounded-full bg-gray-200 flex justify-center items-center">
-                                                    <i class="i-tabler-x text-xl text-red-600"></i>
-                                                </button>
-                                            </div>
+                                    @error('LicenseTypeName', 'edit')
+                                        <div id="license_Type_error"
+                                            class="flex items-center bg-red-100 text-red-700 text-sm px-4 mb-2">
+                                            {{ $message }}
                                         </div>
+                                    @enderror
 
-                                    @endif
-                                    <input type="text" name="LicenseTypeName"
-                                        class="form-input w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                                        value="{{ $editLicenseType->LicenseTypeName }}">
-                                    <input hidden name="oldLicenseTypeName" type="text"
-                                        value="{{ $editLicenseType->LicenseTypeName  }}">
+                                    <input type="text" id="LicenseTypeName" name="LicenseTypeName" value="{{ $editLicenseType->LicenseTypeName }}"
+                                        onfocus="document.getElementById('license_Type_error')?.classList.add('hidden')"
+                                        class="form-input w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
                                 </div>
-                            </div>
 
-
-                            <div>
                                 <div class="mb-3">
                                     <label for="example-email"
                                         class="text-default-800 text-sm font-medium inline-block mb-2">
                                         Mô tả giấy phép</label>
 
-                                    @error("LicenseTypeDescription")
-                                        <div id="dismiss-alert"
-                                            class="hs-removing:translate-x-5 hs-removing:opacity-0 transition duration-300 bg-red-100 border rounded-md "
-                                            role="alert">
-                                            <div class="flex items-center gap-3">
-                                                <div class="flex-shrink-0">
-                                                    <i class="i-tabler-circle-x text-red-600"></i>
-                                                </div>
-                                                <div class="flex-grow">
-                                                    <div class="text-sm text-red-800 font-medium">
-                                                        {{ $message }}
-                                                    </div>
-                                                </div>
-                                                <button data-hs-remove-element="#dismiss-alert" type="button" id="dismiss-test"
-                                                    class="ms-auto h-8 w-8 rounded-full bg-gray-200 flex justify-center items-center">
-                                                    <i class="i-tabler-x text-xl text-red-600"></i>
-                                                </button>
-                                            </div>
+                                    @error("LicenseTypeDescription", 'edit')
+                                        <div id="license_type_description_errorr"
+                                            class="flex items-center bg-red-100 text-red-700 text-sm px-4 mb-2">
+                                            {{ $message }}
                                         </div>
-
                                     @enderror
-                                    <textarea type="text" name="LicenseTypeDescription" class="form-input text-left">
-                                                {{  $editLicenseType->LicenseTypeDescription }}</textarea>
+                                    <textarea type="text" id="example-email" name="LicenseTypeDescription"
+                                        class="form-input"
+                                        onfocus="document.getElementById('license_type_description_errorr')?.classList.add('hidden')">{{ $editLicenseType->LicenseTypeDescription }}"</textarea>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="example-email"
+                                        class="text-default-800 text-sm font-medium inline-block mb-2">
+                                        Thời gian thi</label>
+
+                                    @error("LicenseTypeDuration", 'edit')
+                                        <div id="license_type_duration_errorr"
+                                            class="flex items-center bg-red-100 text-red-700 text-sm px-4 mb-2">
+                                            {{ $message }}
+                                        </div>
+                                    @enderror
+                                    <input type="number" id="" name="LicenseTypeDuration" class="form-input" value="{{ $editLicenseType->LicenseTypeDuration }}"
+                                        onfocus="document.getElementById('license_type_duration_errorr')?.classList.add('hidden')">
+                                </div>
+                                <div class="mb-3">
+                                    <label for="example-email"
+                                        class="text-default-800 text-sm font-medium inline-block mb-2">
+                                        Số lượng câu hỏi</label>
+
+                                    @error("LicenseTypeQuantity", 'edit')
+                                        <div id="license_type_quantity_errorr"
+                                            class="flex items-center bg-red-100 text-red-700 text-sm px-4 mb-2">
+                                            {{ $message }}
+                                        </div>
+                                    @enderror
+                                    <input type="number" id="" name="LicenseTypeQuantity" class="form-input" value="{{ $editLicenseType->LicenseTyQuantity }}"
+                                        onfocus="document.getElementById('license_type_quantity_errorr')?.classList.add('hidden')">
+                                </div>
+                                <div class="">
+                                    <label for="example-email"
+                                        class="text-default-800 text-sm font-medium inline-block mb-2">
+                                        Số câu đúng tối thiểu</label>
+
+                                    @error("LicenseTypePasscount", 'edit')
+                                        <div id="license_type_pass_count_errorr"
+                                            class="flex items-center bg-red-100 text-red-700 text-sm px-4 mb-2">
+                                            {{ $message }}
+                                        </div>
+                                    @enderror
+                                    <input type="number" id="" name="LicenseTypePassCount" class="form-input" value="{{ $editLicenseType->LicenseTyPassCount }}"
+                                        onfocus="document.getElementById('license_type_pass_count_errorr')?.classList.add('hidden')">
                                 </div>
                             </div>
-
+                       
+                            <div class="p-4 overflow-y-auto">
+                                @foreach($questionCategory as $category)
+                                    <div class="mb-3">
+                                        <label for="questionCategory" class="text-gray-700 text-sm font-semibold mb-2 block">
+                                            {{ $category->CategoryName }}
+                                        </label>
+                                            <input type="number" id="questionCategory"
+                                                name="questionCategory[{{ $category->CategoryID }}]"
+                                                    value="{{ $categoryQuantity[$category->CategoryID] ?? '' }}"
+                                                placeholder="Số lượng câu hỏi"
+                                                onfocus="document.getElementById('license_Type_error')?.classList.add('hidden')"
+                                                class="form-input w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                                        </div>
+                                @endforeach
+                            </div>
 
                         </div>
                     </div>
                 </div> <!-- end card -->
             </div>
+
 
         </form>
 

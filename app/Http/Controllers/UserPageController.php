@@ -25,6 +25,7 @@ class UserPageController extends Controller
 
     public function practiceExam(string $id)
     {
+
         $license = LicenseType::find($id);
         $licenseName = $license->LicenseTypeName;
         if ($licenseName) {
@@ -50,6 +51,15 @@ class UserPageController extends Controller
         $answers = ["A" => "", "B" => "", "C" => "", "D" => ""];
         $labels = ["A", "B", "C", "D"];
         return view("userPage.quiz.practiceStart", compact("questions", "examSet", "answers", "labels", "license", "lastWordA", "duration"));
+    }
+    public function PracticeStartRandom($licenseID){
+        $license = LicenseType::find($licenseID);
+        $quantity = $license->LicenseTypeQuantity;
+        dd($quantity);
+        $question = Question::get();
+        // $questions = Question::whe
+        return view("userPage.quiz.practiceRandom");
+
     }
     public function PracticeFinish($licenseTypeID, $ExamSetID, Request $request)
     {

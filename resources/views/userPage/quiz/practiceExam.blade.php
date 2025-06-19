@@ -47,10 +47,12 @@
             <div class="service-item position-relative h-100">
                 <div class="service-text rounded p-5">
                     <div class="row g-4 wow fadeInUp" data-wow-delay="0.1s">
-                        <!-- Dùng col-1 để mỗi hàng chứa tối đa 12 thẻ -->
-                        <!-- Nếu thêm thẻ thứ 13 trở đi, nó tự xuống hàng -->
-
-                        <!-- Ví dụ: 15 thẻ -->
+                           <a href="{{ route("userpage.practice.start.random", ["licenseID"=>$license]) }}" class="col-2" style="text-decoration:none">
+                                <div class="testimonial-item rounded text-center p-2">
+                                
+                                    <p style="color:rgb(43, 39, 39);text-decoration:none" class="small mb-1">Đề ngẫu nhiên</p>
+                                </div>
+                            </a>
                         @foreach ($examSets as $examSet)
                             <a href="{{ route("userpage.practiceStart", ["licenseID"=>$license,"examsetID" => $examSet->ExamSetID]) }}" class="col-2" style="text-decoration:none">
                                 <div class="testimonial-item rounded text-center p-2">

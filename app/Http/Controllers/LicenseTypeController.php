@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\QuestionCategory;
 use Illuminate\Http\Request;
 use App\Models\LicenseType;
 use Illuminate\Support\Facades\DB;
@@ -11,16 +12,24 @@ class LicenseTypeController extends Controller
 {
     public function listLicenseType()
     {
-        $ListLicenseType = LicenseType::all();
+        $ListLicenseType = LicenseType::with("questionCategory_LicenseType")->get();
         return view("admin.licenseManagement.listLicenseType", compact("ListLicenseType"));
     }
     public function createLicenseType()
     {
-        return view("admin.licenseManagement.createLicenseType");
+        $QuestionCategory = QuestionCategory::all();
+        return view("admin.licenseManagement.createLicenseType", compact("QuestionCategory"));
     }
     public function storeLicenseType(Request $request)
     {
 
+        $categories = $request->input("questionCategory");
+        $sysData = [];
+        foreach ($categories as $ID => $quantity) {
+            if ($quantity > 0) {
+                $sysData[$ID] = ["Quantity" => $quantity];
+            }
+        }
         $validator = Validator::make(
             $request->all(),
             [
@@ -29,7 +38,6 @@ class LicenseTypeController extends Controller
                 "LicenseTypeDuration" => "required|numeric",
                 "LicenseTypeQuantity" => "required|numeric",
                 "LicenseTypePassCount" => "required|numeric",
-
             ],
             [
                 "LicenseTypeName.required" => "vui lòng không để trống !",
@@ -49,7 +57,10 @@ class LicenseTypeController extends Controller
         }
         $validatedData = $validator->validated();
         $licenseTypeName = $validatedData["LicenseTypeName"];
-        LicenseType::create($validator->validated());
+        $LicenseType = LicenseType::create($validator->validated());
+        if ($LicenseType) {
+            $LicenseType->questionCategory_LicenseType()->sync($sysData);
+        }
         return redirect()->route("admintrafficbot.listlicensetype")->with("add_license", "Thêm mới $licenseTypeName thành công");
 
     }
@@ -64,17 +75,29 @@ class LicenseTypeController extends Controller
         $licenseType->delete();
         return redirect()->route("admintrafficbot.listlicensetype")->with("delete_license", "xóa $licenseTypeName thành công  !");
     }
-    public function editLicenseType(string $id)
+    public function editLicenseType($ID)
     {
-        $editLicenseType = LicenseType::find($id);
-        return view("admin.licenseType.editLicenseType", compact("editLicenseType"));
+        $editLicenseType = LicenseType::with("questionCategory_LicenseType")->find($ID);
+        $categoryQuantity = $editLicenseType->questionCategory_LicenseType
+            ->pluck("pivot.Quantity", "CategoryID")
+            ->toArray();
+        $questionCategory = QuestionCategory::all();
+        return view("admin.licenseManagement.editLicenseType", compact("editLicenseType", "questionCategory", "categoryQuantity"));
     }
-    public function updateLicenseType(Request $request, string $id)
+    public function updateLicenseType(Request $request, $ID)
     {
+
+        $categories = $request->input("questionCategory", []);
+        $datasync = [];
+        foreach ($categories as $index => $item) {
+            if ($item != null) {
+                $datasync[$index] = ["Quantity" => $item];
+            }
+        }
         $validator = Validator::make(
             $request->all(),
             [
-                "LicenseTypeName" => "required|unique:license_types,LicenseTypeName",
+                "LicenseTypeName" => "required|unique:license_types,LicenseTypeName,{$ID},LicenseTypeID",
                 "LicenseTypeDescription" => "required",
                 "LicenseTypeDuration" => "required|numeric",
                 "LicenseTypeQuantity" => "required|numeric",
@@ -98,9 +121,17 @@ class LicenseTypeController extends Controller
             return back()->withErrors($validator, "edit");
         }
         $validatedata = $validator->validated();
-        $license = LicenseType::find($id);
-        $license->update($validatedata);
+        $license = LicenseType::find($ID);
+        if ($license) {
+            $license->update($validatedata);
+            $license->questionCategory_LicenseType()->sync($datasync);
         return redirect()->route("admintrafficbot.listlicensetype")->with("update_license", "cập nhật giấy phép thành công !");
+
+        }else{
+        return redirect()->route("admintrafficbot.listlicensetype")->with("update_fails", "cập nhật giấy phép thất bại !");
+
+        }
+
 
     }
 }
