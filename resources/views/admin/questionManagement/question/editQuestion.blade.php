@@ -89,7 +89,7 @@
                                     <label for="example-password"
                                         class="text-default-800 text-sm font-medium inline-block mb-2">
                                         Giấy phép</label>
-                                    <select name="LicenseTypeID" class="form-select" id="example-select" multiple>
+                                    <select name="LicenseTypeID[]" class="form-select" id="example-select" multiple>
                                         @foreach ($allLicens as $ID => $name)
                                             <option value="{{ $ID }}" {{ array_key_exists($ID, $allLicenseForQS) ? "selected" : '' }} >{{ $name}}
                                             </option>
