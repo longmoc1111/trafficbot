@@ -86,18 +86,6 @@
                                 </div>
 
                                 <div class="mb-3">
-                                    <label for="example-password"
-                                        class="text-default-800 text-sm font-medium inline-block mb-2">
-                                        Giấy phép</label>
-                                    <select name="LicenseTypeID[]" class="form-select" id="example-select" multiple>
-                                        @foreach ($allLicens as $ID => $name)
-                                            <option value="{{ $ID }}" {{ array_key_exists($ID, $allLicenseForQS) ? "selected" : '' }} >{{ $name}}
-                                            </option>
-                                        @endforeach
-                                    </select>
-                                </div>
-
-                                <div class="mb-3">
                                     <label for="example-palaceholder"
                                         class="text-default-800 text-sm font-medium inline-block mb-2">Tên câu hỏi</label>
                                     @error("QuestionName")
@@ -123,8 +111,40 @@
                                     <input type="text" name="QuestionName" class="form-input" placeholder=""
                                         value="{{ $question->QuestionName }}">
                                 </div>
+                                 <div class="mb-4">
+                                    <label class="text-default-800 text-sm font-medium inline-block mb-2">
+                                        Áp dụng cho giấy phép
+                                    </label>
 
+                                    <div class="space-y-3">
+                                        @foreach ($licenseTypes as $license)
+                                            <div
+                                                class="flex items-center justify-between bg-gray-50 p-3 rounded-md border border-gray-200 shadow-sm">
+                                                <div class="text-sm font-medium text-gray-800 w-1/3">
+                                                    {{ $license->LicenseTypeName }}
+                                                </div>
 
+                                                <div class="flex items-center gap-4 w-2/3">
+                                                    <label class="inline-flex items-center text-sm text-gray-600">
+                                                        <span style="margin-right: 10px;">Áp dụng</span>
+                                                        <input type="checkbox" name="licenseTypes[]"
+                                                            value="{{ $license->LicenseTypeID }}" {{ in_array($license->LicenseTypeID, $appliedLicenseIDs)? "checked" : ""  }}
+                                                            class="form-checkbox text-blue-600 rounded-sm">
+
+                                                    </label>
+
+                                                    <label class="inline-flex items-center text-sm text-red-600">
+                                                        <span style="margin-right: 10px;">Là điểm liệt</span>
+
+                                                        <input type="checkbox" name="criticalTypes[]"
+                                                            value="{{ $license->LicenseTypeID }}" {{ in_array($license->LicenseTypeID, $criticalLicenseIDs) ? "checked" : "" }}
+                                                            class="form-checkbox text-red-500 rounded-sm">
+                                                    </label>
+                                                </div>
+                                            </div>
+                                        @endforeach
+                                    </div>
+                                </div>
 
                                 <div class="mb-3">
                                     <label for="description_image"
@@ -136,22 +156,6 @@
                                 </div>
 
 
-
-                                <div>
-                                    <h6 class="text-sm mb-2">Câu điểm liệt</h6>
-                                    <div class="flex flex-col gap-2">
-                                        <div class="form-check">
-                                            <input value="0" type="radio" class="form-radio text-primary" name="IsCritical"
-                                                id="formRadio01" checked>
-                                            <label class="ms-1.5" for="formRadio01">Không</label>
-                                        </div>
-                                        <div class="form-check">
-                                            <input value="1" type="radio" class="form-radio text-primary" name="IsCritical"
-                                                id="formRadio02">
-                                            <label class="ms-1.5" for="formRadio02">Có</label>
-                                        </div>
-                                    </div>
-                                </div>
                             </div>
                             <div>
                                 @if(!empty($arrAnswers[0]) && $arrAnswers[0]["AnswerLabel"] == "A")

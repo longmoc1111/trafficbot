@@ -86,8 +86,12 @@ class UserPageController extends Controller
             if ($isCorrect) {
                 $correctCount += 1;
             }
+            $Iscritical = Question::where("QuestionID", $questionID)->whereHas("licenseType_Question", function($query) use ($licenseTypeID){
+                $query->where("question_license_types.LicenseTypeID", $licenseTypeID)
+                ->where("question_license_types.IsCritical" , true);
+            })->exists();
 
-            if ($question && $question->IsCritical == true && !$isCorrect) {
+            if ($question && $Iscritical == true  && !$isCorrect) {
                 $isCriticalWrong = true;
             }
 
@@ -100,6 +104,7 @@ class UserPageController extends Controller
                 "answerCorrect" => $answerCorrect,
                 "sumQuestion" => $sumQuestion,
                 "time" => $timefinish,
+                "Iscritical" => $Iscritical,
                 // "name"=>$name
 
             ];

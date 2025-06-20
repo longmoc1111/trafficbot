@@ -19,7 +19,8 @@ class LicenseType extends Model
         return $this->belongsToMany(ExamSet::class, "exam_set_license_type","LicenseTypeID","ExamSetID");
     }
     public function question_LicenseType(){
-        return $this->belongsToMany(Question::class,"question_license_types","LicenseTypeID","QuestionID");
+        return $this->belongsToMany(Question::class,"question_license_types","LicenseTypeID","QuestionID")
+                    ->withPivot("IsCritical");
     }
     public function result_LicenseType(){
         return $this->hasMany(ExamResult::class , "LicenseTypeID","LicenseTypeID");
@@ -28,4 +29,5 @@ class LicenseType extends Model
         return $this->belongsToMany(QuestionCategory::class, "license_type_question_category", "LicenseTypeID", "CategoryID")
                     ->withPivot("Quantity");
     }
+  
 }

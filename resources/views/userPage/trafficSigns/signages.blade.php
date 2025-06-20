@@ -15,7 +15,7 @@
                         <div class="service-item-signs position-relative">
                             <div class="service-text rounded p-2">
                                 <div class="btn-square" style="width: 150px; height: 150px;">
-                                    <img class="img-fluid" src="/assets/adminPage/SignagesImage/{{ $signages->SignageImage }}"
+                                    <img class="img-fluid" src = "{{ asset("storage/uploads/imageSignage/$signages->SignageImage") }}"
                                         alt="Icon">
                                 </div>
                                 <div>

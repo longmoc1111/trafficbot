@@ -160,7 +160,7 @@
                                 <span class="font-medium">{{$Questions->total()}}</span>
                             </p>
                         </div>
-
+ 
                         <!-- Pagination -->
                         <div class="flex flex-wrap items-center gap-1">
                             <!-- trước -->
@@ -186,14 +186,14 @@
                             @endif
 
                             <!-- link các trang -->
-                            @for($page = $start; $page < $end; $page++)
+                            @for($page = $start; $page <= $end; $page++)
                                 @if($page == $Questions->currentPage())
                                     <span
                                         class="px-3 py-1 bg-primary/25 text-primary rounded border border-indigo-600">{{ $page }}</span>
-                                @endif
+                                @else
                                 <a href="{{ $Questions->url($page) }}"
-                                    class="px-3 py-1 text-gray-700 bg-white rounded border border-gray-300 hover:bg-gray-50">{{ $Questions->lastPage() }}</a>
-
+                                    class="px-3 py-1 text-gray-700 bg-white rounded border border-gray-300 hover:bg-gray-50">{{ $page}}</a>
+                                @endif
                             @endfor
 
                             <!-- page cuối -->

@@ -74,7 +74,10 @@
                                                         style="white-space: normal; word-wrap: break-word; max-width: 250px;">
                                                     {{ $question->categoryQuestion_Question->CategoryName }}
                                                 </td>
-                                                @if($question->IsCritical == true)
+                                                <td class="px-6 py-4 whitespace-nowrap text-sm text-default-800">
+                                                         <span class="px-2 py-1 bg-success/10 text-success text-xs rounded">{{ $question-> }}</span>
+                                                    </td>
+                                                <!-- @if($question->IsCritical == true)
                                                     <td class="px-6 py-4 whitespace-nowrap text-sm text-default-800">
                                                          <span class="px-2 py-1 bg-success/10 text-success text-xs rounded">có</span>
                                                     </td>
@@ -83,7 +86,7 @@
                                                          <span class="px-2 py-1 bg-red-100 text-red-500 text-xs rounded"
                                                         style="white-space:nowrap">Không</span>
                                                     </td>
-                                                @endif
+                                                @endif -->
                                                 <td
                                                     class="px-6 py-4 whitespace-nowrap text-end text-sm font-medium flex justify-end gap-x-2">
                                                     <div class="hs-tooltip">

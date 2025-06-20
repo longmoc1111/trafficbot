@@ -5,8 +5,7 @@
 
 //     if (fullText.style.display === "none") {
 //         fullText.style.display = "inline";
-//         shortText.style.display = "none";
-//         btn.innerText = "Thu gọn";
+//         shortText.style.display = "none"; 
 //     } else {
 //         fullText.style.display = "none";
 //         shortText.style.display = "inline";
