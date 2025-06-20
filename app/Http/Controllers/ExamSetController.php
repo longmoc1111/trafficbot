@@ -20,7 +20,7 @@ class ExamSetController extends Controller
         } else {
             $LicenseType = LicenseType::with("examset_LicenseType")->first();
         }
-        return view("admin.examSetManagement.listExamSet", compact("LicenseType", "selectLicenseType"));
+        return view("admin.examSetManagement.listExamset", compact("LicenseType", "selectLicenseType"));
 
     }
 
