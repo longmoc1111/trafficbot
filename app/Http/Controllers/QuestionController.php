@@ -49,7 +49,7 @@ class QuestionController extends Controller
     {
         $questionCategory = QuestionCategory::all();
         $licenseTypes = LicenseType::all();
-        return view("admin.questionmanagement.question.createQuestion", compact("questionCategory", "licenseTypes"));
+        return view("admin.questionManagement.question.createQuestion", compact("questionCategory", "licenseTypes"));
     }
     public function storeQuestion(Request $request)
     {
