@@ -17,7 +17,6 @@ class ExamSetController extends Controller
         $chooseLicense = $request->get("choose_License");
         if (!empty($chooseLicense)) {
             $LicenseType = LicenseType::where("LicenseTypeName", $chooseLicense)->first();
-
         } else {
             $LicenseType = LicenseType::with("examset_LicenseType")->first();
         }
@@ -28,7 +27,6 @@ class ExamSetController extends Controller
     public function createExamSet($currenlicense)
     {
         $listLicense = LicenseType::where("LicenseTypeName", $currenlicense)->first();
-      
         if($listLicense){
             $currenlicenseID = $listLicense->LicenseTypeID;
         }
