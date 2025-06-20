@@ -143,6 +143,9 @@ class QuestionController extends Controller
         $questionCategory = QuestionCategory::all();
         $licenseType = LicenseType::all();
         $question = Question::find($id);
+        $allLicenseForQS = [];
+        $allLicens = [];
+        $arrAnswers = [];
 
 
         foreach ($licenseType as $license) {
@@ -151,7 +154,6 @@ class QuestionController extends Controller
         foreach ($question->licenseType_Question as $license) {
             $allLicenseForQS[$license->LicenseTypeID] = $license->LicenseTypeName;
         }
-
         $answers = $question->answer_Question()->get()->keyBy("AnswerLabel");
         foreach ($answers as $index => $answer) {
             $arrAnswers[] = [

@@ -25,11 +25,17 @@ class LicenseTypeController extends Controller
 
         $categories = $request->input("questionCategory");
         $sysData = [];
-        foreach ($categories as $ID => $quantity) {
-            if ($quantity > 0) {
-                $sysData[$ID] = ["Quantity" => $quantity];
+        if ($sysData) {
+            foreach ($categories as $ID => $quantity) {
+                if ($quantity > 0) {
+                    $sysData[$ID] = ["Quantity" => $quantity];
+                }
             }
+        } else {
+            $sysData = [];
         }
+
+
         $validator = Validator::make(
             $request->all(),
             [
@@ -125,10 +131,10 @@ class LicenseTypeController extends Controller
         if ($license) {
             $license->update($validatedata);
             $license->questionCategory_LicenseType()->sync($datasync);
-        return redirect()->route("admintrafficbot.listlicensetype")->with("update_license", "cập nhật giấy phép thành công !");
+            return redirect()->route("admintrafficbot.listlicensetype")->with("update_license", "cập nhật giấy phép thành công !");
 
-        }else{
-        return redirect()->route("admintrafficbot.listlicensetype")->with("update_fails", "cập nhật giấy phép thất bại !");
+        } else {
+            return redirect()->route("admintrafficbot.listlicensetype")->with("update_fails", "cập nhật giấy phép thất bại !");
 
         }
 
