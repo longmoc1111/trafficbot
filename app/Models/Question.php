@@ -4,7 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
-use App\models\QuestionCategory;
+use App\Models\QuestionCategory;
 use App\Models\Answer;
 use App\Models\ExamSet;
 
