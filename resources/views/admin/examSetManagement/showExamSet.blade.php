@@ -75,7 +75,7 @@
                                                     {{ $question->categoryQuestion_Question->CategoryName }}
                                                 </td>
                                                 <td class="px-6 py-4 whitespace-nowrap text-sm text-default-800">
-                                                         <span class="px-2 py-1 bg-success/10 text-success text-xs rounded">{{ $question-> }}</span>
+                                                         <span class="px-2 py-1 bg-success/10 text-success text-xs rounded"></span>
                                                     </td>
                                                 <!-- @if($question->IsCritical == true)
                                                     <td class="px-6 py-4 whitespace-nowrap text-sm text-default-800">

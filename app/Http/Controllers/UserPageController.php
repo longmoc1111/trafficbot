@@ -66,12 +66,13 @@ class UserPageController extends Controller
         $submittedAnswers = $request->input("answers");
         $timefinish = $request->input("timeFinish");
         $isCriticalWrong = false;
+        $result = [];
         $correctCount = 0;
         $sumQuestion = count($submittedAnswers);
-        $score = $sumQuestion - $correctCount;
+        // $score = $sumQuestion - $correctCount;
         $examset = ExamSet::find($ExamSetID);
         $passCount = $examset->PassCount;
-        $passed = false;
+        // $passed = false;
         foreach ($submittedAnswers as $questionID => $answerID) {
             $question = Question::find($questionID);
             $answer = Answer::where("AnswerID", $answerID)
@@ -102,44 +103,44 @@ class UserPageController extends Controller
                 "isCorrect" => $isCorrect,
                 "labelCorrect" => $labelCorrect,
                 "answerCorrect" => $answerCorrect,
-                "sumQuestion" => $sumQuestion,
                 "time" => $timefinish,
-                "Iscritical" => $Iscritical,
+                "sumQuestion"=>$sumQuestion,
+                // "Iscritical" => $Iscritical,
                 // "name"=>$name
 
             ];
         }
 
-        if ($score >= $passCount && $isCorrect == true) {
-            $passed = true;
-        } else {
-            $passed = false;
-        }
+        // if ($score >= $passCount && $isCorrect == true) {
+        //     $passed = true;
+        // } else {
+        //     $passed = false;
+        // }
 
 
-        if (Auth::check()) {
-            $exam_reult = ExamResult::create([
-                "userID" => Auth::user()->userID,
-                "LicenseTypeID" => $licenseTypeID,
-                "score" => $score,
-                "passed" => $passed,
-                "duration" => $timefinish
+        // if (Auth::check()) {
+        //     $exam_reult = ExamResult::create([
+        //         "userID" => Auth::user()->userID,
+        //         "LicenseTypeID" => $licenseTypeID,
+        //         "score" => $score,
+        //         "passed" => $passed,
+        //         "duration" => $timefinish
 
-            ]);
-        } else {
-            $exam_reult = ExamResult::create([
-                "userID" => null,
-                "LicenseTypeID" => $licenseTypeID,
-                "score" => $score,
-                "passed" => $passed,
-                "duration" => $timefinish
-            ]);
-        }
+        //     ]);
+        // } else {
+        //     $exam_reult = ExamResult::create([
+        //         "userID" => null,
+        //         "LicenseTypeID" => $licenseTypeID,
+        //         "score" => $score,
+        //         "passed" => $passed,
+        //         "duration" => $timefinish
+        //     ]);
+        // }
 
         return response()->json([
             'message' => 'Dữ liệu đã nhận thành công',
             'examsetID' => $ExamSetID,
-            'answers' => $submittedAnswers,
+            "passCount"=>$passCount,
             'result' => $result,
             'iscriticalWrong' => $isCriticalWrong,
             "correctCount" => $correctCount,

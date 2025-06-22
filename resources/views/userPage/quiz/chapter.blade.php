@@ -1,23 +1,21 @@
 @extends("userPage.layout.layout")
-@section("title", "Ôn tập")
+@section("title", "Ôn tập tổng hợp")
 
 @section("main")
     <!-- About Start -->
     <style>
         .question-item {
-            font-size: 14px;
-            /* Giảm cỡ chữ */
-            padding: 10px 10px;
-            /* Giảm padding */
-            width: 40px;
-            height: 40px;
+            font-size: 11px;
+            padding: 7px 7px;
+            width: 35px;
+            height: 35px;
             line-height: 24px;
             margin: auto;
             border: 1px solid rgb(97, 149, 248);
         }
 
         .question-btn.active .question-item {
-            background-color: #6Fc7e7;
+            background-color: rgb(156, 179, 213);
             color: white !important;
 
         }
@@ -54,20 +52,20 @@
             text-decoration: none;
         }
 
-        /* .selected-question {
-                                                            background-color: #DCFCE7;
-                                                            color: black !important;
-                                                            border-color: #4ade80;
-                                                        } */
+        .selected-question {
+            background-color: #DCFCE7;
+            color: black !important;
+            border-color: #4ade80;
+        }
 
-        .index-question.correct {
+        .correct {
             background-color: #DCFCE7;
             /* xanh lá */
             color: black;
             border-radius: 50%;
         }
 
-        .index-question.incorrect {
+        .inCorrect {
             background-color: #fee2e2;
             /* đỏ */
             color: black;
@@ -78,7 +76,7 @@
             display: none !important;
         }
 
-        #explanation-container {
+        .explanation-container {
             border: 2px solid #ccc;
             border-radius: 8px;
             padding: 12px 16px;
@@ -115,35 +113,24 @@
 
         .wrong-answer {
             border: 2px solid #F8D7DA;
-            background-color: #fee2e2;
+            background-color: #fee2e2 !important;
             border-radius: 5px;
             padding: 5px;
         }
 
-        .select-item {
-            width: 100%;
-            padding: 10px 15px;
-            font-size: 1rem;
-            border: 1px solid #ccc;
-            border-radius: 8px;
-            background-color: #fff;
-            color: #333;
-            appearance: none;
-            -webkit-appearance: none;
-            -moz-appearance: none;
-            background-image: url("data:image/svg+xml,%3Csvg width='10' height='6' viewBox='0 0 10 6' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1 1L5 5L9 1' stroke='%234761FF' stroke-width='1.5' stroke-linecap='round'/%3E%3C/svg%3E");
-            background-repeat: no-repeat;
-            background-position: right 12px center;
-            background-size: 12px;
-            transition: border-color 0.3s;
+        .answer-correct {
+            background-color: #d4edda;
+            color: #155724;
+            padding: 5px;
+            border-radius: 5px;
         }
 
-        .select-item :focus {
-            outline: none;
-            border-color: #4761FF;
-            box-shadow: 0 0 0 2px rgba(71, 97, 255, 0.2);
+        .answer-wrong {
+            background-color: #f8d7da;
+            color: #721c24;
+            padding: 5px;
+            border-radius: 5px;
         }
-
 
         .service-item img {
             display: block;
@@ -154,11 +141,29 @@
             object-fit: contain;
         }
 
+        .select-answer {
+            background-color: #d4edda;
+        }
 
+        .scroll-wrapper {
+            max-height: 250px;
+            overflow-y: auto;
+            padding-right: 15px;
+        }
+
+        .scroll-wrapper::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .scroll-wrapper::-webkit-scrollbar-thumb {
+            background-color: #ccc;
+            border-radius: 3px;
+        }
 
 
         /*  */
     </style>
+
 
 
 
@@ -169,23 +174,25 @@
 
     <!-- practice Start -->
     <!-- <div class="text-center mb-4">
-                                                                                                            <button id="start-btn" class="btn btn-success">Bắt đầu làm bài</button>
-                                                                                                        </div> -->
+                                                                                                                <button id="start-btn" class="btn btn-success">Bắt đầu làm bài</button>
+                                                                                                            </div> -->
 
     <div class="container-lg mt-5 mb-5 " id="exam-section" style="box-shadow: 0 0 45px rgba(0, 0, 0, .06)">
-
-        <div class="d-flex justify-content-between align-items-center mb-3 px-3" data-wow-delay="0.1s">
-            <select class="select-item display-7 form-select mb-0 mt-2" onchange="location = this.value">
-                @foreach ($chapters as $option)
-                    <option value="{{ route('userpage.chapters', ['ID' => $option->CategoryID]) }}" {{ $option->CategoryID == $chapter->CategoryID ? "selected" : "" }}>{{ $option->CategoryName }}</option>
-                @endforeach
-            </select>
-        </div>
         <hr>
         <div class="row g-4 d-flex">
+            <div class="d-flex justify-content-between align-items-center px-3" data-wow-delay="0.1s">
+                <select class="select-item display-7 form-select mb-0 mt-2" onchange="location = this.value">
+                    @foreach ($chapters as $option)
+                        <option value="{{ route('userpage.chapters', ['ID' => $option->CategoryID]) }}" {{ $option->CategoryID == $chapter->CategoryID ? "selected" : "" }}>{{ $option->CategoryName }}</option>
+                    @endforeach
+                </select>
+            </div>
+            <hr>
             <div class="col-lg-4 col-md-4 wow fadeInUp" data-wow-delay="0.1s">
+
                 <div class="service-item position-relative h-100">
                     <div class="service-text rounded p-4">
+                         <div class="scroll-wrapper" style="max-height: 400px; overflow-y: auto;">
                         <div class="row g-4 wow fadeInUp" data-wow-delay="0.1s">
                             <!-- Dùng col-1 để mỗi hàng chứa tối đa 12 thẻ -->
                             <!-- Nếu thêm thẻ thứ 13 trở đi, nó tự xuống hàng -->
@@ -193,31 +200,32 @@
                             <!-- Ví dụ: 15 thẻ -->
                             @foreach ($questions as $index => $question)
                                 @php
-                                    $answers = [];
+    $answers = [];
+    $labelCorrect = '';
 
-                                    foreach ($question->answer_Question as $answer) {
-                                        $key = strtoupper($answer->AnswerLabel); // Đảm bảo là A, B, C, D
-                                        if (in_array($key, ["A", "B", "C", "D"])) {
-                                            $answers[$key . '_ID'] = $answer->AnswerID;     // Gán ID
-                                            $answers[$key . '_NAME'] = $answer->AnswerName; // Hiển thị nội dung nếu cần
-                                            $answers[$key . '_CORRECT'] = $answer->IsCorrect;
-                                        }
-                                    }
+    foreach ($question->answer_Question as $answer) {
+        $key = strtoupper($answer->AnswerLabel); // Đảm bảo là A, B, C, D
+        if (in_array($key, ["A", "B", "C", "D"])) {
+            $answers[$key . '_ID'] = $answer->AnswerID;     // Gán ID
+            $answers[$key . '_NAME'] = $answer->AnswerName; // Hiển thị nội dung nếu cần
+            $answers[$key . '_CORRECT'] = $answer->IsCorrect;
+            if ($answer->IsCorrect) {
+                $labelCorrect = $key;
+            }
+        }
+    }
                                 @endphp
                                 <div class="col-2 col-sm-1 col-md-3  col-lg-2">
                                     <a href="#" style="color:rgb(43, 39, 39); border-color:red" class="question-btn small"
                                         data-question="{{ $index + 1 }}" data-id={{ $question->QuestionID }}
-                                        data-explanation="{{ $question->QuestionExplain }}" data-img="{{ $question->ImageDescription }}"
+                                        data-explanation="{{ $question->QuestionExplain }}"
+                                        data-img="{{ $question->ImageDescription }}"
                                         data-content="{{ $question->QuestionName }}" data-a-id="{{ $answers['A_ID'] ?? ''  }}"
                                         data-b-id="{{ $answers['B_ID'] ?? '' }}" data-c-id="{{ $answers['C_ID'] ?? ''  }}"
                                         data-d-id="{{ $answers['D_ID'] ?? ''  }}" data-a-name="{{ $answers['A_NAME'] ?? ''  }}"
                                         data-b-name="{{ $answers['B_NAME'] ?? '' }}"
                                         data-c-name="{{ $answers['C_NAME'] ?? ''  }}"
-                                        data-d-name="{{ $answers['D_NAME'] ?? ''  }}"
-                                        data-a-correct="{{ $answers["A_CORRECT"] ?? '' }}"
-                                        data-b-correct="{{ $answers["B_CORRECT"] ?? '' }}"
-                                        data-c-correct="{{ $answers["C_CORRECT"] ?? '' }}"
-                                        data-d-correct="{{ $answers["D_CORRECT"] ?? '' }}">
+                                        data-d-name="{{ $answers['D_NAME'] ?? ''  }}" data-label-correct="{{ $labelCorrect }}">
 
                                         <p class="index-question question-item rounded text-center"
                                             style="box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);">
@@ -229,44 +237,56 @@
 
                             <a href="{{ route("userpage.home") }}" class="btn btn-primary mt-3" id="end-test">Thoát</a>
                         </div>
+                        </div>
                     </div>
                 </div>
             </div>
             <div class="col-lg-8 col-md-8  wow fadeInUp" data-wow-delay="0.3s">
                 <div class="service-item position-relative h-100">
                     <div class="service-text rounded p-3">
-                        <div class="d-flex align-items-center">
-                            <h6 id="question-title" class="me-2 mb-0"></h6>
-                            <p id="question-content" class="mb-0 mt-1"></p>
-                        </div>
-                        <div id="div-image"
-                            class="mt-2 d-flex align-items-center align-items-start mb-2 answer-item d-none">
-                            <img id="question-image" src="" alt="">
-                        </div>
-
-
-                        <div class="mt-2">
-                            @foreach ($labels as $label)
-                                <div class="d-flex align-items-center align-items-start mb-2 answer-item"
-                                    id="answer-row-{{ $label }}">
-                                    <input type="radio" name="answer" id="radio{{ $label }}" value="" class="me-2 mb-0 mt-1 ">
-                                    <p class="mb-0" id="answer{{$label}}"> {{$answers[$label . '_NAME'] ?? ''}} :
-                                    </p>
+                        @foreach($questions as $index => $question)
+                            @php
+    $answers = [];
+    foreach ($question->answer_Question as $answer) {
+        $key = strtoupper($answer->AnswerLabel);
+        if (in_array($key, ["A", "B", "C", "D"])) {
+            $answers[$key . '_ID'] = $answer->AnswerID;
+            $answers[$key . '_NAME'] = $answer->AnswerName;
+        }
+    }
+                            @endphp
+                            <div class="question-block" id="question-block-{{ $question->QuestionID }}"
+                                data-question-id="{{ $question->QuestionID }}">
+                                <div class="d-flex align-items-center">
+                                    <h5 id="question-title" class="me-2 mb-0">Câu {{ $index + 1 }}:
+                                        {{ $question->QuestionName }}
+                                    </h5>
+                                    <!-- <p id="question-content" class="mb-0 mt-1"></p> -->
                                 </div>
-                            @endforeach
-                            <div id="explanation-container" class="d-none"></div>
-
-
-
-                        </div>
-                        <div class="d-flex justify-content-between mt-4">
-                            <button id="prevButton" class="btn btn-primary">
-                                Trước
-                            </button>
-
-                            <button id="nextButton" class="btn btn-primary">
-                                Sau
-                            </button>
+                                @if($question->ImageDescription)
+                                    <div id="div-image" class="mt-2 d-flex align-items-center align-items-start mb-2 answer-item">
+                                        <img src="{{ asset("storage/uploads/imageQuestion/$question->ImageDescription") }}" alt="">
+                                    </div>
+                                @endif
+                                <div class="mt-2">
+                                    @foreach ($labels as $label)
+                                        @if(!empty($answers[$label . "_ID"]))
+                                            <div class="d-flex align-items-start mb-2 answer-item answer-label"
+                                                data-label="{{ $label }}" data-question-id="{{ $question->QuestionID }}"
+                                                data-answer-id="{{ $answers[$label . '_ID'] ?? '' }}"
+                                                id="answer-row-{{ $question->QuestionID }}-{{ $label }}">
+                                                <p class="mb-0">{{ $label }}: {{ $answers[$label . '_NAME'] ?? '' }}</p>
+                                            </div>
+                                        @endif
+                                    @endforeach
+                                    <div class="explanation-container d-none" data-question-id="{{ $question->QuestionID }}">
+                                    </div>
+                                </div>
+                            </div>
+                        @endforeach
+                        <div class="d-flex justify-content-between mt-3">
+                            <button class="btn btn-primary" id="prev-btn">← Trước</button>
+                            <button class="btn btn-primary" id="next-btn">Sau →</button>
                         </div>
 
 
@@ -274,6 +294,7 @@
 
                 </div>
             </div>
+
         </div>
 
 
@@ -288,253 +309,207 @@
 
 
 @endsection
-
 <script>
+    let currentQuestionIndex = 0;
+    let questionButtons = [];
+    let disSelectAnswer = false
+
     document.addEventListener("DOMContentLoaded", function () {
+        questionButtons = Array.from(document.querySelectorAll(".question-btn"));
         const buttons = document.querySelectorAll(".question-btn");
-        const title = document.getElementById("question-title")
-        const content = document.getElementById("question-content")
-        const prevButton = document.getElementById("prevButton");
-        const nextButton = document.getElementById("nextButton");
-        const image = document.getElementById("question-image")
-        const divImage = document.getElementById("div-image")
+        const title = document.getElementById("question-title");
+        const content = document.getElementById("question-content");
+        const nextBtn = document.getElementById("next-btn");
+        const image = document.getElementById("question-image");
+        const divImage = document.getElementById("div-image");
+        const startBtn = document.getElementById("start-btn");
+        const examSection = document.getElementById("exam-section");
+        const timerElement = document.getElementById("exam-timmer");
+        // const countdownMinutes = parseInt(timerElement.dataset.duration || 0);
 
 
-        //hàm hiển thị đáp án
-        function UpdateAnswerDisplay(buttonElement) {
-            const labels = ["A", "B", "C", "D"]
-            labels.forEach(label => {
-                const name = buttonElement.dataset[`${label.toLowerCase()}Name`]
-                const answerText = document.getElementById(`answer${label}`)
-                const answerRow = document.getElementById(`answer-row-${label}`)
-                if (name && name.trim() !== "") {
-                    answerText.innerText = `${label} : ${name}`
-                    answerRow.style.display = "flex"
-                    answerRow.classList.remove("hidden-question")
-                } else {
-                    answerText.innerText = ""
-                    answerRow.classList.add("hidden-question")
-                }
-            })
-        }
-        //hàm hiển thị câu hỏi
-        function updateQuestionDisplay(buttonElement) {
-            const numberQS = buttonElement.dataset.question
-            const contentQS = buttonElement.dataset.content
-            const imageSrc = buttonElement.dataset.img;
-            console.log(numberQS)
-            title.innerText = `Câu ${numberQS} : ${contentQS} `
-            if (imageSrc) {
 
-                image.src = imageSrc;
-                divImage.classList.remove("d-none")
-            } else {
-                image.src = ""
-                divImage.classList.add("d-none")
+        //xử ly nút trái phải
+        document.addEventListener("keydown", function (event) {
+            if (event.key === "ArrowRight") {
+                nextQuestionKey();
+            } else if (event.key == "ArrowLeft") {
+                previousQuestionKey();
             }
-            // content.innerText = 
-        }
-        function getCorrectAnswer(buttonELement) {
-            const labels = ['a', 'b', 'c', 'd']
-            for (let label of labels) {
-                const correct = buttonELement.dataset[`${label}Correct`]
-                const answerID = buttonELement.dataset[`${label}Id`]
-                if (correct == '1' || correct == true) {
-                    return answerID
-                }
-            }
-            return null
-        }
-
-        function changeColorAnswer(buttonELement) {
-            const indexQS = buttonELement.querySelector(".index-question")
-            const QuestionID = buttonELement.dataset.id
-            const selectedID = selectedAnswer[QuestionID]
-
-            // console.log(selectedID)
-
-            const labels = ["A", "B", "C", "D"]
-            labels.forEach(label => {
-                const row = document.getElementById(`answer-row-${label}`)
-                const answerID = buttonELement.dataset[`${label.toLowerCase()}Id`]
-                const correct = buttonELement.dataset[`${label.toLowerCase()}Correct`]
-
-                row.classList.remove("correct-answer", "wrong-answer")
-
-                if (selectedID == answerID) {
-                    if (correct == "1" || correct === true) {
-                        row.classList.add("correct-answer");
-                    } else {
-                        row.classList.add("wrong-answer");
-                    }
-                }
-            })
-            if (indexQS) {
-                indexQS.classList.remove("incorrect", "correct")
-                const correctID = getCorrectAnswer(buttonELement)
-                console.log("selectedID " + selectedID + "correctID" + correctID)
-                if (selectedID == correctID) {
-                    indexQS.classList.add("correct")
-                } else if (selectedID) {
-                    indexQS.classList.add("incorrect")
-                }
-            }
-
-        }
-
-
-        //object lưu đáp án 
-        selectedAnswer = {}
-        document.querySelectorAll('input[name="answer"]').forEach(radio => {
-            radio.addEventListener("change", function () {
-                const activeBtn = document.querySelector(".question-btn.active")
-                if (activeBtn) {
-                    const questionID = activeBtn.dataset.id
-                    const selectedLabel = this.id.replace("radio", "")
-                    const radio = document.getElementById(`radio${selectedLabel}`)
-                    const answerID = activeBtn.dataset[`${selectedLabel.toLowerCase()}Id`]
-                    radio.value = answerID
-                    selectedAnswer[questionID] = answerID
-                    showExplanation(activeBtn);
-                    changeColorAnswer(activeBtn)
-
-                }
-            })
         })
-        function showExplanation(buttonElement) {
-            const explanationQS = buttonElement.dataset.explanation
-            const questionID = buttonElement.dataset.id
-            const selectedID = selectedAnswer[questionID]
-            const explain = document.getElementById("explanation-container")
+        // 
 
-
-            if (!selectedID) {
-                explain.classList.add("d-none")
-                return
-            }
-            explain.classList.remove("d-none")
-            const correctID = getCorrectAnswer(buttonElement)
-            let correctLabel = ""
-            const labels = ["A", "B", "C", "D"]
-            labels.forEach(label => {
-                const answerID = buttonElement.dataset[`${label.toLowerCase()}Id`]
-                if (answerID == correctID) {
-                    correctLabel = label
-                }
-            })
-            explain.innerText = `Đáp án đúng: ${correctLabel}\n\Giải thích: ${explanationQS}`
-
-
-        }
-
-
-        function updateRadioButtons(QuestionID) {
-            document.querySelectorAll('input[name="answer"]').forEach(radio => {
-                radio.checked = false
-                if (radio.value == selectedAnswer[QuestionID]) {
-                    radio.checked = true
-                }
-            })
-        }
-
-        // sự kiện đổi câu hỏi qua button
-        buttons.forEach(btn => {
-            btn.addEventListener("click", function (e) {
-                e.preventDefault()
-                const questionID = this.dataset.id
-                buttons.forEach(b => b.classList.remove("active"))
-                this.classList.add("active")
-                updateQuestionDisplay(this)
-                UpdateAnswerDisplay(this)
-                updateRadioButtons(questionID)
-                showExplanation(this)
-                changeColorAnswer(this)
-
-
-            })
-        })
-
-
-        prevButton.addEventListener("click", function (e) {
-            e.preventDefault();
-            const activeBtn = document.querySelector(".question-btn.active");
-            if (activeBtn) {
-                const currentIndex = Array.from(buttons).indexOf(activeBtn);
-                if (currentIndex > 0) {
-                    const prevBtn = buttons[currentIndex - 1];
-                    buttons.forEach(b => b.classList.remove("active"));
-                    prevBtn.classList.add("active");
-                    updateQuestionDisplay(prevBtn);
-                    UpdateAnswerDisplay(prevBtn);
-                    updateRadioButtons(prevBtn.dataset.id);
-                    showExplanation(prevBtn)
-                    changeColorAnswer(prevBtn)
-
-                }
-            }
-        });
-
-        nextButton.addEventListener("click", function (e) {
-            e.preventDefault();
-            const activeBtn = document.querySelector(".question-btn.active");
-            if (activeBtn) {
-                const currentIndex = Array.from(buttons).indexOf(activeBtn);
-                if (currentIndex < buttons.length - 1) {
-                    const nextBtn = buttons[currentIndex + 1];
-                    buttons.forEach(b => b.classList.remove("active"));
-                    nextBtn.classList.add("active");
-                    updateQuestionDisplay(nextBtn);
-                    UpdateAnswerDisplay(nextBtn);
-                    updateRadioButtons(nextBtn.dataset.id);
-                    showExplanation(nextBtn)
-                    changeColorAnswer(nextBtn)
-
-
-                }
-            }
-        });
-        //         let isKeyboardNavigation = false;
-
-        // document.addEventListener("keydown", function (e) {
-        //     const activeBtn = document.querySelector(".question-btn.active");
-        //     if (!activeBtn) return;
-
-        //     const currentIndex = Array.from(buttons).indexOf(activeBtn);
-
-        //     if (e.key === "ArrowLeft") {
-        //         if (currentIndex > 0) {
-        //             const prevBtn = buttons[currentIndex - 1];
-        //             buttons.forEach(b => b.classList.remove("active"));
-        //             prevBtn.classList.add("active");
-        //             updateQuestionDisplay(prevBtn);
-        //             UpdateAnswerDisplay(prevBtn);
-
-        //             // không update radio nếu chuyển bằng keyboard
-        //             // updateRadioButtons(prevBtn.dataset.id);
-        //         }
-        //     } else if (e.key === "ArrowRight") {
-        //         if (currentIndex < buttons.length - 1) {
-        //             const nextBtn = buttons[currentIndex + 1];
-        //             buttons.forEach(b => b.classList.remove("active"));
-        //             nextBtn.classList.add("active");
-        //             updateQuestionDisplay(nextBtn);
-        //             UpdateAnswerDisplay(nextBtn);
-
-        //             // không update radio nếu chuyển bằng keyboard
-        //             // updateRadioButtons(nextBtn.dataset.id);
-        //         }
-        //     }
-        // });
-
-
-        if (buttons.length > 0) {
-            buttons[0].classList.add("active")
-            updateQuestionDisplay(buttons[0])
-            UpdateAnswerDisplay(buttons[0])
-        }
-
+        // gọi hà
+        initQuestionButtons();
+        initAnswerSelection();
+        showFirstQuestion();
+        navigationButtons();
 
     });
 
+    // hàm xử lý bắt đầu bài thi
+
+
+    // =============================các hàm xử lý block question====================================
+    function initQuestionButtons() {
+        questionButtons = Array.from(document.querySelectorAll(".question-btn"));
+        const buttons = document.querySelectorAll(".question-btn");
+        buttons.forEach((btn, index) => {
+            btn.addEventListener("click", function (e) {
+                e.preventDefault()
+
+                setActiveButton(this)
+                const questionID = this.dataset.id
+                showQuestionBlock(questionID)
+                selectAnswer(questionID)
+                currentQuestionIndex = index;
+
+            })
+        })
+    }
+
+    const selectedLabel = {}
+    // hàm lưu đáp án
+    function initAnswerSelection() {
+        document.querySelectorAll(".answer-label").forEach((el) => {
+            el.addEventListener("click", function () {
+                const questionID = this.dataset.questionId;
+                const answerID = this.dataset.answerId;
+                const label = this.dataset.label;
+
+                if (disSelectAnswer == true) {
+                    return
+                }
+                //cập nhat label đã chọn
+                selectedLabel[questionID] = label;
+                // Gọi lại hàm tô màu
+                selectAnswer(questionID);
+                selectQuestion(questionID)
+                showExplanation(questionID)
+
+
+
+            });
+        });
+    }
+    //hàm show câu hỏi đầu tiên
+    function showFirstQuestion() {
+        const firstBtn = document.querySelector(".question-btn");
+        if (firstBtn) {
+            firstBtn.click()
+        }
+    }
+
+    // gán active cho nút câu hỏi
+    function setActiveButton(currentBtn) {
+        const buttons = document.querySelectorAll(".question-btn")
+        buttons.forEach((b) =>
+            b.classList.remove("active")
+        )
+        currentBtn.classList.add("active")
+    }
+    //hàm show block question 
+    function showQuestionBlock(questionID) {
+        document.querySelectorAll(".question-block").forEach((block) => {
+            block.style.display = "none"
+        })
+
+        const block = document.getElementById("question-block-" + questionID)
+        if (block) {
+            block.style.display = "block"
+        }
+    }
+
+    function selectAnswer(questionID) {
+        const selected = selectedLabel[questionID];
+        if (!selected) return;
+
+
+        document.querySelectorAll(`.answer-label[data-question-id="${questionID}"]`)
+            .forEach((el) => el.classList.remove("correct-answer", "wrong-answer", "select-answer"));
+
+        const selectedRow = document.getElementById(`answer-row-${questionID}-${selected}`);
+        const questionBtn = document.querySelector(`.question-btn[data-id="${questionID}"]`);
+        const correctLabel = questionBtn?.dataset.labelCorrect;
+
+        if (selected === correctLabel) {
+            selectedRow?.classList.add("correct-answer");
+        } else {
+            selectedRow?.classList.add("wrong-answer");
+
+            const correctRow = document.getElementById(`answer-row-${questionID}-${correctLabel}`);
+            correctRow?.classList.add("correct-answer");
+        }
+
+        // showExplanation(questionID, correctLabel);
+    }
+
+    //hàm tô màu index câu hỏi 
+    function selectQuestion(questionID) {
+        const indexBtn = document.querySelector(`.question-btn[data-id="${questionID}"] .index-question`)
+        if (indexBtn) {
+            indexBtn.classList.add("selected-question")
+        }
+    }
+
+
+
+    // ==================================end phần block question=====================================
+
+    // ==================================hàm điều hướng câu hỏi======================================
+    function navigationButtons() {
+        document.getElementById("prev-btn").addEventListener("click", function () {
+            if (currentQuestionIndex > 0) {
+                currentQuestionIndex--;
+                questionButtons[currentQuestionIndex].click();
+            }
+        });
+
+        document.getElementById("next-btn").addEventListener("click", function () {
+            if (currentQuestionIndex < questionButtons.length - 1) {
+                currentQuestionIndex++;
+                questionButtons[currentQuestionIndex].click();
+            }
+        });
+    }
+
+    // phím next
+    function nextQuestionKey() {
+        if (currentQuestionIndex < questionButtons.length - 1) {
+            currentQuestionIndex++
+            questionButtons[currentQuestionIndex].click()
+        }
+    }
+
+    //phím previous
+    function previousQuestionKey() {
+        if (currentQuestionIndex > 0) {
+            currentQuestionIndex--
+            questionButtons[currentQuestionIndex].click()
+        }
+    }
+
+    function showExplanation(questionID) {
+        const questionBtn = document.querySelector(`.question-btn[data-id="${questionID}"]`);
+        const explanation = questionBtn?.dataset.explanation || '';
+        const labelCorrect = questionBtn?.dataset.labelCorrect || '';
+        console.log(explanation)
+
+        const explanationContainer = document.querySelector(`.explanation-container[data-question-id="${questionID}"]`);
+        if (explanationContainer) {
+            if (explanation.trim() !== "") {
+                explanationContainer.classList.remove("d-none");
+                explanationContainer.innerHTML = `<div>
+              <p><strong>Đáp án đúng:</strong> ${labelCorrect}</p>
+            <strong>Giải thích:</strong> ${explanation}
+            </div>`;
+            } else {
+                explanationContainer.classList.add("d-none");
+                explanationContainer.innerHTML = "";
+            }
+        }
+
+    }
+    // ===============================end hàm điều hướng câu hỏi===========================================
 
 </script>

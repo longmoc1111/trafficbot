@@ -31,7 +31,7 @@ class ViewServiceProvider extends ServiceProvider
             $view->with("SignageType", SignageType::all());
         });
         view::composer("userPage.layout.layout", function ($view) {
-            $view->with("chapters", QuestionCategory::all());
+            $view->with("chapter", QuestionCategory::first());
         });
         View::composer("userPage.layout.layout", function ($view) {
             $signages = Signage::all();

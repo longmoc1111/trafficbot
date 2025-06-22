@@ -159,14 +159,12 @@
                     <div class="nav-item dropdown">
                         <a href="" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">Ôn tập lý thuyết</a>
                         <div class="dropdown-menu bg-light rounded-0 rounded-bottom m-0">
-                            @foreach ($chapters as $chapter)
-                                <a href="{{ route("userpage.chapters", ["ID" => $chapter->CategoryID]) }}"
-                                    class="dropdown-item">{{ $chapter->CategoryName }}</a>
-                            @endforeach
+
+                            <a href="{{ route("userpage.chapters", ["ID" => $chapter->CategoryID]) }}"
+                                class="dropdown-item">Ôn tập nhanh với 600 câu</a>
+
                             <a href="{{ route("userpage.collection") }}" class="dropdown-item">Ôn tập nhanh 250 câu lý
                                 thuyết - A1</a>
-                            <a href="{{ route("userpage.collection") }}" class="dropdown-item">Ôn tập nhanh với 600 câu
-                                hỏi tổng hợp</a>
 
                         </div>
                     </div>
@@ -356,21 +354,21 @@
   </script> -->
 
 <script>
-    @if(!empty($signagesData)){
-        window.signagesData = @json($signagesData)
-    }else{
-        window.signagesData = []
-    }
-    @endif
-     @if(!empty($pdfs)){
-           window.pdfs = {!! json_encode($pdfs) !!} || null;
+    @if(!empty($signagesData))
+        window.signagesData = @json($signagesData);
+    @else
+        window.signagesData =[];
 
-    }else{
-         window.pdfs = []
-    }
     @endif
-    
-   
+    @if(!empty($pdfs))
+        window.pdfs = {!! json_encode($pdfs) !!} || null;
+
+    @else
+        window.pdfs =[];
+
+    @endif
+
+
 </script>
 
 <script type="module" src="/assets/chatbot/chatbot.js">

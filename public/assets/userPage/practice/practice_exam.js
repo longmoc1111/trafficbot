@@ -5,7 +5,7 @@
 
 //     if (fullText.style.display === "none") {
 //         fullText.style.display = "inline";
-//         shortText.style.display = "none"; 
+//         shortText.style.display = "none";
 //     } else {
 //         fullText.style.display = "none";
 //         shortText.style.display = "inline";
@@ -18,11 +18,10 @@ document.addEventListener("DOMContentLoaded", function () {
     const title = document.getElementById("question-title");
     const content = document.getElementById("question-content");
     const nextBtn = document.getElementById("next-btn");
-    const image = document.getElementById("question-image")
-    const divImage = document.getElementById("div-image")
- 
+    const image = document.getElementById("question-image");
+    const divImage = document.getElementById("div-image");
 
-//    console.log("day la licenid " + dataset.licenseid);
+    //    console.log("day la licenid " + dataset.licenseid);
 
     // lấy toàn bộ data được gửi lại
     let allExplanation = [];
@@ -42,9 +41,10 @@ document.addEventListener("DOMContentLoaded", function () {
     //
 
     //set thời gian làm bài
-    let countdownSeconds = parseInt(document.getElementById("exam-timmer").dataset.duration) * 60;
+    let countdownSeconds =
+        parseInt(document.getElementById("exam-timmer").dataset.duration) * 60;
     const timeStart = countdownSeconds;
-    let endCountdownSeconds = ""
+    let endCountdownSeconds = "";
     let timeInterval;
     function startCountdown() {
         updatateTimeDisplay(countdownSeconds);
@@ -57,7 +57,7 @@ document.addEventListener("DOMContentLoaded", function () {
             } else {
                 countdownSeconds--;
                 updatateTimeDisplay(countdownSeconds);
-                endCountdownSeconds = timeStart - countdownSeconds
+                endCountdownSeconds = timeStart - countdownSeconds;
             }
         }, 1000);
     }
@@ -123,28 +123,22 @@ document.addEventListener("DOMContentLoaded", function () {
         const result = resultArr.find((item) => item.QuestionID == questionID);
         console.log(result);
         if (!result) return;
-
-        const selectedAnswerID = result.AnswerID;
         const correctAnswerID = result.answerCorrect;
-        console.log(correctAnswerID);
-        const isCorrect = result.isCorrect;
         const labels = ["A", "B", "C", "D"];
-
         labels.forEach((label) => {
             const row = document.getElementById(`answer-row-${label}`);
             const radio = document.getElementById(`radio${label}`);
             if (!row || !radio) return;
 
             const answerID = parseInt(radio.value); // value đã được set động khi người dùng chọn
-            console.log(answerID);
             // Reset class
             row.classList.remove("answer-correct", "answer-wrong");
 
             // Đáp án đúng
             if (answerID === correctAnswerID) {
                 row.classList.add("answer-correct");
-            }else{
-                row.classList.add("answer-wrong");  
+            } else {
+                row.classList.add("answer-wrong");
             }
         });
     }
@@ -172,14 +166,13 @@ document.addEventListener("DOMContentLoaded", function () {
         const contentQS = buttonElement.dataset.content;
         const imageSrc = buttonElement.dataset.img;
         title.innerText = `Câu ${numberQS} : ${contentQS} `;
-        
-        if(imageSrc){
-            
+
+        if (imageSrc) {
             image.src = imageSrc;
-            divImage.classList.remove("d-none")
-        }else{
-            image.src = ""
-            divImage.classList.add("d-none")
+            divImage.classList.remove("d-none");
+        } else {
+            image.src = "";
+            divImage.classList.add("d-none");
         }
         // content.innerText = contentQS;
     }
@@ -196,6 +189,28 @@ document.addEventListener("DOMContentLoaded", function () {
             }
         });
     }
+function chooseAnswerName() {
+    document.querySelectorAll(".answer-label").forEach((label) => {
+        label.addEventListener("click", function () {
+            const labelQS = this.dataset.label;
+            const questionID = this.dataset.questionId;
+            const radio = document.getElementById(`radio${labelQS}-${questionID}`);
+
+            if (radio) {
+                radio.click();
+            }
+
+            // Chỉ bỏ class trong cùng câu hỏi
+            document.querySelectorAll(`.answer-label[data-question-id="${questionID}"]`).forEach((el) => {
+                el.classList.remove("select-answer");
+            });
+
+            this.classList.add("select-answer");
+        });
+    });
+}
+7
+
 
     //hàm submit
     function submitExam() {
@@ -228,14 +243,18 @@ document.addEventListener("DOMContentLoaded", function () {
             },
             body: JSON.stringify({
                 answers: allAnswers,
-                timeFinish: endCountdownSeconds
+                timeFinish: endCountdownSeconds,
             }),
         })
             .then((response) => response.json())
             .then((data) => {
-                const quantity = document.getElementById("quantity-passcount").dataset.quantity
-                const passCount = document.getElementById("quantity-passcount").dataset.passcount
-                console.log("soos luong" + passCount)
+                const quantity =
+                    document.getElementById("quantity-passcount").dataset
+                        .quantity;
+                const passCount =
+                    document.getElementById("quantity-passcount").dataset
+                        .passcount;
+                console.log("soos luong" + passCount);
                 console.log("phan hoi", data);
                 allExplanation = data.result;
                 const iscriticalElemet =
@@ -320,6 +339,7 @@ document.addEventListener("DOMContentLoaded", function () {
             updateQuestionDisplay(this);
             updateAnswerDisplay(this);
             updateValueRadio(this);
+            chooseAnswerName();
 
             document
                 .querySelectorAll('input[name="answer"]')
@@ -378,7 +398,7 @@ document.addEventListener("DOMContentLoaded", function () {
         console.log("id hien tai" + currentID);
         if (currentID) {
             console.log("exxplan" + JSON.stringify(allExplanation, null, 2));
-            
+
             showExplanation(currentID, allExplanation);
             changeColorAnswer(currentID, allExplanation);
         }
@@ -391,6 +411,7 @@ document.addEventListener("DOMContentLoaded", function () {
     const submitBtn = document.getElementById("submit-btn");
     const previewBtn = document.getElementById("preview");
 
+    
     if (submitBtn) {
         submitBtn.addEventListener("click", function (e) {
             e.preventDefault();
