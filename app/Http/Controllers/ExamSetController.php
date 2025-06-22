@@ -34,7 +34,7 @@ class ExamSetController extends Controller
             $query->where("license_types.LicenseTypeID",$currenlicenseID);
         })->get();        
         $License = LicenseType::get();
-        return view("admin.examSetManagement.createexamset", compact("currenlicense","currenlicenseID","License","listExamset"));
+        return view("admin.examSetManagement.createExamSet", compact("currenlicense","currenlicenseID","License","listExamset"));
     }
     public function storeExamSet(Request $request){
         $examSetName = $request->get("ExamSetName");
