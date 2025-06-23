@@ -174,8 +174,8 @@
 
     <!-- practice Start -->
     <!-- <div class="text-center mb-4">
-                                                                                                                <button id="start-btn" class="btn btn-success">Bắt đầu làm bài</button>
-                                                                                                            </div> -->
+                                                                                                                        <button id="start-btn" class="btn btn-success">Bắt đầu làm bài</button>
+                                                                                                                    </div> -->
 
     <div class="container-lg mt-5 mb-5 " id="exam-section" style="box-shadow: 0 0 45px rgba(0, 0, 0, .06)">
         <hr>
@@ -183,51 +183,53 @@
             <div class="col-lg-4 col-md-4 wow fadeInUp" data-wow-delay="0.1s">
                 <div class="service-item position-relative h-100">
                     <div class="service-text rounded p-4">
-                         <div class="scroll-wrapper" style="max-height: 400px; overflow-y: auto;">
-                        <div class="row g-4 wow fadeInUp" data-wow-delay="0.1s">
-                            <!-- Dùng col-1 để mỗi hàng chứa tối đa 12 thẻ -->
-                            <!-- Nếu thêm thẻ thứ 13 trở đi, nó tự xuống hàng -->
+                        <div class="scroll-wrapper" style="max-height: 400px; overflow-y: auto;">
+                            <div class="row g-4 wow fadeInUp" data-wow-delay="0.1s">
+                                <!-- Dùng col-1 để mỗi hàng chứa tối đa 12 thẻ -->
+                                <!-- Nếu thêm thẻ thứ 13 trở đi, nó tự xuống hàng -->
 
-                            <!-- Ví dụ: 15 thẻ -->
-                            @foreach ($questions as $index => $question)
-                                @php
-                                    $answers = [];
-                                    $labelCorrect = '';
+                                <!-- Ví dụ: 15 thẻ -->
+                                @foreach ($questions as $index => $question)
+                                    <!-- @php
+                                                    $answers = [];
+                                                    $labelCorrect = '';
 
-                                    foreach ($question->answer_Question as $answer) {
-                                        $key = strtoupper($answer->AnswerLabel); // Đảm bảo là A, B, C, D
-                                        if (in_array($key, ["A", "B", "C", "D"])) {
-                                            $answers[$key . '_ID'] = $answer->AnswerID;     // Gán ID
-                                            $answers[$key . '_NAME'] = $answer->AnswerName; // Hiển thị nội dung nếu cần
-                                            $answers[$key . '_CORRECT'] = $answer->IsCorrect;
-                                            if ($answer->IsCorrect) {
-                                                $labelCorrect = $key;
-                                            }
-                                        }
-                                    }
-                                @endphp
-                                <div class="col-2 col-sm-1 col-md-3  col-lg-2">
-                                    <a href="#" style="color:rgb(43, 39, 39); border-color:red" class="question-btn small"
-                                        data-question="{{ $index + 1 }}" data-id={{ $question->QuestionID }}
-                                        data-explanation="{{ $question->QuestionExplain }}"
-                                        data-img="{{ $question->ImageDescription }}"
-                                        data-content="{{ $question->QuestionName }}" data-a-id="{{ $answers['A_ID'] ?? ''  }}"
-                                        data-b-id="{{ $answers['B_ID'] ?? '' }}" data-c-id="{{ $answers['C_ID'] ?? ''  }}"
-                                        data-d-id="{{ $answers['D_ID'] ?? ''  }}" data-a-name="{{ $answers['A_NAME'] ?? ''  }}"
-                                        data-b-name="{{ $answers['B_NAME'] ?? '' }}"
-                                        data-c-name="{{ $answers['C_NAME'] ?? ''  }}"
-                                        data-d-name="{{ $answers['D_NAME'] ?? ''  }}" data-label-correct="{{ $labelCorrect }}">
+                                                    foreach ($question->answer_Question as $answer) {
+                                                        $key = strtoupper($answer->AnswerLabel); // Đảm bảo là A, B, C, D
+                                                        if (in_array($key, ["A", "B", "C", "D"])) {
+                                                            $answers[$key . '_ID'] = $answer->AnswerID;     // Gán ID
+                                                            $answers[$key . '_NAME'] = $answer->AnswerName; // Hiển thị nội dung nếu cần
+                                                            $answers[$key . '_CORRECT'] = $answer->IsCorrect;
+                                                            if ($answer->IsCorrect) {
+                                                                $labelCorrect = $key;
+                                                            }
+                                                        }
+                                                    }
+                                                @endphp -->
+                                    <div class="col-2 col-sm-1 col-md-3  col-lg-2">
+                                        <a href="#" style="color:rgb(43, 39, 39); border-color:red" class="question-btn small"
+                                            data-question="{{ $index + 1 }}" data-id={{ $question->QuestionID }}
+                                            data-explanation="{{ $question->QuestionExplain }}"
+                                            data-img="{{ $question->ImageDescription }}"
+                                            data-content="{{ $question->QuestionName }}"
+                                            data-a-id="{{ $answers['A_ID'] ?? ''  }}" data-b-id="{{ $answers['B_ID'] ?? '' }}"
+                                            data-c-id="{{ $answers['C_ID'] ?? ''  }}" data-d-id="{{ $answers['D_ID'] ?? ''  }}"
+                                            data-a-name="{{ $answers['A_NAME'] ?? ''  }}"
+                                            data-b-name="{{ $answers['B_NAME'] ?? '' }}"
+                                            data-c-name="{{ $answers['C_NAME'] ?? ''  }}"
+                                            data-d-name="{{ $answers['D_NAME'] ?? ''  }}"
+                                            data-label-correct="{{ $labelCorrect }}">
 
-                                        <p class="index-question question-item rounded text-center"
-                                            style="box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);">
-                                            {{ $index + 1 }}
-                                        </p>
-                                    </a>
-                                </div>
-                            @endforeach
+                                            <p class="index-question question-item rounded text-center"
+                                                style="box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);">
+                                                {{ $index + 1 }}
+                                            </p>
+                                        </a>
+                                    </div>
+                                @endforeach
 
-                            <a href="{{ route("userpage.home") }}" class="btn btn-primary mt-3" id="end-test">Thoát</a>
-                        </div>
+                                <a href="{{ route("userpage.home") }}" class="btn btn-primary mt-3" id="end-test">Thoát</a>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -246,32 +248,62 @@
                                     }
                                 }
                             @endphp
-                            <div class="question-block" style="display: none; min-height: 250px; max-height: 350px; overflow-y: auto;" id="question-block-{{ $question->QuestionID }}"
-                                data-question-id="{{ $question->QuestionID }}">
-                                <div class="d-flex align-items-center">
-                                    <h5 id="question-title" class="me-2 mb-0">Câu {{ $index + 1 }}:
-                                        {{ $question->QuestionName }}
-                                    </h5>
-                                    <!-- <p id="question-content" class="mb-0 mt-1"></p> -->
-                                </div>
-                                @if($question->ImageDescription)
-                                    <div id="div-image" class="mt-2 d-flex align-items-center align-items-start mb-2 answer-item">
-                                        <img src="{{ asset("storage/uploads/imageQuestion/$question->ImageDescription") }}" alt="">
-                                    </div>
-                                @endif
-                                <div class="mt-2">
-                                    @foreach ($labels as $label)
-                                        @if(!empty($answers[$label . "_ID"]))
-                                            <div class="d-flex align-items-start mb-2 answer-item answer-label"
-                                                data-label="{{ $label }}" data-question-id="{{ $question->QuestionID }}"
-                                                data-answer-id="{{ $answers[$label . '_ID'] ?? '' }}"
-                                                id="answer-row-{{ $question->QuestionID }}-{{ $label }}">
-                                                <p class="mb-0">{{ $label }}: {{ $answers[$label . '_NAME'] ?? '' }}</p>
+                            <div class="col-lg-8 col-md-8  wow fadeInUp" data-wow-delay="0.3s">
+                                <div class="service-item position-relative h-100">
+                                    <div class="service-text rounded p-3">
+                                        @foreach($questions as $index => $question)
+                                            @php
+                                                $answers = [];
+                                                foreach ($question->answer_Question as $answer) {
+                                                    $key = strtoupper($answer->AnswerLabel);
+                                                    if (in_array($key, haystack: ["A", "B", "C", "D"])) {
+                                                        $answers[$key . '_ID'] = $answer->AnswerID;
+                                                        $answers[$key . '_NAME'] = $answer->AnswerName;
+                                                    }
+                                                }
+                                            @endphp
+                                            <div class="question-block"
+                                                style="display: none; min-height: 250px; max-height: 350px; overflow-y: auto;"
+                                                id="question-block-{{ $question->QuestionID }}"
+                                                data-question-id="{{ $question->QuestionID }}">
+                                                <div class="d-flex align-items-center">
+                                                    <h6 id="question-title" class="me-2 mb-0">Câu {{ $index + 1 }}:
+                                                        {{ $question->QuestionName }}
+                                                    </h6>
+                                                    <!-- <p id="question-content" class="mb-0 mt-1"></p> -->
+                                                </div>
+                                                @if($question->ImageDescription)
+                                                    <div id="div-image"
+                                                        class="mt-2 d-flex align-items-center align-items-start mb-2 answer-item">
+                                                        <img src="{{ asset("storage/uploads/imageQuestion/$question->ImageDescription") }}"
+                                                            class="img-fluid d-block mx-auto"
+                                                            style="max-width: 250px; height: auto; object-fit: contain;" alt="">
+
+                                                    </div>
+                                                @endif
+                                                <div class="mt-2">
+                                                    @foreach ($labels as $label)
+                                                        @if(!empty($answers[$label . "_ID"]))
+                                                            <div class="d-flex align-items-start mb-2 answer-item answer-label"
+                                                                data-label="{{ $label }}" data-question-id="{{ $question->QuestionID }}"
+                                                                data-answer-id="{{ $answers[$label . '_ID'] ?? '' }}"
+                                                                id="answer-row-{{ $question->QuestionID }}-{{ $label }}">
+                                                                <p class="mb-0">{{ $label }}: {{ $answers[$label . '_NAME'] ?? '' }}</p>
+                                                            </div>
+                                                        @endif
+                                                    @endforeach
+                                                    <div id="explanation-container" class="d-none"></div>
+                                                </div>
                                             </div>
-                                        @endif
-                                    @endforeach
-                                    <div class="explanation-container d-none" data-question-id="{{ $question->QuestionID }}">
+                                        @endforeach
+                                        <div class="d-flex justify-content-between mt-2">
+                                            <button class="btn btn-primary" id="prev-btn">← Trước</button>
+                                            <button class="btn btn-primary" id="next-btn">Sau →</button>
+                                        </div>
+
+
                                     </div>
+
                                 </div>
                             </div>
                         @endforeach

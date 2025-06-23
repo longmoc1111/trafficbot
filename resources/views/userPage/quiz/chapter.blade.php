@@ -3,7 +3,7 @@
 
 @section("main")
     <!-- About Start -->
-    <style>
+   <style>
         .question-item {
             font-size: 11px;
             padding: 7px 7px;
@@ -166,7 +166,6 @@
 
 
 
-
     <!-- About End -->
 
     <!-- Page Header End -->
@@ -200,20 +199,20 @@
                             <!-- Ví dụ: 15 thẻ -->
                             @foreach ($questions as $index => $question)
                                 @php
-    $answers = [];
-    $labelCorrect = '';
+                                    $answers = [];
+                                    $labelCorrect = '';
 
-    foreach ($question->answer_Question as $answer) {
-        $key = strtoupper($answer->AnswerLabel); // Đảm bảo là A, B, C, D
-        if (in_array($key, ["A", "B", "C", "D"])) {
-            $answers[$key . '_ID'] = $answer->AnswerID;     // Gán ID
-            $answers[$key . '_NAME'] = $answer->AnswerName; // Hiển thị nội dung nếu cần
-            $answers[$key . '_CORRECT'] = $answer->IsCorrect;
-            if ($answer->IsCorrect) {
-                $labelCorrect = $key;
-            }
-        }
-    }
+                                    foreach ($question->answer_Question as $answer) {
+                                        $key = strtoupper($answer->AnswerLabel); // Đảm bảo là A, B, C, D
+                                        if (in_array($key, ["A", "B", "C", "D"])) {
+                                            $answers[$key . '_ID'] = $answer->AnswerID;     // Gán ID
+                                            $answers[$key . '_NAME'] = $answer->AnswerName; // Hiển thị nội dung nếu cần
+                                            $answers[$key . '_CORRECT'] = $answer->IsCorrect;
+                                            if ($answer->IsCorrect) {
+                                                $labelCorrect = $key;
+                                            }
+                                        }
+                                    }
                                 @endphp
                                 <div class="col-2 col-sm-1 col-md-3  col-lg-2">
                                     <a href="#" style="color:rgb(43, 39, 39); border-color:red" class="question-btn small"
@@ -255,8 +254,9 @@
         }
     }
                             @endphp
-                            <div class="question-block" id="question-block-{{ $question->QuestionID }}"
-                                data-question-id="{{ $question->QuestionID }}">
+                             <div class="question-block"
+                                style="display: none; min-height: 250px; max-height: 350px; overflow-y: auto;"
+                                id="question-block-{{ $question->QuestionID }}" data-question-id="{{ $question->QuestionID }}">
                                 <div class="d-flex align-items-center">
                                     <h5 id="question-title" class="me-2 mb-0">Câu {{ $index + 1 }}:
                                         {{ $question->QuestionName }}
@@ -265,7 +265,10 @@
                                 </div>
                                 @if($question->ImageDescription)
                                     <div id="div-image" class="mt-2 d-flex align-items-center align-items-start mb-2 answer-item">
-                                        <img src="{{ asset("storage/uploads/imageQuestion/$question->ImageDescription") }}" alt="">
+                                                                                <img src="{{ asset("storage/uploads/imageQuestion/$question->ImageDescription") }}"
+                                            class="img-fluid d-block mx-auto"
+                                            style="max-width: 350px; height: auto; object-fit: contain;" alt="">
+
                                     </div>
                                 @endif
                                 <div class="mt-2">
@@ -284,7 +287,7 @@
                                 </div>
                             </div>
                         @endforeach
-                        <div class="d-flex justify-content-between mt-3">
+                        <div class="d-flex justify-content-between mt-2">
                             <button class="btn btn-primary" id="prev-btn">← Trước</button>
                             <button class="btn btn-primary" id="next-btn">Sau →</button>
                         </div>

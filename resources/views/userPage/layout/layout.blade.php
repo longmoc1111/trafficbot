@@ -77,9 +77,14 @@
             background-color: #f0f0f0;
         }
 
-        /* Đăng xuất nổi bật */
+
         .dropdown-item.text-danger:hover {
             background-color: #ffe5e5;
+        }
+
+        .container-navbar {
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            z-index: 1000;
         }
     </style>
 </body>
@@ -96,7 +101,7 @@
     <div class="container py-3">
         <div class="d-flex align-items-center">
             <a href="index.html">
-                <h2 class="text-white fw-bold m-0">Trafficbot</h2>
+                <h4 class="text-white fw-bold m-0">Trafficbot</h4>
             </a>
             <div class="ms-auto d-flex align-items-center">
                 <div class="ms-3 d-flex">
@@ -115,11 +120,11 @@
 
 
 <!-- Navbar Start -->
-<div class="container-fluid bg-white sticky-top">
+<div class="container-fluid bg-white sticky-top container-navbar">
     <div class="container">
         <nav class="navbar navbar-expand-lg bg-white navbar-light p-lg-0">
             <a href="index.html" class="navbar-brand d-lg-none">
-                <h1 class="fw-bold m-0">TrafficBot</h1>
+                <h4 class="fw-bold m-0">TrafficBot</h4>
             </a>
             <button type="button" class="navbar-toggler me-0" data-bs-toggle="collapse"
                 data-bs-target="#navbarCollapse">
@@ -129,7 +134,7 @@
                 <div class="navbar-nav">
                     <a href="{{ route("userpage.home") }}" class="nav-item nav-link">Trang
                         chủ</a>
-                    <div class="nav-item dropdown">
+                    <!-- <div class="nav-item dropdown">
 
                         <a href="" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">Thi lý thuyết xe máy</a>
                         <div class="dropdown-menu bg-light rounded-0 rounded-bottom m-0 ">
@@ -143,19 +148,8 @@
                             @endisset
 
                         </div>
-                    </div>
-                    <div class="nav-item dropdown">
-                        <a href="" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">Thi sát hạch ô tô</a>
-                        <div class="dropdown-menu bg-light rounded-0 rounded-bottom m-0">
-                            @foreach ($licenses as $license)
-                                @if($license->LicenseTypeName == "B1" || $license->LicenseTypeName == "B2")
-                                    <a href="{{ route("userpage.practiceExam", ["LicenseTypeID" => $license->LicenseTypeID]) }}"
-                                        class="dropdown-item">Hạng {{ $license->LicenseTypeName }}</a>
-                                @endif
-                            @endforeach
-                        </div>
-                    </div>
-
+                    </div> -->
+                     <a href="{{ route("userpage.practice.test")}}" class="nav-item nav-link">Thi thử lý thuyết</a>
                     <div class="nav-item dropdown">
                         <a href="" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">Ôn tập lý thuyết</a>
                         <div class="dropdown-menu bg-light rounded-0 rounded-bottom m-0">

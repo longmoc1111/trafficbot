@@ -86,14 +86,19 @@
     margin-right: 35px;
     padding: 25px 0;
     color: var(--dark);
-    font-size: 18px;
+    font-size: 17px;
     font-weight: 500;
     outline: none;
 }
 
+
 .navbar .navbar-nav .nav-link:hover,
 .navbar .navbar-nav .nav-link.active {
     color: var(--primary);
+}
+
+.dropdown-menu .dropdown-item{
+    font-size: 14px;
 }
 
 .navbar .dropdown-toggle::after {
@@ -206,21 +211,29 @@
 
 /*** About ***/
 .about {
-    background: linear-gradient(rgba(0, 0, 0, .1), rgba(0, 0, 0, .1)), url(../img/about.jpg) left center no-repeat;
+    background: linear-gradient(rgba(0, 0, 0, .1), rgba(0, 0, 0, .1)), url(../background/background.png) left center no-repeat;
     background-size: cover;
 }
-
 .btn-play {
     position: relative;
-    display: block;
-    box-sizing: content-box;
-    width: 36px;
-    height: 46px;
-    border-radius: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 90px;
+    height: 90px;
+    border-radius: 50%;
     border: none;
     outline: none !important;
-    padding: 18px 20px 20px 28px;
-    background: var(--primary);
+    cursor: pointer;
+    z-index: 2;
+
+    background-color: rgba(255, 255, 255, 0.1); /* nền mờ nhẹ */
+    backdrop-filter: blur(2px); /* hiệu ứng mờ phía sau */
+    -webkit-backdrop-filter: blur(2px); /* hỗ trợ Safari */
+    transition: background-color 0.3s ease, transform 0.3s ease;
+    color: #fff;
+    font-size: 16px;
+    font-weight: 600;
 }
 
 .btn-play:before {
@@ -229,13 +242,15 @@
     z-index: 0;
     left: 50%;
     top: 50%;
-    transform: translateX(-50%) translateY(-50%);
-    display: block;
+    transform: translate(-50%, -50%);
     width: 90px;
     height: 90px;
-    background: var(--primary);
-    border-radius: 100%;
+    background: radial-gradient(circle, rgba(255, 255, 255, 0.25) 0%, rgba(255, 255, 255, 0.05) 100%);
+    border-radius: 50%;
     animation: pulse-border 1500ms ease-out infinite;
+    opacity: 0.7;
+    backdrop-filter: blur(2px);
+    -webkit-backdrop-filter: blur(2px);
 }
 
 .btn-play:after {
@@ -244,26 +259,27 @@
     z-index: 1;
     left: 50%;
     top: 50%;
-    transform: translateX(-50%) translateY(-50%);
-    display: block;
+    transform: translate(-50%, -50%);
     width: 90px;
     height: 90px;
-    background: var(--primary);
-    border-radius: 100%;
+    background: rgba(255, 255, 255, 0.1); /* hiệu ứng mờ */
+    border-radius: 50%;
     transition: all 200ms;
+    box-shadow: 0 0 15px rgba(255, 255, 255, 0.2);
+    backdrop-filter: blur(1px);
 }
 
+
 .btn-play span {
-    display: block;
     position: relative;
     z-index: 3;
-    width: 0;
-    height: 0;
-    left: 3px;
-    border-left: 30px solid #FFFFFF;
-    border-top: 18px solid transparent;
-    border-bottom: 18px solid transparent;
+    color: #fff;
+    font-weight: 600;
+    font-size: 16px;
+    padding: 4px 10px;
 }
+
+
 
 @keyframes pulse-border {
     0% {
@@ -333,7 +349,7 @@
 }
 .service-text-home .title-content {
 
-    padding: 15px 15px;
+    padding: 15px 15px; 
     
 }
 

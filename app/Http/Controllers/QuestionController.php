@@ -304,7 +304,17 @@ class QuestionController extends Controller
         $licenseTypeID = $request->get("licenseTypeID");
         $licenseType = LicenseType::find($licenseTypeID);
         $quantity = $licenseType->LicenseTypeQuantity;
-        ;
+        $countCurrentQuestion = 0;
+        $examset = ExamSet::find($id);
+        $currentQuestions = $examset->question_Examset()->get();
+        if ($currentQuestions) {
+            $countCurrentQuestion = count($currentQuestions);
+            if ($countCurrentQuestion >= $quantity) {
+                return redirect()->route("admintrafficbot.examset.show", $examset->ExamSetID)
+                                 ->with("quantity_max" ,"Bộ đề đã đủ số lượng câu hỏi, không thể tạo mới!");
+            }
+        }
+
         $countQuestion = 0;
         $amounts = $request->input('amounts', []);
 
@@ -312,11 +322,11 @@ class QuestionController extends Controller
         foreach ($amounts as $index => $item) {
             $countQuestion += $item;
         }
-            if ($countQuestion != $quantity - 1) {
-                return back()->withErrors(["quantity_error" => "Bộ đề yêu cầu số lượng $quantity câu hỏi!"]);
-            }else if($countQuestion == $quantity){
-                return back()->withErrors(["quantity_error" => "Số lượng câu hỏi đã đủ $quantity câu!"]);
-            }
+        if ($countQuestion != $quantity - 1) {
+            return back()->withErrors(["quantity_error" => "Bộ đề yêu cầu số lượng $quantity câu hỏi!"]);
+        } else if ($countQuestion == $quantity) {
+            return back()->withErrors(["quantity_error" => "Số lượng câu hỏi đã đủ $quantity câu!"]);
+        }
 
 
         $questionIdToAttach = [];
@@ -342,8 +352,8 @@ class QuestionController extends Controller
 
 
 
-        if($questionIdToAttach == null){
-            return back()->withErrors(["arr_question_null"=> "Số lượng câu hỏi "]);
+        if ($questionIdToAttach == null) {
+            return back()->withErrors(["arr_question_null" => "Số lượng câu hỏi "]);
         }
 
         $IsCritical = Question::whereHas("licenseType_Question", function ($query) use ($licenseTypeID) {
@@ -363,7 +373,6 @@ class QuestionController extends Controller
         $randomIndex = rand(0, count($questionIdToAttach) / 2);
         array_splice($questionIdToAttach, $randomIndex, 0, [$IsCritical->QuestionID]);
         // dd($questionIdToAttach);
-        $examset = ExamSet::find($id);
         if ($examset) {
             foreach ($questionIdToAttach as $questionID) {
                 $examset->question_Examset()->attach($questionID);

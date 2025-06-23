@@ -209,5 +209,11 @@
                 position: "topRight"
             })
         @endif
+         @if(session("quantity_max"))
+            iziToast.warning    ({
+                message: "{{ session("quantity_max") }}",
+                position: "topRight"
+            })
+        @endif quantity_max
     </script>
 @endsection

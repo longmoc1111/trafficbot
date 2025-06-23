@@ -4,6 +4,7 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\ChatBotController;
 use App\Http\Controllers\DashBoardController;
 use App\Http\Controllers\QuestionCategoryController;
+use App\Http\Controllers\QuizzController;
 use App\Http\Controllers\SignageController;
 use App\Http\Controllers\UserPageController;
 use App\Http\Controllers\QuestionController;
@@ -83,16 +84,26 @@ Route::middleware("admin")->controller(ChatBotController::class)->prefix("admint
 
 route::controller(UserPageController::class)->name("userpage")->group(function() {
     route::get("/","homePage")->name(".home");
+    route::get("/signages/{SignageTypeID}","signages")->name(".signages");
+
+
+});
+
+
+route::controller(QuizzController::class)->name("userpage")->group(function() {
+    route::get("/practice-test", "practiceTest")->name(".practice.test");
+    route::get("/practice-test/{licenseID}", "getExam")->name("practice.getexam");
+    route::get("/practice-info/{licenseID}", "getInfo")->name("practice.getinfo");
     route::get("/quiz-practice/{LicenseTypeID}","PracticeExam")->name(".practiceExam");
-    route::get("/quiz-practice/start/{licenseID}/{examsetID}","PracticeStart")->name(".practiceStart");
+    route::post("/quiz-practice/start/","PracticeStart")->name(".practiceStart");
     route::get("/quiz-practice/start-random/{licenseID}","PracticeStartRandom")->name(".practice.start.random");
     route::post("/quiz-practice/finish/{licenseTypeID}/{ExamSetID}","PracticeFinish")->name(".practicefinish");
-    route::get("/signages/{SignageTypeID}","signages")->name(".signages");
 
     route::get("/quiz-chapters/{ID}","chapters")->name(".chapters");
 
     route::get("/quiz-collection","collection")->name(".collection");
 });
+
 
  
 
