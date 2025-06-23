@@ -218,11 +218,6 @@
         document.getElementById('licenseType').addEventListener("change", function () {
             const licenseID = this.value
             const examSetSelect = document.getElementById("examset")
-            const promptLicense = document.getElementById("prompt-license")
-            const promptExam = document.getElementById("prompt-exam")
-            promptLicense.style = "display:none"
-
-
             fetch(`/practice-test/${licenseID}`)
                 .then(response => response.json())
                 .then(data => {
@@ -234,9 +229,6 @@
                             option.value = examset.ExamSetID
                             option.text = examset.ExamSetName
                             examSetSelect.appendChild(option)
-                            promptExam.style = "display:none"
-
-
                         })
                     } else {
                         examSetSelect.innerHTML = `<option>Không có đề thi nào</option>`
