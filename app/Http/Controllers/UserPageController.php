@@ -47,12 +47,12 @@ class UserPageController extends Controller
             $wordA = explode(" ", $licenseName);
             $lastWordA = end($wordA);
         }
-        $questions = $examSet->question_Examset;
         $answers = ["A" => "", "B" => "", "C" => "", "D" => ""];
         $labels = ["A", "B", "C", "D"];
         return view("userPage.quiz.practiceStart", compact("questions", "examSet", "answers", "labels", "license", "lastWordA", "duration"));
     }
-    public function PracticeStartRandom($licenseID){
+    public function PracticeStartRandom($licenseID)
+    {
         $license = LicenseType::find($licenseID);
         $quantity = $license->LicenseTypeQuantity;
         dd($quantity);
@@ -87,12 +87,12 @@ class UserPageController extends Controller
             if ($isCorrect) {
                 $correctCount += 1;
             }
-            $Iscritical = Question::where("QuestionID", $questionID)->whereHas("licenseType_Question", function($query) use ($licenseTypeID){
+            $Iscritical = Question::where("QuestionID", $questionID)->whereHas("licenseType_Question", function ($query) use ($licenseTypeID) {
                 $query->where("question_license_types.LicenseTypeID", $licenseTypeID)
-                ->where("question_license_types.IsCritical" , true);
+                    ->where("question_license_types.IsCritical", true);
             })->exists();
 
-            if ($question && $Iscritical == true  && !$isCorrect) {
+            if ($question && $Iscritical == true && !$isCorrect) {
                 $isCriticalWrong = true;
             }
 
@@ -104,7 +104,7 @@ class UserPageController extends Controller
                 "labelCorrect" => $labelCorrect,
                 "answerCorrect" => $answerCorrect,
                 "time" => $timefinish,
-                "sumQuestion"=>$sumQuestion,
+                "sumQuestion" => $sumQuestion,
                 // "Iscritical" => $Iscritical,
                 // "name"=>$name
 
@@ -140,7 +140,7 @@ class UserPageController extends Controller
         return response()->json([
             'message' => 'Dữ liệu đã nhận thành công',
             'examsetID' => $ExamSetID,
-            "passCount"=>$passCount,
+            "passCount" => $passCount,
             'result' => $result,
             'iscriticalWrong' => $isCriticalWrong,
             "correctCount" => $correctCount,

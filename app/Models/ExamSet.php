@@ -16,6 +16,9 @@ class ExamSet extends Model
         return $this->belongsToMany(LicenseType::class, "exam_set_license_type","ExamsetID","LicenseTypeID");
     }
     public function question_Examset(){
-        return $this->belongsToMany(Question::class,"question_exam_sets","ExamSetID","QuestionID");
+        return $this->belongsToMany(Question::class,"question_exam_sets","ExamSetID","QuestionID")
+         ->withTimestamps()
+         ->withPivot("QuestionExamsetID")
+          ->orderBy('QuestionExamsetID'); ;
     }
 }
