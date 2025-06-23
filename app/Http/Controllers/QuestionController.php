@@ -343,7 +343,7 @@ class QuestionController extends Controller
 
 
         if($questionIdToAttach == null){
-            return back()->withErrors(["arr_question_null"=> "Số lượng câu hỏi "])
+            return back()->withErrors(["arr_question_null"=> "Số lượng câu hỏi "]);
         }
 
         $IsCritical = Question::whereHas("licenseType_Question", function ($query) use ($licenseTypeID) {
