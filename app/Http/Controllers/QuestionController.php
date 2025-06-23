@@ -309,14 +309,14 @@ class QuestionController extends Controller
         $amounts = $request->input('amounts', []);
 
 
-        // foreach ($amounts as $index => $item) {
-        //     $countQuestion += $item;
-        // }
-        //     if ($countQuestion != $quantity - 1) {
-        //         return back()->withErrors(["quantity_error" => "Bộ đề yêu cầu số lượng $quantity câu hỏi!"]);
-        //     }else if($countQuestion == $quantity){
-        //         return back()->withErrors(["quantity_error" => "Số lượng câu hỏi đã đủ $quantity câu!"]);
-        //     }
+        foreach ($amounts as $index => $item) {
+            $countQuestion += $item;
+        }
+            if ($countQuestion != $quantity - 1) {
+                return back()->withErrors(["quantity_error" => "Bộ đề yêu cầu số lượng $quantity câu hỏi!"]);
+            }else if($countQuestion == $quantity){
+                return back()->withErrors(["quantity_error" => "Số lượng câu hỏi đã đủ $quantity câu!"]);
+            }
 
 
         $questionIdToAttach = [];
@@ -341,9 +341,10 @@ class QuestionController extends Controller
 
 
 
-        // if($questionIdToAttach == null){
-        //     return back()->withErrors(["arr_question_null"=> "Số lượng câu hỏi "])
-        // }
+
+        if($questionIdToAttach == null){
+            return back()->withErrors(["arr_question_null"=> "Số lượng câu hỏi "])
+        }
 
         $IsCritical = Question::whereHas("licenseType_Question", function ($query) use ($licenseTypeID) {
             $query->where("question_license_types.LicenseTypeID", $licenseTypeID)
@@ -361,9 +362,12 @@ class QuestionController extends Controller
         }
         $randomIndex = rand(0, count($questionIdToAttach) / 2);
         array_splice($questionIdToAttach, $randomIndex, 0, [$IsCritical->QuestionID]);
+        // dd($questionIdToAttach);
         $examset = ExamSet::find($id);
         if ($examset) {
-            $examset->question_Examset()->syncWithoutDetaching($questionIdToAttach);
+            foreach ($questionIdToAttach as $questionID) {
+                $examset->question_Examset()->attach($questionID);
+            }
             return redirect()->route("admintrafficbot.examset.show", $examset->ExamSetID)->with("create_success", "Tạo danh sách câu hỏi mới thành công!");
         } else {
             return redirect()->route("admintrafficbot.examset.show", $examset->ExamSetID)->with("create_fails", "Tạo danh sách câu hỏi Không thành công!");

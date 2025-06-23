@@ -176,7 +176,7 @@
                                                                                                                                                 <button id="start-btn" class="btn btn-success">Bắt đầu làm bài</button>
                                                                                                                                             </div> -->
 
-        <div  class="container-lg d-none p-4" id="exam-section" style="box-shadow: 0 0 45px rgba(0, 0, 0, .06)">
+        <div   class="container-lg d-none p-4" id="exam-section" style="box-shadow: 0 0 45px rgba(0, 0, 0, .06)">
 
             <div class="d-flex justify-content-between align-items-center mb-3 px-3" data-wow-delay="0.1s">
                 <h3 class="display-7 mb-0 mt-2">Thi lý thuyết xe máy hạng {{ $lastWordA }} - {{ $examSet->ExamSetName }}</h3>
@@ -189,7 +189,7 @@
                     <div class="service-item position-relative h-100">
                         <div class="service-text rounded p-4">
                             <div class="scroll-wrapper" style="max-height: 400px; overflow-y: auto;">
-                            <div class="row g-4 wow fadeInUp p-2 " data-wow-delay="0.1s">
+                            <div class="row g-4 wow fadeInUp p-2  " data-wow-delay="0.1s">
                                 <!-- Dùng col-1 để mỗi hàng chứa tối đa 12 thẻ -->
                                 <!-- Nếu thêm thẻ thứ 13 trở đi, nó tự xuống hàng -->
 
@@ -250,7 +250,7 @@
                                     }
                                 }
                                 @endphp
-                                <div class="question-block" style="display: none;" id="question-block-{{ $question->QuestionID }}"
+                                <div class="question-block" style="display: none; min-height: 250px; max-height: 350px; overflow-y: auto;" id="question-block-{{ $question->QuestionID }}"
                                     data-question-id="{{ $question->QuestionID }}">
                                     <div class="d-flex align-items-center">
                                         <h5 id="question-title" class="me-2 mb-0">Câu {{ $index + 1 }}:
@@ -316,6 +316,7 @@
                     </div>
                 </div>
             </div>
+        </div>
             <!-- endmodal -->
 
             <!-- modal ket thuc thi -->

@@ -246,7 +246,7 @@
                                     }
                                 }
                             @endphp
-                            <div class="question-block" id="question-block-{{ $question->QuestionID }}"
+                            <div class="question-block" style="display: none; min-height: 250px; max-height: 350px; overflow-y: auto;" id="question-block-{{ $question->QuestionID }}"
                                 data-question-id="{{ $question->QuestionID }}">
                                 <div class="d-flex align-items-center">
                                     <h5 id="question-title" class="me-2 mb-0">Câu {{ $index + 1 }}:
