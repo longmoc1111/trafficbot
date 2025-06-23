@@ -161,7 +161,7 @@
                 </div>
                 <div class="col-lg-6">
                     <div class="h-100 d-flex align-items-center justify-content-center" style="min-height: 300px;">
-                        <button type="button" class="btn-play" data-bs-toggle="modal" data-bs-target="#videoModal">
+                        <button type="button" class="btn-modal" data-bs-toggle="modal" data-bs-target="#videoModal">
                             <span>Bắt đầu</span>
                         </button>
                     </div>

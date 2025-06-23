@@ -211,7 +211,7 @@
 
 /*** About ***/
 
-.btn-play {
+.btn-modal {
     position: relative;
     display: flex;
     align-items: center;
@@ -233,7 +233,7 @@
     font-weight: 600;
 }
 
-.btn-play:before {
+.btn-modal:before {
     content: "";
     position: absolute;
     z-index: 0;
@@ -250,7 +250,7 @@
     -webkit-backdrop-filter: blur(2px);
 }
 
-.btn-play:after {
+.btn-modal:after {
     content: "";
     position: absolute;
     z-index: 1;
@@ -267,7 +267,7 @@
 }
 
 
-.btn-play span {
+.btn-modal span {
     position: relative;
     z-index: 3;
     color: #fff;
