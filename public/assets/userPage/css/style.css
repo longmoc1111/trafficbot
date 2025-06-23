@@ -210,10 +210,7 @@
 
 
 /*** About ***/
-.about {
-    background: linear-gradient(rgba(0, 0, 0, .1), rgba(0, 0, 0, .1)), url(../background/background.png) left center no-repeat;
-    background-size: cover;
-}
+
 .btn-play {
     position: relative;
     display: flex;

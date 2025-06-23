@@ -4,6 +4,11 @@
 @section("main")
 
     <style>
+        .about {
+            background: linear-gradient(rgba(0, 0, 0, .1), rgba(0, 0, 0, .1)), url(" {{ asset('assets/userPage/background/background.png') }} ") left center no-repeat;
+            background-size: cover;
+        }
+
         .license-btn {
             display: inline-block;
             padding: 8px 15px;
@@ -269,12 +274,12 @@
                             tbody.innerHTML = ``
                             data.dataCategory.forEach(function (item, index) {
                                 tbody.innerHTML += `
-                                    <tr>
-                                        <td>${index + 1}</td>
-                                        <td>${item.name}</td>
-                                        <td>${item.quantity}</td>
-                                    </tr>
-                                `
+                                        <tr>
+                                            <td>${index + 1}</td>
+                                            <td>${item.name}</td>
+                                            <td>${item.quantity}</td>
+                                        </tr>
+                                    `
                             })
                             licenseName.innerText = `Cấu trúc đề thi Hạng ${data.dataLicense.name}`
                             duration.innerText = data.dataLicense.duration
@@ -283,7 +288,7 @@
                 })
             })
             const firstBtn = document.querySelector(".license-btn")
-            if(firstBtn){
+            if (firstBtn) {
                 firstBtn.click()
             }
         })
