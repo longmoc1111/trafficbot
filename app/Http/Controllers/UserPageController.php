@@ -47,6 +47,7 @@ class UserPageController extends Controller
             $wordA = explode(" ", $licenseName);
             $lastWordA = end($wordA);
         }
+        $questions = $examSet->question_Examset()->get();
         $answers = ["A" => "", "B" => "", "C" => "", "D" => ""];
         $labels = ["A", "B", "C", "D"];
         return view("userPage.quiz.practiceStart", compact("questions", "examSet", "answers", "labels", "license", "lastWordA", "duration"));
