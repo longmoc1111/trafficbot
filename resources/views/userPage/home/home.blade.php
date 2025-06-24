@@ -66,7 +66,7 @@
 
             </div>
             <div class="row g-4">
-                <div class="col-lg-3 col-sm-6 col-md-6 wow fadeInUp " data-wow-delay="0.1s">
+                <div class="col-lg-4 col-sm-6 col-md-6 wow fadeInUp " data-wow-delay="0.1s">
                     <div class="service-item-home position-relative h-100 ">
                         <div class="service-text-home rounded ">
                             <div>
@@ -84,7 +84,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="col-lg-3 col-sm-6 col-md-6 wow fadeInUp " data-wow-delay="0.1s">
+                <div class="col-lg-4 col-sm-6 col-md-6 wow fadeInUp " data-wow-delay="0.1s">
                     <div class="service-item-home position-relative h-100 ">
                         <div class="service-text-home rounded ">
                             <div>
@@ -108,7 +108,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="col-lg-3 col-sm-6 col-md-6 wow fadeInUp " data-wow-delay="0.1s">
+                <div class="col-lg-4 col-sm-6 col-md-6 wow fadeInUp " data-wow-delay="0.1s">
                     <div class="service-item-home position-relative h-100 ">
                         <div class="service-text-home rounded ">
                             <div>
@@ -131,7 +131,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="col-lg-3 col-sm-6 col-md-6 wow fadeInUp " data-wow-delay="0.1s">
+                <div class="col-lg-4 col-sm-6 col-md-6 wow fadeInUp " data-wow-delay="0.1s">
                     <div class="service-item-home position-relative h-100 ">
                         <div class="service-text-home rounded ">
                             <div>

@@ -12,28 +12,35 @@ use App\Models\ExamSet;
 
 class QuizzController extends Controller
 {
-        public function practiceExam(string $id)
+    public function practiceExam(string $id)
     {
 
         $license = LicenseType::find($id);
-        $licenseName = $license->LicenseTypeName;
-        if ($licenseName) {
-            $wordA = explode(" ", $licenseName);
-            $lastWordA = end($wordA);
+        if ($license) {
+            $licenseName = $license->LicenseTypeName;
+            if ($licenseName) {
+                $wordA = explode(" ", $licenseName);
+                $lastWordA = end($wordA);
+            }
+
+            $examSets = $license->examset_LicenseType;
+            return view("userPage.quiz.practiceExam", compact("examSets", "license", "lastWordA"));
+        }else{
+            return abort(404);
         }
 
-        $examSets = $license->examset_LicenseType;
-        return view("userPage.quiz.practiceExam", compact("examSets", "license", "lastWordA"));
     }
-    public function practiceTest(){
-         $licenses = LicenseType::all();
-        return view("userPage.quiz.practiceTest",compact("licenses"));
+    public function practiceTest()
+    {
+        $licenses = LicenseType::all();
+        return view("userPage.quiz.practiceTest", compact("licenses"));
     }
 
-    public function getInfo($licenseID){
+    public function getInfo($licenseID)
+    {
         $license = LicenseType::with("questionCategory_LicenseType")->find($licenseID);
         $dataInfo = [];
-        if(!$license){
+        if (!$license) {
             return response()->json(["error" => "Không tìm thấy dữ liệu!"], 404);
         }
         $dataLicense = [
@@ -43,7 +50,7 @@ class QuizzController extends Controller
             "quantity" => $license->LicenseTypeQuantity
 
         ];
-        $dataCategory = $license->questionCategory_LicenseType->map(function($category){
+        $dataCategory = $license->questionCategory_LicenseType->map(function ($category) {
             return [
                 "name" => $category->CategoryName,
                 "quantity" => $category->pivot->Quantity
@@ -52,23 +59,25 @@ class QuizzController extends Controller
         return response()->json([
             "dataLicense" => $dataLicense,
             "dataCategory" => $dataCategory
-         ]);
+        ]);
     }
 
-    public function getExam($licensenID){
+    public function getExam($licensenID)
+    {
         $license = LicenseType::with("examset_LicenseType")->find($licensenID);
-        if(!$license){
+        if (!$license) {
             return response()->json(["error" => "Không tìm thấy"], 404);
         }
         return response()->json($license->examset_LicenseType);
     }
-    
+
     public function PracticeStart(Request $request)
     {
         $examsetID = $request->input("examSetID");
         $licenseID = $request->input("licenseType");
         $examSet = ExamSet::find($examsetID);
         $license = LicenseType::find($licenseID);
+        $licenseTypes = LicenseType::all();
         $licenseName = $license->LicenseTypeName;
         if ($licenseName) {
             $wordA = explode(" ", $licenseName);
@@ -77,7 +86,7 @@ class QuizzController extends Controller
         $questions = $examSet->question_Examset()->get();
         $answers = ["A" => "", "B" => "", "C" => "", "D" => ""];
         $labels = ["A", "B", "C", "D"];
-        return view("userPage.quiz.practiceStart", compact("questions", "examSet", "answers", "labels", "license", "lastWordA"));
+        return view("userPage.quiz.practiceStart", compact("questions", "examSet", "answers", "labels", "license", "lastWordA","licenseTypes"));
     }
     public function PracticeStartRandom($licenseID)
     {
@@ -175,7 +184,7 @@ class QuizzController extends Controller
         ]);
     }
 
-     public function chapters($ID)
+    public function chapters($ID)
     {
         $chapter = QuestionCategory::find($ID);
         $chapters = QuestionCategory::all();

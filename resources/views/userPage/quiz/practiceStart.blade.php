@@ -266,8 +266,8 @@
 
     <!-- practice Start -->
     <!-- <div class="text-center mb-4">
-                                                                                                                                                        <button id="start-btn" class="btn btn-success">Bắt đầu làm bài</button>
-                                                                                                                                                    </div> -->
+                                                                                                                                                                            <button id="start-btn" class="btn btn-success">Bắt đầu làm bài</button>
+                                                                                                                                                                        </div> -->
 
     <div class="container-lg d-none p-4" id="exam-section" style="box-shadow: 0 0 45px rgba(0, 0, 0, .06)">
 
@@ -291,17 +291,17 @@
                                 @foreach ($questions as $index => $question)
 
                                     <!-- @php
-                                                            $answers = [];
+                                                                                                    $answers = [];
 
-                                                            foreach ($question->answer_Question as $answer) {
-                                                                $key = strtoupper($answer->AnswerLabel); // Đảm bảo là A, B, C, D
+                                                                                                    foreach ($question->answer_Question as $answer) {
+                                                                                                        $key = strtoupper($answer->AnswerLabel); // Đảm bảo là A, B, C, D
 
-                                                                if (in_array($key, ["A", "B", "C", "D"])) {
-                                                                    $answers[$key . '_ID'] = $answer->AnswerID;     // Gán ID
-                                                                    $answers[$key . '_NAME'] = $answer->AnswerName; // Hiển thị nội dung nếu cần
-                                                                }
-                                                            }
-                                                        @endphp -->
+                                                                                                        if (in_array($key, ["A", "B", "C", "D"])) {
+                                                                                                            $answers[$key . '_ID'] = $answer->AnswerID;     // Gán ID
+                                                                                                            $answers[$key . '_NAME'] = $answer->AnswerName; // Hiển thị nội dung nếu cần
+                                                                                                        }
+                                                                                                    }
+                                                                                                @endphp -->
 
                                     <div class="col-2 col-sm-1 col-md-3  col-lg-2">
                                         <a href="#" style="color:rgb(43, 39, 39); border-color:red" class="question-btn small"
@@ -344,8 +344,7 @@
                                     }
                                 }
                             @endphp
-                            <div class="question-block"
-                                style="display: none; min-height: 250px; max-height: 350px; overflow-y: auto;"
+                            <div class="question-block" style="display: none; min-height: 250px; max-height: 350px;  "
                                 id="question-block-{{ $question->QuestionID }}" data-question-id="{{ $question->QuestionID }}">
                                 <div class="d-flex align-items-center">
                                     <h6 id="question-title" class="me-2 mb-0">Câu {{ $index + 1 }}:
@@ -386,8 +385,53 @@
 
                 </div>
             </div>
-
+            <button class="btn btn-primary mt-3 " data-bs-toggle="modal" data-bs-target="#videoModal" id="end-test">Chọn
+                đề thi khác</button>
         </div>
+        <!-- Form Modal Start -->
+        <div class="modal fade" id="videoModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content rounded-0">
+                    <div class="modal-header">
+                        <h3 class="modal-title" id="exampleModalLabel">Chọn Hạng Bằng Lái</h3>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <form action="{{ route('userpage.practiceStart')}}" method="POST">
+                        @csrf
+                        <div class="modal-body">
+                            <div class="mb-3">
+                                <label for="licenseType" class="form-label">Chọn hạng bằng lái:</label>
+                                <select id="licenseType" class="form-select" name="licenseType" required>
+                                    <!-- <option id="prompt-license" value="" selected disabled>-- Vui lòng chọn --</option> -->
+                                    @foreach($licenseTypes as $licenseType)
+                                        <option value="{{ $licenseType->LicenseTypeID }}" {{ $licenseType->LicenseTypeID == $license->LicenseTypeID ? "selected" : "" }}> Hạng
+                                            {{ $licenseType->LicenseTypeName }}
+                                        </option>
+                                    @endforeach
+
+
+                                </select>
+                            </div>
+                            <div class="mb-3">
+                                <label for="licenseType" class="form-label">Chọn đề thi:</label>
+                                <select class="form-select" id="examset" name="examSetID" required>
+                                    <option id="prompt-exam" value="" selected disabled>-- Vui lòng chọn --</option>
+                                </select>
+                            </div>
+                            <!-- Bạn có thể thêm các trường khác ở đây -->
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-info" data-bs-dismiss="modal">Đóng</button>
+
+                            <button type="submit" class="btn btn-primary">Xác nhận</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <!-- Form Modal End -->
+
+
 
         <!-- modal thong báo kết quả -->
         <!-- modal ket quả -->
@@ -438,39 +482,41 @@
     <div class="container-lg mt-4 mb-5" style="box-shadow: 0 0 45px rgba(0, 0, 0, .06)">
         <div class="row g-0">
             <div class="col-lg-12 wow fadeIn" data-wow-delay="0.5s">
-                <div class="bg-white rounded-top p-5">
-                    <h1 class="display-6"><strong>Thi thử lý thuyết hạng {{ $lastWordA }}</strong></h1>
-                    <div class="mb-2">
-                        <p class="mb-2">Cấu trúc đề thi sát hạch giấy phép lái xe hạng {{ $lastWordA }} bao gồm
-                            {{ $license->LicenseTypeQuantity }} câu hỏi, mỗi câu hỏi
-                            chỉ có duy nhất một câu trả lời đúng.
-                        </p>
-                        <h5>Bao gồm</h5>
-                        <ul>
-                            <li>số lượng câu hỏi: <strong style="color:#ff0000"> {{ $license->LicenseTypeQuantity }}
-                                    câu</strong></li>
-                            <li>yêu cầu : <strong style="color:#ff0000" id="quantity-passcount"
-                                    data-quantity="{{ $license->LicenseTypeQuantity }}"
-                                    data-passcount="{{ $license->LicenseTypePassCount }}">đúng
-                                    {{ $license->LicenseTypePassCount }}/{{ $license->LicenseTypeQuantity }} câu</strong>
-                            </li>
-                            <li>Thời gian: <strong style="color:#ff0000">{{ $license->LicenseTypeDuration }} phút</strong>
-                            </li>
-                        </ul>
-                    </div>
-                    <p class="mb-4">
-                        <span id="short-text"><strong>Lưu ý đặc biệt: </strong>Chọn sai <strong style="color:#ff0000">"CÂU
-                                ĐIỂM LIỆT"</strong> đồng nghĩa với việc <strong style="color:#ff0000">KHÔNG ĐẠT"</strong> dù
-                            các câu hỏi khác trả lời đúng</span>
-                        <span id="full-text" style="display: none;">
-                            Tempor erat elitr rebum at clita. Diam dolor diam ipsum sit. Aliqu diam amet
-                            diam et eos. Clita erat ipsum et lorem et sit, sed stet lorem sit clita duo justo
-                        </span>
-                    </p>
-                    <div class="text-center">
-                        <button id="start-btn" class="btn btn-outline-primary mb-4">Bắt đầu thi</button>
+                <div class="bg-white rounded-top p-3">
 
-                    </div>
+                    <h5 id="license-name" class="mb-1 fw-bold text-primary">Cấu trúc Đề thi lý thuyết hạng
+                        {{ $lastWordA }}</strong></h6>
+
+                        <div class="mb-2">
+                            <p class="mb-2">Bài thi lý thuyết hạng {{ $lastWordA }} bao gồm
+                                {{ $license->LicenseTypeQuantity }} câu hỏi được phân bố như sau:
+                            </p>
+                            <h5 id="license-name" class="mb-1 fw-bold text-primary">Cách đánh giá:</strong></h6>
+                                <p id="license-name" class="mb-1 ">Điểm số:</strong></p>
+
+                                <ul>
+                                    <li>Trả lời đúng mỗi câu sẽ đạt được 1 điểm.</li>
+                                    <li>Để đạt yêu cầu kết quả thi phải đạt <strong style="color:#ff0000"
+                                            id="quantity-passcount" data-quantity="{{ $license->LicenseTypeQuantity }}"
+                                            data-passcount="{{ $license->LicenseTypePassCount }}">
+                                            {{ $license->LicenseTypePassCount }}/{{ $license->LicenseTypeQuantity }}
+                                        </strong> câu,
+                                    </li>
+                                    <li>Kết quả sẽ hiển thị ngay sau khi thí sinh thi xong.
+                                    </li>
+                                </ul>
+                        </div>
+                        <p class="mb-4">
+                            <span id="short-text"><strong style="color:#ff0000">Lưu ý: </strong>Chọn sai <strong
+                                    style="color:#ff0000">"CÂU
+                                    ĐIỂM LIỆT"</strong> đồng nghĩa với việc <strong style="color:#ff0000">"KHÔNG
+                                    ĐẠT"</strong> dù
+                                các câu hỏi khác trả lời đúng</span>
+                        </p>
+                        <div class="text-center">
+                            <button id="start-btn" class="btn btn-outline-primary mb-4">Bắt đầu thi</button>
+
+                        </div>
                 </div>
             </div>
         </div>
@@ -481,10 +527,45 @@
 
     <!-- script -->
     <script>
+        function loadExamSet(licenseID) {
+                const examSetSelect = document.getElementById("examset")
+                examSetSelect.innerText = ""
+                fetch(`/practice-test/${licenseID}`)
+                    .then(response => response.json())
+                    .then(data => {
+                        console.log("da nhan dư leu than cong" + JSON.stringify(data))
+
+                        if (Array.isArray(data) && data.length > 0) {
+                            data.forEach(function (examset) {
+                                const option = document.createElement("option")
+                                option.value = examset.ExamSetID
+                                option.text = examset.ExamSetName
+                                examSetSelect.appendChild(option)
+                            })
+                        } else {
+                            examSetSelect.innerHTML = `<option>Không có đề thi nào</option>`
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error fetching exam sets:', error);
+                        examSetSelect.innerHTML = '<option disabled>Lỗi khi tải đề thi</option>';
+                    });
+          
+        }
+        document.getElementById('licenseType').addEventListener("change", function () {
+            const licenseID = this.value
+            if(licenseID){
+                loadExamSet(licenseID)
+            }
+        })
+
+
         let currentQuestionIndex = 0;
         let questionButtons = [];
         let endCountdownSeconds = 0;
         let disSelectAnswer = false
+
+
 
         document.addEventListener("DOMContentLoaded", function () {
             questionButtons = Array.from(document.querySelectorAll(".question-btn"));
@@ -504,6 +585,11 @@
             let timeInterval;
 
             let allExplanation = [];
+
+            const licenseID =  document.getElementById('licenseType').value
+            if(licenseID){
+                loadExamSet(licenseID)
+            }
 
             //xử ly nút trái phải
             document.addEventListener("keydown", function (event) {
@@ -804,13 +890,13 @@
 
             if (iscritical) {
                 iscriticalElemet.innerHTML = `
-                                                <p><strong>Kết quả:</strong> Không đạt - sai câu điểm liệt</p>`;
+                                                                    <p><strong>Kết quả:</strong> Không đạt - sai câu điểm liệt</p>`;
             } else if (correctCount < passCount) {
                 iscriticalElemet.innerHTML = `
-                                                <p><strong>Kết quả:</strong> Không đạt - yêu cầu tối thiểu đúng ${passCount}/${quantity} câu</p>`;
+                                                                    <p><strong>Kết quả:</strong> Không đạt - yêu cầu tối thiểu đúng ${passCount}/${quantity} câu</p>`;
             } else {
                 iscriticalElemet.innerHTML = `
-                                                <p><strong>Kết quả:</strong> Đạt</p>`;
+                                                                    <p><strong>Kết quả:</strong> Đạt</p>`;
             }
         }
 

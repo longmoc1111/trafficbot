@@ -11,9 +11,9 @@
 
         .license-btn {
             display: inline-block;
-            padding: 8px 15px;
-            margin-right: 6px;
-            font-size: 12px;
+            padding: 8px 11px;
+            margin-right: 2px;
+            font-size: 11px;
             font-weight: 400;
             color: #fff;
             background: linear-gradient(135deg, #007bff, #6610f2);
@@ -105,6 +105,18 @@
             width: 24px;
             height: 24px;
         }
+        .score-info-box li, 
+        .score-info-box p {
+            font-size: 13px;
+        }
+        .table-header th 
+        {
+            font-size: 13px;
+        }
+        .table-body td {
+            font-size: 13px;
+        }
+        
     </style>
 
 
@@ -114,18 +126,18 @@
         <div class="container">
             <div class="row g-0">
                 <div class="col-lg-6 pt-lg-5 wow fadeIn" data-wow-delay="0.5s">
-                    <div class="bg-white rounded-top p-5 mt-3 ">
-                        <div class="type-btn mb-2">
+                    <div class="bg-white rounded-top p-4 mt-3">
+                        <div class="type-btn mb-2  ">
                             @foreach($licenses as $index => $license)
                                 <button class="license-btn mb-2" data-id="{{ $license->LicenseTypeID }}" @if($index == 0)
                                 data-first="true" @endif>Hạng {{ $license->LicenseTypeName }}</button>
                             @endforeach
                         </div>
 
-                        <h5 id="license-name" class="mb-1 fw-bold text-primary"></h5>
+                        <h6 id="license-name" class="mb-1 fw-bold text-primary"></h6>
                         <div class="row g-5 pt-2 mb-2">
                             <div class="table-responsive">
-                                <table class="table table-bordered table-sm align-middle text-center">
+                                <table class=" table-header table table-bordered table-sm align-middle text-center">
                                     <thead class="table-primary">
                                         <tr>
                                             <th scope="col">Chương</th>
@@ -133,7 +145,7 @@
                                             <th scope="col" style="width: 20%;">Số lượng </th>
                                         </tr>
                                     </thead>
-                                    <tbody id="categoryTable">
+                                    <tbody id="categoryTable" class = "table-body">
                                         <tr>
 
                                         </tr>
@@ -142,17 +154,17 @@
                             </div>
                         </div>
                         <div class="score-info-box p-4 rounded shadow-sm bg-light mb-4">
-                            <h5 class="mb-3 fw-bold text-primary">📌 Cách tính điểm:</h5>
+                            <h6 class="fw-bold text-primary">📌 Cách tính điểm:</h6>
                             <ul class="mb-0 ps-3 small">
-                                <li class="mb-2">⏱️ Thời gian làm bài: <strong id="duration"></strong></li>
+                                <li class="mb-2 ">⏱️ Thời gian làm bài: <strong id="duration"></strong></li>
                                 <li class="mb-2">✅ Mỗi câu chỉ có duy nhất <strong>1 đáp án đúng</strong></li>
                                 <li class="mb-2">🎯 Phải đúng tối thiểu <strong id="passCount"></strong> để đạt</li>
                             </ul>
                             <div class="alert-note p-2 rounded shadow-sm mb-4">
-                                <h5 class="mb-0 fw-bold">
+                                <p class="mb-0">
                                     📌 <strong style="color: #dc3545">Lưu ý:</strong> <span class="text-dark">Không được
                                         phép sai câu điểm liệt</span>
-                                </h5>
+                                </p>
                             </div>
 
                         </div>
@@ -218,6 +230,7 @@
         document.getElementById('licenseType').addEventListener("change", function () {
             const licenseID = this.value
             const examSetSelect = document.getElementById("examset")
+            examSetSelect.innerText = ""
             fetch(`/practice-test/${licenseID}`)
                 .then(response => response.json())
                 .then(data => {

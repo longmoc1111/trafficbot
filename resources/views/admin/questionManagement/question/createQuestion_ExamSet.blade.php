@@ -8,17 +8,7 @@
 
             <input type="text" name = "redirect-back" hidden value = "{{ url()->current() }}">
             <!-- Page Title Start -->
-            <div class="flex items-center md:justify-between flex-wrap gap-2 mb-6">
-                <h4 class="text-default-900 text-lg font-medium mb-2"></h4>
-
-                <div class="md:flex hidden items-center gap-3 text-sm font-semibold">
-                    <a href="#" class="text-sm font-medium text-default-700">OpenDash</a>
-                    <i class="material-symbols-rounded text-xl flex-shrink-0 text-default-500">chevron_right</i>
-                    <a href="#" class="text-sm font-medium text-default-700">Forms</a>
-                    <i class="material-symbols-rounded text-xl flex-shrink-0 text-default-500">chevron_right</i>
-                    <a href="#" class="text-sm font-medium text-default-700" aria-current="page">Input</a>
-                </div>
-            </div>
+           
             <!-- Page Title End -->
             <div class="flex flex-col mb-3">
                 <div class="card border rounded shadow w-full">
@@ -40,8 +30,8 @@
                         <button type="submit"
                             class="btn border-success text-success hover:bg-success hover:text-white">Tạo</button>
                     </div>
-
-                    @error("quantity_error" || "question_created" || "iscritical_null") 
+                  
+                    @error("quantity_error") 
                         <div id="dismiss-alert_1"
                             class="hs-removing:translate-x-5 hs-removing:opacity-0 transition duration-300 bg-red-100 border rounded-md "
                             role="alert">
