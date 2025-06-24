@@ -14,13 +14,13 @@
                 <div class="card-header flex justify-end">
                     <div class="flex gap-2">
                         <div>
-                            @if(!empty($selectLicenseType))
+                            @if(!empty($selectLicenseTypes))
                                 <form action="{{ route("admintrafficbot.examset")}}" method="get">
                                     <select name="choose_License" class="form-select" id="example-select"
                                         onchange="this.form.submit()">
-                                        @foreach ($selectLicenseType as $licenseType)
-                                            <option value="{{$licenseType->LicenseTypeName}}" {{isset($LicenseType) && $LicenseType->LicenseTypeName == $licenseType->LicenseTypeName ? "selected" : "" }}>
-                                                {{ $licenseType->LicenseTypeName }}
+                                        @foreach ($selectLicenseTypes as $license)
+                                            <option value="{{$license->LicenseTypeID}}" {{isset($LicenseType) && $license->LicenseTypeName == $LicenseType->LicenseTypeName ? "selected" : "" }}>
+                                                {{ $license->LicenseTypeName }}
                                             </option>
                                         @endforeach
                                     </select>
@@ -32,12 +32,12 @@
                                 </select>
                             @endif
                         </div>
-                        @if(empty($LicenseType->LicenseTypeName))
+                        @if(empty($LicenseType->LicenseTypeID))
                             <a href="" class="btn bg-primary/25 text-primary hover:bg-primary hover:text-white">
                                 Thêm bộ đề
                             </a>
                         @else
-                            <a href="{{ route("admintrafficbot.examset.create", ["currenlicense" => $LicenseType->LicenseTypeName]) }}"
+                            <a href="{{ route("admintrafficbot.examset.create", ["ID" => $LicenseType->LicenseTypeID]) }}"
                                 class="btn bg-primary/25 text-primary hover:bg-primary hover:text-white">
                                 Thêm bộ đề
                             </a>
@@ -70,8 +70,8 @@
                                         </tr>
                                     </thead>
                                     <tbody class="divide-y divide-gray-200">
-                                        @if(isset($LicenseType))
-                                            @foreach ($LicenseType->examSet_LicenseType as $exam)
+                                        @if(isset($examSet))
+                                            @foreach ($examSet as $exam)
                                                 <tr>
                                                     <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-default-800">
                                                         {{ $exam->ExamSetName }}
@@ -79,9 +79,9 @@
                                                     <td class="px-6 py-4 whitespace-nowrap text-sm text-default-800">
                                                         {{ $exam->licenseType_examset->pluck("LicenseTypeName")->join(", ") }}
                                                     </td>
-
+                                    
                                                     <td class="px-6 py-4 whitespace-nowrap text-sm text-default-800">
-                                                        {{ count($exam->question_Examset) }}/ {{ $licenseType->LicenseTypeQuantity }}
+                                                        {{ count($exam->question_Examset) }}/ {{ $exam->licenseType_Examset->pluck("LicenseTypeQuantity")->first() }}
                                                     </td>
                                                     <td
                                                         class="px-6 py-4 whitespace-nowrap text-end text-sm font-medium flex justify-end gap-x-2">
@@ -139,13 +139,79 @@
                             </div>
                         </div>
                     </div>
+                         <div class="flex items-center justify-between border-t border-gray-200 bg-white px-4 py-3 sm:px-6">
+                        <!-- Showing -->
+                        <div>
+                            <p class="text-sm text-gray-700">
+                                <span class="font-medium">{{ $examSet->firstItem() }}</span>
+                                ->
+                                <span class="font-medium">{{ $examSet->lastItem() }}</span>
+                                of
+                                <span class="font-medium">{{$examSet->total()}}</span>
+                            </p>
+                        </div>
+
+                        <!-- Pagination -->
+                        <div class="flex flex-wrap items-center gap-1">
+                            <!-- trước -->
+                            @if($examSet->onFirstPage())
+                                <span class="px-3 py-1 text-gray-400 bg-gray-100 rounded border border-gray-300">Trước</span>
+                            @else
+                                <a href="{{ $examSet->previousPageUrl() }}"
+                                    class="px-3 py-1 text-gray-700 bg-white rounded border border-gray-300 hover:bg-gray-50">Trước</a>
+                            @endif
+
+                            @php
+                            $start = max($examSet->currentPage() - 2, 1);
+                            $end = min($examSet->currentPage() + 2, $examSet->lastPage());
+                            @endphp
+
+                            <!-- trang đầu tiên -->
+                            @if($start > 1)
+                                <a href="{{ $examSet->url(1) }}"
+                                    class="px-3 py-1 text-gray-700 bg-white rounded border border-gray-300 hover:bg-gray-50">1</a>
+                                @if($start > 2)
+                                    <span class="px-2 text-gray-500">...</span>
+                                @endif
+                            @endif
+
+                            <!-- link các trang -->
+                            @for($page = $start; $page <= $end; $page++)
+                                @if($page == $examSet->currentPage())
+                                    <span
+                                        class="px-3 py-1 bg-primary/25 text-primary rounded border border-indigo-600">{{ $page }}</span>
+                                @else
+                                    <a href="{{ $examSet->url($page) }}"
+                                        class="px-3 py-1 text-gray-700 bg-white rounded border border-gray-300 hover:bg-gray-50">{{ $page}}</a>
+                                @endif
+                            @endfor
+
+                            <!-- page cuối -->
+                            @if($end < $examSet->lastPage())
+                                @if($end < $examSet->lastPage() - 1)
+                                    <span class="px-2 text-gray-500">...</span>
+                                @endif
+                                <a href="{{ $examSet->url($examSet->lastPage()) }}"
+                                    class="px-3 py-1 text-gray-700 bg-white rounded border border-gray-300 hover:bg-gray-50">{{ $examSet->lastPage() }}</a>
+                            @endif
+
+                            <!-- trang tiếp -->
+                            @if($examSet->hasMorePages())
+                                <a href="{{ $examSet->nextPageUrl() }}"
+                                    class="px-3 py-1 text-gray-700 bg-white rounded border border-gray-300 hover:bg-gray-50">Sau</a>
+                            @else
+                                <span class="px-3 py-1 text-gray-400 bg-gray-100 rounded border border-gray-300">Sau</span>
+                            @endif
+
+                        </div>
+                    </div>
                 </div>
                 
             </div> <!-- end card -->
 
             <!-- modal -->
-            @if(isset($LicenseType))
-                @foreach ($LicenseType->examSet_LicenseType as $exam)
+            @if(isset($examSet))
+                @foreach ($examSet as $exam)
                     <div id="modal-{{ $exam->ExamSetID }}"
                         class="hs-overlay w-full h-full fixed top-0 left-0 z-70 transition-all duration-500 overflow-y-auto hidden pointer-events-none">
                         <div

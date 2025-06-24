@@ -63,7 +63,7 @@ Route::middleware("admin")->controller(LicenseTypeController::class)->prefix("ad
 });
 Route::middleware("admin")->controller(ExamSetController::class)->prefix("admintrafficbot")->name("admintrafficbot")->group(function(){
     Route::get("/exam_set", "listExamSet")->name(".examset");
-    Route::get("/exam_set/add/{currenlicense}","createExamSet")->name(".examset.create");
+    Route::get("/exam_set/add/{ID}",action: "createExamSet")->name(".examset.create");
     Route::post("/exam_set/store","storeExamSet")->name(".examset.store");
     Route::delete("/exam_set/delete/{ExamSetID}","deleteExamSet")->name(".examset.delete");
     Route::get("/exam_set/edit/{ExamSetID}","editExamSet")->name(".examset.edit");

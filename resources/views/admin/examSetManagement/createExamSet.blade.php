@@ -21,7 +21,7 @@
             <div class="flex flex-col gap-6">
                 <div class="card border rounded shadow">
                     <div class="flex items-center justify-between px-6 py-4 border-b">
-                        <h4 class="text-lg font-semibold">Tạo bộ đề mới cho {{ $currenlicense }}</h4>
+                        <h4 class="text-lg font-semibold">Tạo bộ đề mới cho {{ $listLicense->LicenseTypeName }}</h4>
                         <button type="submit"
                             class="btn border-success text-success hover:bg-success hover:text-white">Tạo</button>
                     </div>
