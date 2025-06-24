@@ -344,7 +344,7 @@
                                     }
                                 }
                             @endphp
-                            <div class="question-block" style="display: none; min-height: 250px; max-height: 350px;  "
+                            <div class="question-block" style="display: none; min-height: 350px; max-height: 600px; overflow-y: auto;  "
                                 id="question-block-{{ $question->QuestionID }}" data-question-id="{{ $question->QuestionID }}">
                                 <div class="d-flex align-items-center">
                                     <h6 id="question-title" class="me-2 mb-0">Câu {{ $index + 1 }}:

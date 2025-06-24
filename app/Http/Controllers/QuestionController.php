@@ -299,80 +299,70 @@ class QuestionController extends Controller
     }
     public function storeQuestion_ExamSet(string $id, Request $request)
     {
-
-
         $licenseTypeID = $request->get("licenseTypeID");
         $licenseType = LicenseType::find($licenseTypeID);
         $quantity = $licenseType->LicenseTypeQuantity;
         $countCurrentQuestion = 0;
+        $questionCreated = 0;
         $examset = ExamSet::find($id);
+        $isCritical = false;
         $currentQuestions = $examset->question_Examset()->get();
         if ($currentQuestions) {
             $countCurrentQuestion = count($currentQuestions);
-            if ($countCurrentQuestion >= $quantity) {
+            if ($countCurrentQuestion > 0) {
                 return redirect()->route("admintrafficbot.examset.show", $examset->ExamSetID)
-                                 ->with("quantity_max" ,"Bộ đề đã đủ số lượng câu hỏi, không thể tạo mới!");
+                    ->with("quantity_max", "Bộ đề đã có câu hỏi không thể khởi tạo lại!");
             }
         }
-
         $countQuestion = 0;
         $amounts = $request->input('amounts', []);
-
-
         foreach ($amounts as $index => $item) {
             $countQuestion += $item;
         }
-        if ($countQuestion != $quantity - 1) {
+        if ($countQuestion != $quantity) {
             return back()->withErrors(["quantity_error" => "Bộ đề yêu cầu số lượng $quantity câu hỏi!"]);
-        } else if ($countQuestion == $quantity) {
-            return back()->withErrors(["quantity_error" => "Số lượng câu hỏi đã đủ $quantity câu!"]);
         }
-
-
         $questionIdToAttach = [];
         foreach ($amounts as $categoryID => $count) {
-            $questions = Question::where("CategoryID", $categoryID)
+            if ($isCritical == false) {
+                $isCriticalQuestion = Question::where("CategoryID", $categoryID)
+                    ->whereHas("licenseType_Question", function ($query) use ($licenseTypeID) {
+                        $query->where('question_license_types.LicenseTypeID', $licenseTypeID)
+                            ->where("question_license_types.Iscritical", 1);
+                    })
+                    ->whereDoesntHave("examSet_Question")
+                    ->inRandomOrder()
+                    ->pluck("QuestionID")
+                    ->first();
+                if ($isCriticalQuestion) {
+                    $questionIdToAttach[] = $isCriticalQuestion;
+                    $isCritical = true;
+                    $count--;
+                } else {
+                    return back()->withErrors(["iscritical_null" => "Không tìm thấy câu điểm liệt!"]);
+                }
+            }
+            if ($count > 0) {
+                $questions = Question::where("CategoryID", $categoryID)
+                    ->whereHas("licenseType_Question", function ($query) use ($licenseTypeID) {
+                        $query->where("question_license_types.LicenseTypeID", $licenseTypeID)
+                            ->where("question_license_types.Iscritical", 0);
+                    })
+                    ->whereDoesntHave("examSet_Question")
+                    ->inRandomOrder()
+                    ->limit($count)
+                    ->pluck("QuestionID")
+                    ->toArray();
+                $questionIdToAttach = array_merge($questionIdToAttach, $questions);
 
-                ->whereHas("licenseType_Question", function ($query) use ($licenseTypeID) {
-                    $query->where('question_license_types.LicenseTypeID', $licenseTypeID)
-                        ->where("question_license_types.Iscritical", "!=", 1);
-                })
-                ->whereDoesntHave("examSet_Question")
-                ->inRandomOrder()
-                ->limit($count)
-                ->pluck("QuestionID")
-                ->toArray();
-            $questionIdToAttach = array_merge($questionIdToAttach, $questions);
+            }
         }
-        $questionCreated = 0;
         foreach ($questionIdToAttach as $index => $item) {
             $questionCreated += $item;
         }
-
-
-
-
-        if ($questionIdToAttach == null) {
-            return back()->withErrors(["arr_question_null" => "Số lượng câu hỏi "]);
-        }
-
-        $IsCritical = Question::whereHas("licenseType_Question", function ($query) use ($licenseTypeID) {
-            $query->where("question_license_types.LicenseTypeID", $licenseTypeID)
-                ->where("question_license_types.IsCritical", $licenseTypeID);
-        })
-            ->whereDoesntHave("examSet_Question")
-            ->inRandomOrder()
-            ->first();
-
-        if ($IsCritical == null) {
-            return back()->withErrors(["iscritical_null" => "Không tìm thấy câu điểm liệt!"]);
-        }
-        if ($questionCreated <= $quantity - 1) {
+        if ($questionCreated <= $quantity) {
             return back()->withErrors(["question_created" => "Không đủ số lượng câu hỏi để tạo bộ đề mới!"]);
         }
-        $randomIndex = rand(0, count($questionIdToAttach) / 2);
-        array_splice($questionIdToAttach, $randomIndex, 0, [$IsCritical->QuestionID]);
-        // dd($questionIdToAttach);
         if ($examset) {
             foreach ($questionIdToAttach as $questionID) {
                 $examset->question_Examset()->attach($questionID);
@@ -380,7 +370,6 @@ class QuestionController extends Controller
             return redirect()->route("admintrafficbot.examset.show", $examset->ExamSetID)->with("create_success", "Tạo danh sách câu hỏi mới thành công!");
         } else {
             return redirect()->route("admintrafficbot.examset.show", $examset->ExamSetID)->with("create_fails", "Tạo danh sách câu hỏi Không thành công!");
-
         }
     }
 }

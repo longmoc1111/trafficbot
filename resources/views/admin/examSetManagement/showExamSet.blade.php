@@ -74,19 +74,26 @@
                                                         style="white-space: normal; word-wrap: break-word; max-width: 250px;">
                                                     {{ $question->categoryQuestion_Question->CategoryName }}
                                                 </td>
-                                                <td class="px-6 py-4 whitespace-nowrap text-sm text-default-800">
-                                                         <span class="px-2 py-1 bg-success/10 text-success text-xs rounded"></span>
-                                                    </td>
-                                                <!-- @if($question->IsCritical == true)
-                                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-default-800">
-                                                         <span class="px-2 py-1 bg-success/10 text-success text-xs rounded">có</span>
-                                                    </td>
+                                              
+                                               @php
+                                                    $hasCritical = false;
+                                                    foreach ($question->licenseType_Question as $license) {
+                                                        if ($license->pivot->IsCritical == 1) {
+                                                            $hasCritical = true;
+                                                            break;
+                                                        }
+                                                    }
+                                                @endphp
+
+                                                @if($hasCritical)
+                                                    <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-default-800">
+                                                       <span class="px-2 py-1 bg-success/10 text-success text-xs rounded">có</span>                                             
+                                                    </td>                                                 
                                                 @else
-                                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-default-800">
-                                                         <span class="px-2 py-1 bg-red-100 text-red-500 text-xs rounded"
-                                                        style="white-space:nowrap">Không</span>
+                                                    <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-default-800">
+                                                        <span class="px-2 py-1 bg-blue-100 text-secondary text-xs rounded">không</span>
                                                     </td>
-                                                @endif -->
+                                                @endif 
                                                 <td
                                                     class="px-6 py-4 whitespace-nowrap text-end text-sm font-medium flex justify-end gap-x-2">
                                                     <div class="hs-tooltip">

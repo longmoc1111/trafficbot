@@ -83,7 +83,7 @@
             margin-top: 16px;
             background-color: #F6FEF9;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-            font-size: 16px;
+            font-size: 14px;
             color: #333;
             line-height: 1.5;
         }
@@ -97,6 +97,9 @@
             box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
             transition: background-color 0.3s ease;
             cursor: pointer;
+        }
+          .answer-item p {
+            font-size: 13px;
         }
 
         .answer-item input {
@@ -255,7 +258,7 @@
     }
                             @endphp
                              <div class="question-block"
-                                style="display: none; min-height: 250px; max-height: 350px; overflow-y: auto;"
+                                style="display: none; min-height: 350px; max-height: 600px; overflow-y: auto;"
                                 id="question-block-{{ $question->QuestionID }}" data-question-id="{{ $question->QuestionID }}">
                                 <div class="d-flex align-items-center">
                                     <h5 id="question-title" class="me-2 mb-0">Câu {{ $index + 1 }}:

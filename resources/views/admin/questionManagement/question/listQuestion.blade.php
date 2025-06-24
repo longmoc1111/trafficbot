@@ -9,12 +9,12 @@
                 <h4 class="text-default-900 text-lg font-medium mb-2">Danh sách câu hỏi</h4>
 
                 <!-- <div class="md:flex hidden items-center gap-3 text-sm font-semibold">
-                                                <a href="#" class="text-sm font-medium text-default-700">OpenDash</a>
-                                                <i class="material-symbols-rounded text-xl flex-shrink-0 text-default-500">chevron_right</i>
-                                                <a href="#" class="text-sm font-medium text-default-700">Tables</a>
-                                                <i class="material-symbols-rounded text-xl flex-shrink-0 text-default-500">chevron_right</i>
-                                                <a href="#" class="text-sm font-medium text-default-700" aria-current="page">Basic Tables</a>
-                                            </div> -->
+                                                                <a href="#" class="text-sm font-medium text-default-700">OpenDash</a>
+                                                                <i class="material-symbols-rounded text-xl flex-shrink-0 text-default-500">chevron_right</i>
+                                                                <a href="#" class="text-sm font-medium text-default-700">Tables</a>
+                                                                <i class="material-symbols-rounded text-xl flex-shrink-0 text-default-500">chevron_right</i>
+                                                                <a href="#" class="text-sm font-medium text-default-700" aria-current="page">Basic Tables</a>
+                                                            </div> -->
             </div>
             <!-- Page Title End -->
 
@@ -36,11 +36,13 @@
                         <!-- RIGHT: Select + Button -->
                         <div class="flex items-center gap-3">
                             <form action="">
-                            <select onchange = "this.form.submit()" name="category" class="form-select" id="example-select" style = "max-width: 200px;">
+                                <select onchange="this.form.submit()" name="category" class="form-select" id="example-select"
+                                    style="max-width: 200px;">
                                     @foreach($questionCategory as $category)
-                                        <option value="{{ $category->CategoryID }}" {{ !empty($categoryKey) && $categoryKey == $category->CategoryID ? "selected" : "" }}>{{ $category->CategoryName }}</option>
+                                        <option value="{{ $category->CategoryID }}" {{ !empty($categoryKey) && $categoryKey == $category->CategoryID ? "selected" : "" }}>{{ $category->CategoryName }}
+                                        </option>
                                     @endforeach
-                            </select>
+                                </select>
                             </form>
                             <a href="{{ route('admintrafficbot.question.create') }}" style="white-space: nowrap"
                                 class="btn bg-primary/25 text-primary hover:bg-primary hover:text-white">
@@ -80,18 +82,26 @@
                                                         {{ optional($question->categoryQuestion_Question)->CategoryName ?? 'Chưa phân loại' }}
                                                     </td>
                                                     </td>
-                                                    @if($question->IsCritical == true || $question->IsCritical == "1")
-                                                        <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-default-800">
-                                                             <span
-                                                        class="px-2 py-1 bg-success/10 text-success text-xs rounded">có</span>
-                                                        </td>
-                                                    @else
-                                                        <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-default-800">
- <span
-                                                        class="px-2 py-1 bg-blue-100 text-secondary text-xs rounded">không</span>
-                                                        </td>
-                                                    @endif
 
+                                                @php
+                                                    $hasCritical = false;
+                                                    foreach ($question->licenseType_Question as $license) {
+                                                        if ($license->pivot->IsCritical == 1) {
+                                                            $hasCritical = true;
+                                                            break;
+                                                        }
+                                                    }
+                                                @endphp
+
+                                                @if($hasCritical)
+                                                    <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-default-800">
+                                                       <span class="px-2 py-1 bg-success/10 text-success text-xs rounded">có</span>                                             
+                                                    </td>                                                 
+                                                @else
+                                                    <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-default-800">
+                                                        <span class="px-2 py-1 bg-blue-100 text-secondary text-xs rounded">không</span>
+                                                    </td>
+                                                @endif
                                                     <td
                                                         class="px-6 py-4 whitespace-nowrap text-end text-sm font-medium flex justify-end gap-x-2">
                                                         <div class="hs-tooltip">
@@ -160,7 +170,7 @@
                                 <span class="font-medium">{{$Questions->total()}}</span>
                             </p>
                         </div>
- 
+
                         <!-- Pagination -->
                         <div class="flex flex-wrap items-center gap-1">
                             <!-- trước -->
@@ -191,8 +201,8 @@
                                     <span
                                         class="px-3 py-1 bg-primary/25 text-primary rounded border border-indigo-600">{{ $page }}</span>
                                 @else
-                                <a href="{{ $Questions->url($page) }}"
-                                    class="px-3 py-1 text-gray-700 bg-white rounded border border-gray-300 hover:bg-gray-50">{{ $page}}</a>
+                                    <a href="{{ $Questions->url($page) }}"
+                                        class="px-3 py-1 text-gray-700 bg-white rounded border border-gray-300 hover:bg-gray-50">{{ $page}}</a>
                                 @endif
                             @endfor
 

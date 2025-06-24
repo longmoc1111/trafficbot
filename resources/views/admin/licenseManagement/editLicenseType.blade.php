@@ -95,7 +95,7 @@
                                             {{ $message }}
                                         </div>
                                     @enderror
-                                    <input type="number" id="" name="LicenseTypeQuantity" class="form-input" value="{{ $editLicenseType->LicenseTyQuantity }}"
+                                    <input type="number" id="" name="LicenseTypeQuantity" class="form-input" value="{{ $editLicenseType->LicenseTypeQuantity }}"
                                         onfocus="document.getElementById('license_type_quantity_errorr')?.classList.add('hidden')">
                                 </div>
                                 <div class="">
@@ -109,7 +109,7 @@
                                             {{ $message }}
                                         </div>
                                     @enderror
-                                    <input type="number" id="" name="LicenseTypePassCount" class="form-input" value="{{ $editLicenseType->LicenseTyPassCount }}"
+                                    <input type="number" id="" name="LicenseTypePassCount" class="form-input" value="{{ $editLicenseType->LicenseTypePassCount }}"
                                         onfocus="document.getElementById('license_type_pass_count_errorr')?.classList.add('hidden')">
                                 </div>
                             </div>
