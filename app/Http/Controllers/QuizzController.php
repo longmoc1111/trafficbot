@@ -160,7 +160,7 @@ class QuizzController extends Controller
     }
     public function PracticeFinish($licenseTypeID, Request $request)
     {
-        $submittedAnswers = $request->input("answers",[]);
+        $submittedAnswers = $request->input("answers");
         $timefinish = $request->input("timeFinish");
         $isCriticalWrong = false;
         $result = [];
@@ -213,7 +213,7 @@ class QuizzController extends Controller
         // }
 
 
-        // if (Auth::check()) {
+        // if(Auth::check()) {
         //     $exam_reult = ExamResult::create([
         //         "userID" => Auth::user()->userID,
         //         "LicenseTypeID" => $licenseTypeID,
@@ -235,7 +235,7 @@ class QuizzController extends Controller
         return response()->json([
             'message' => 'Dữ liệu đã nhận thành công',
             "passCount" => $passCount,
-            'result' => $submittedAnswers,
+            'result' => $result,
             'iscriticalWrong' => $isCriticalWrong,
             "correctCount" => $correctCount,
         ]);
