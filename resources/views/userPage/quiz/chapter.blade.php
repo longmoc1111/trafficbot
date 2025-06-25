@@ -191,8 +191,8 @@
             <hr>
             <div class="col-lg-4 col-md-4 h-100 wow fadeInUp" data-wow-delay="0.1s">
                 <div class="service-item position-relative h-100">
-                    <div class="service-text rounded p-4">
-                        <div class="scroll-wrapper" style="max-height: 250px; overflow-y: auto;">
+                    <div class="service-text rounded p-3">
+                        <div class="scroll-wrapper" style="max-height: 300px; overflow-y: auto;">
                             <div class="d-flex flex-wrap gap-2 justify-content-center">
                                   @foreach ($questions as $index => $question)
                                 @php
