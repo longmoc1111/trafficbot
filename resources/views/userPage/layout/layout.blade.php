@@ -149,7 +149,7 @@
 
                         </div>
                     </div> -->
-                     <a href="{{ route("userpage.practice.test")}}" class="nav-item nav-link">Thi thử lý thuyết</a>
+                    <a href="{{ route("userpage.practice.test")}}" class="nav-item nav-link">Thi thử lý thuyết</a>
                     <div class="nav-item dropdown">
                         <a href="" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">Ôn tập lý thuyết</a>
                         <div class="dropdown-menu bg-light rounded-0 rounded-bottom m-0">
@@ -157,8 +157,12 @@
                             <a href="{{ route("userpage.chapters", ["ID" => $chapter->CategoryID]) }}"
                                 class="dropdown-item">Ôn tập nhanh với 600 câu</a>
 
-                            <a href="{{ route("userpage.collection") }}" class="dropdown-item">Ôn tập nhanh 250 câu lý
-                                thuyết - A1</a>
+                            <a href="{{ route("userpage.collectionA", ["ID" => $chapter->CategoryID]) }}"
+                                class="dropdown-item">Ôn tập nhanh 250 câu lý
+                                thuyết - A1,A</a>
+                            <a href="{{ route("userpage.collectionBone", ["ID" => $chapter->CategoryID]) }}"
+                                class="dropdown-item">Ôn tập nhanh 300 câu lý
+                                thuyết - B1</a>
 
                         </div>
                     </div>

@@ -3,8 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Models\Answer;
+use App\Models\ExamResult;
 use App\Models\Question;
 use App\Models\QuestionCategory;
+use Auth;
 use Illuminate\Http\Request;
 use App\Models\LicenseType;
 use App\Models\ExamSet;
@@ -106,9 +108,8 @@ class QuizzController extends Controller
         $result = [];
         $correctCount = 0;
         $sumQuestion = count($submittedAnswers);
-        // $score = $sumQuestion - $correctCount;
-        $examset = ExamSet::find($ExamSetID);
-        $passCount = $examset->PassCount;
+        $licenseType = LicenseType::find($licenseTypeID);
+        $passCount = $licenseType->LicenseTypePassCount;
         // $passed = false;
         foreach ($submittedAnswers as $questionID => $answerID) {
             $question = Question::find($questionID);
@@ -147,32 +148,31 @@ class QuizzController extends Controller
 
             ];
         }
+        if ($correctCount >= $passCount && $isCorrect == true) {
+            $passed = true;
+        } else {
+            $passed = false;
+        }
 
-        // if ($score >= $passCount && $isCorrect == true) {
-        //     $passed = true;
-        // } else {
-        //     $passed = false;
-        // }
 
+        if(Auth::check()) {
+            $exam_reult = ExamResult::create([
+                "userID" => Auth::user()->userID,
+                "LicenseTypeID" => $licenseTypeID,
+                "score" => $correctCount,
+                "passed" => $passed,
+                "duration" => $timefinish
 
-        // if (Auth::check()) {
-        //     $exam_reult = ExamResult::create([
-        //         "userID" => Auth::user()->userID,
-        //         "LicenseTypeID" => $licenseTypeID,
-        //         "score" => $score,
-        //         "passed" => $passed,
-        //         "duration" => $timefinish
-
-        //     ]);
-        // } else {
-        //     $exam_reult = ExamResult::create([
-        //         "userID" => null,
-        //         "LicenseTypeID" => $licenseTypeID,
-        //         "score" => $score,
-        //         "passed" => $passed,
-        //         "duration" => $timefinish
-        //     ]);
-        // }
+            ]);
+        } else {
+            $exam_reult = ExamResult::create([
+                "userID" => null,
+                "LicenseTypeID" => $licenseTypeID,
+                "score" => $correctCount,
+                "passed" => $passed,
+                "duration" => $timefinish
+            ]);
+        }
 
         return response()->json([
             'message' => 'Dữ liệu đã nhận thành công',
@@ -194,12 +194,29 @@ class QuizzController extends Controller
         return view("userPage.quiz.chapter", compact("chapter", "questions", "answers", "labels", "chapters"));
     }
 
-    public function collection()
+    public function collectionA($ID)
     {
-        $questions = Question::all();
+        $chapter = QuestionCategory::find($ID);
+        $chapters = QuestionCategory::all();
+        $licenseType = LicenseType::where("LicenseTypeName", "A1")->first();
+        $questions = Question::whereHas("licenseType_Question", function($query) use ($licenseType) {
+                    $query->where("question_license_types.LicenseTypeID" , $licenseType->LicenseTypeID);
+        })->where("CategoryID", $chapter->CategoryID)->get();
         $answers = ["A" => "", "B" => "", "C" => "", "D" => ""];
         $labels = ["A", "B", "C", "D"];
-        return view("userPage.quiz.collection", data: compact("questions", "answers", "labels"));
+        return view("userPage.quiz.collection", data: compact("chapter","chapters","questions", "answers", "labels"));
+    }
+     public function collectionBOne($ID)
+    {
+        $chapter = QuestionCategory::find($ID);
+        $chapters = QuestionCategory::all();
+        $licenseType = LicenseType::where("LicenseTypeName", "B1")->first();
+        $questions = Question::whereHas("licenseType_Question", function($query) use ($licenseType) {
+                    $query->where("question_license_types.LicenseTypeID" , $licenseType->LicenseTypeID);
+        })->where("CategoryID", $chapter->CategoryID)->get();
+        $answers = ["A" => "", "B" => "", "C" => "", "D" => ""];
+        $labels = ["A", "B", "C", "D"];
+        return view("userPage.quiz.collection", data: compact("chapter","chapters","questions", "answers", "labels"));
     }
 
 

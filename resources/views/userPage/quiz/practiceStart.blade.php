@@ -533,7 +533,6 @@
                 fetch(`/practice-test/${licenseID}`)
                     .then(response => response.json())
                     .then(data => {
-                        console.log("da nhan dư leu than cong" + JSON.stringify(data))
 
                         if (Array.isArray(data) && data.length > 0) {
                             data.forEach(function (examset) {
@@ -547,7 +546,7 @@
                         }
                     })
                     .catch(error => {
-                        console.error('Error fetching exam sets:', error);
+                        // console.error('Error fetching exam sets:', error);
                         examSetSelect.innerHTML = '<option disabled>Lỗi khi tải đề thi</option>';
                     });
           
@@ -563,6 +562,7 @@
         let currentQuestionIndex = 0;
         let questionButtons = [];
         let endCountdownSeconds = 0;
+        let timeFinish = 0;
         let disSelectAnswer = false
 
 
@@ -706,7 +706,7 @@
                     // Gọi lại hàm tô màu
                     selectAnswer(questionID);
                     selectQuestion(questionID)
-                    console.log(selectedAnswer)
+                    // console.log(selectedAnswer)
 
 
                 });
@@ -815,9 +815,11 @@
         }
         //hàm submit
         function submit() {
+
             stopCountDown()
             totalQuestion()
             disSelectAnswer = true
+            timeFinish = startCountdown - endCountdownSeconds
             const buttons = document.querySelectorAll("question-btn");
 
             const submitBtnElement = document.getElementById("submit-btn");
@@ -839,7 +841,6 @@
             })
                 .then((response) => response.json())
                 .then((data) => {
-                    console.log(data)
 
                     displayResultModal(data)
                     data.result.forEach(result => {
@@ -927,7 +928,6 @@
         function QuestionIndexAfterSubmit(result) {
             const questionID = result.QuestionID;
             const isCorrect = result.isCorrect;
-            console.log(isCorrect)
             const indexQuestion = document.querySelector(`.question-btn[data-id="${questionID}"] .index-question`)
             if (indexQuestion) {
                 indexQuestion.classList.remove("correct", "inCorrect");

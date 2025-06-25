@@ -88,9 +88,9 @@
                     <div class="service-item-home position-relative h-100 ">
                         <div class="service-text-home rounded ">
                             <div>
-                                <h5 class="title-text mb-3 text-center">Ôn tập theo chương</h4>
+                                <h5 class="title-text mb-3 text-center">Ôn tập nhanh</h4>
                             </div>
-                            <p class="mb-0 title-content">Phân chia hệ thống câu hỏi theo từng chương</p>
+                            <p class="mb-0 title-content">Ôn tập nhanh với 600 câu hỏi lý thuyết</p>
                             <hr>
                             <div class="btn-container">
                                 @if(!empty($chapter->CategoryID))
@@ -108,7 +108,40 @@
                         </div>
                     </div>
                 </div>
+             
                 <div class="col-lg-4 col-sm-6 col-md-6 wow fadeInUp " data-wow-delay="0.1s">
+                    <div class="service-item-home position-relative h-100 ">
+                        <div class="service-text-home rounded ">
+                            <div>
+                                <h5 class="title-text mb-3 text-center">Ôn tập nhanh</h4>
+                            </div>
+                            <p class="mb-0 title-content">Ôn tập nhanh 250 câu hỏi lý thuyết A1 - A</p>
+                            <hr>
+                            <div class="btn-container">
+                                <a href="{{ route("userpage.collectionA",["ID" => $chapter->CategoryID]) }}" class="btn-continue  text-center">
+                                    Tiếp tục <i class="fa fa-arrow-right"></i>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                 <div class="col-lg-4 col-sm-6 col-md-6 wow fadeInUp " data-wow-delay="0.1s">
+                    <div class="service-item-home position-relative h-100 ">
+                        <div class="service-text-home rounded ">
+                            <div>
+                                <h5 class="title-text mb-3 text-center">Ôn tập nhanh</h4>
+                            </div>
+                            <p class="mb-0 title-content">Ôn tập nhanh 300 câu hỏi lý thuyết B1</p>
+                            <hr>
+                            <div class="btn-container">
+                                <a href="{{ route("userpage.collectionBone",["ID" => $chapter->CategoryID]) }}" class="btn-continue  text-center">
+                                    Tiếp tục <i class="fa fa-arrow-right"></i>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                   <div class="col-lg-4 col-sm-6 col-md-6 wow fadeInUp " data-wow-delay="0.1s">
                     <div class="service-item-home position-relative h-100 ">
                         <div class="service-text-home rounded ">
                             <div>
@@ -127,22 +160,6 @@
                                         Tiếp tục <i class="fa fa-arrow-right"></i>
                                     </a>
                                 @endif
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-lg-4 col-sm-6 col-md-6 wow fadeInUp " data-wow-delay="0.1s">
-                    <div class="service-item-home position-relative h-100 ">
-                        <div class="service-text-home rounded ">
-                            <div>
-                                <h5 class="title-text mb-3 text-center">Ôn tập nhanh</h4>
-                            </div>
-                            <p class="mb-0 title-content">Ôn tập nhanh với 600 câu hỏi trắc nghiệm</p>
-                            <hr>
-                            <div class="btn-container">
-                                <a href="{{ route("userpage.collection") }}" class="btn-continue  text-center">
-                                    Tiếp tục <i class="fa fa-arrow-right"></i>
-                                </a>
                             </div>
                         </div>
                     </div>

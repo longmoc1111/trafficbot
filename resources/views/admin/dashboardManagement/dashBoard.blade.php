@@ -130,7 +130,7 @@
                                     <tr>
                                         <th class="px-6 py-3 text-start">Tên</th>
                                         <th class="px-6 py-3 text-start">Giấy phép</th>
-                                        <th class="px-6 py-3 text-start">Thời gian thi</th>
+                                        <th class="px-6 py-3 text-start">Thời gian</th>
                                         <th class="px-6 py-3 text-start">Điểm</th>
                                         <th class="px-6 py-3 text-start">Kết quả</th>
 
@@ -143,7 +143,7 @@
                                             <td class="px-6 py-3">{{ optional($result->user_Result)->name ?? 'Khách' }}</td>
                                             <td class="px-6 py-3">
                                                 {{ optional($result->licenseType_Result)->LicenseTypeName ?? '' }}</td>
-                                            <td class="px-6 py-3">{{ gmdate("i:s", $result->duration) }}</td>
+                                            <td class="px-6 py-3">{{ gmdate("i:s", $result->Duration) }}</td>
                                             <td class="px-6 py-3">{{ $result->score }}</td>
                                             <td class="px-6 py-3">
 

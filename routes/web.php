@@ -101,7 +101,9 @@ route::controller(QuizzController::class)->name("userpage")->group(function() {
 
     route::get("/quiz-chapters/{ID}","chapters")->name(".chapters");
 
-    route::get("/quiz-collection","collection")->name(".collection");
+    route::get("/quiz-collection/250-A1/{ID}","collectionA")->name(".collectionA");
+    route::get("/quiz-collection/300-B1/{ID}","collectionBOne")->name(".collectionBone");
+
 });
 
 
