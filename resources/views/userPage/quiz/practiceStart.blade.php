@@ -468,7 +468,7 @@
                 <h3 class="text-center">Xác nhận</h3>
                 <p class="text-center">Bạn muốn kết thúc bài thi không ?</p>
                 <div class="text-center mb-3 d-flex justify-content-center">
-                    <button data-examsetid="{{ $examsetID }}" data-liecenid="{{ $license->LicenseTypeID }}"
+                    <button data-liecenid="{{ $license->LicenseTypeID }}"
                         id="submit-btn" class="btn btn-danger w-30 mx-2 ">kết thúc</button>
                     <button data-bs-dismiss="modal" aria-label="Close" class="btn btn-primary w-30 mx-2">tiếp tục
                         thi</button>
@@ -828,9 +828,8 @@
 
             const submitBtnElement = document.getElementById("submit-btn");
             const licenseTypeID = submitBtnElement.dataset.liecenid;
-            const examsetID = submitBtnElement.dataset.examsetid;
             ModalOnSubmit()
-            fetch(`/quiz-practice/finish/${licenseTypeID}/${examsetID}`, {
+            fetch(`/quiz-practice/finish/${licenseTypeID}`, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",

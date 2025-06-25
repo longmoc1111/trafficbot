@@ -97,7 +97,7 @@ route::controller(QuizzController::class)->name("userpage")->group(function() {
     route::get("/quiz-practice/{LicenseTypeID}","PracticeExam")->name(".practiceExam");
     route::post("/quiz-practice/start/","PracticeStart")->name(".practiceStart");
     route::get("/quiz-practice/start-random/{licenseID}","PracticeStartRandom")->name(".practice.start.random");
-    route::post("/quiz-practice/finish/{licenseTypeID}/{ExamSetID}","PracticeFinish")->name(".practicefinish");
+    route::post("/quiz-practice/finish/{licenseTypeID}","PracticeFinish")->name(".practicefinish");
 
     route::get("/quiz-chapters/{ID}","chapters")->name(".chapters");
 

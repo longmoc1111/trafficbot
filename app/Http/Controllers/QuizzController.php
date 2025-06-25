@@ -158,17 +158,7 @@ class QuizzController extends Controller
 
        
     }
-    public function PracticeStartRandom($licenseID)
-    {
-        $license = LicenseType::find($licenseID);
-        $quantity = $license->LicenseTypeQuantity;
-        dd($quantity);
-        $question = Question::get();
-        // $questions = Question::whe
-        return view("userPage.quiz.practiceRandom");
-
-    }
-    public function PracticeFinish($licenseTypeID, $ExamSetID, Request $request)
+    public function PracticeFinish($licenseTypeID, Request $request)
     {
         $submittedAnswers = $request->input("answers");
         $timefinish = $request->input("timeFinish");
@@ -244,7 +234,6 @@ class QuizzController extends Controller
 
         return response()->json([
             'message' => 'Dữ liệu đã nhận thành công',
-            'examsetID' => $ExamSetID,
             "passCount" => $passCount,
             'result' => $result,
             'iscriticalWrong' => $isCriticalWrong,
