@@ -844,7 +844,7 @@
             })
                 .then((response) => response.json())
                 .then((data) => {
-                    console.log(JSON.stringify(data))
+                    // console.log(JSON.stringify(data))
                     displayResultModal(data)
                     data.result.forEach(result => {
                         AnswerafterSubmit(result);

@@ -206,31 +206,31 @@ class QuizzController extends Controller
 
             ];
         }
-        // if ($correctCount >= $passCount && $isCorrect == true) {
-        //     $passed = true;
-        // } else {
-        //     $passed = false;
-        // }
+        if ($correctCount >= $passCount && !$isCriticalWrong) {
+            $passed = true;
+        } else {
+            $passed = false;
+        }
 
 
-        // if(Auth::check()) {
-        //     $exam_reult = ExamResult::create([
-        //         "userID" => Auth::user()->userID,
-        //         "LicenseTypeID" => $licenseTypeID,
-        //         "score" => $correctCount,
-        //         "passed" => $passed,
-        //         "duration" => $timefinish
+        if(Auth::check()) {
+            $exam_reult = ExamResult::create([
+                "userID" => Auth::user()->userID,
+                "LicenseTypeID" => $licenseTypeID,
+                "score" => $correctCount,
+                "passed" => $passed,
+                "duration" => $timefinish
 
-        //     ]);
-        // } else {
-        //     $exam_reult = ExamResult::create([
-        //         "userID" => null,
-        //         "LicenseTypeID" => $licenseTypeID,
-        //         "score" => $correctCount,
-        //         "passed" => $passed,
-        //         "duration" => $timefinish
-        //     ]);
-        // }
+            ]);
+        } else {
+            $exam_reult = ExamResult::create([
+                "userID" => null,
+                "LicenseTypeID" => $licenseTypeID,
+                "score" => $correctCount,
+                "passed" => $passed,
+                "duration" => $timefinish
+            ]);
+        }
 
         return response()->json([
             'message' => 'Dữ liệu đã nhận thành công',
