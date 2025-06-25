@@ -180,7 +180,6 @@
                                                                                                             </div> -->
 
     <div class="container-lg mt-5 mb-5 " id="exam-section" style="box-shadow: 0 0 45px rgba(0, 0, 0, .06)">
-        <hr>
         <div class="row g-4 d-flex">
             <div class="d-flex justify-content-between align-items-center px-3" data-wow-delay="0.1s">
                 <select class="select-item display-7 form-select mb-0 mt-2" onchange="location = this.value">
@@ -190,17 +189,12 @@
                 </select>
             </div>
             <hr>
-            <div class="col-lg-4 col-md-4 wow fadeInUp" data-wow-delay="0.1s">
-
+            <div class="col-lg-4 col-md-4 h-100 wow fadeInUp" data-wow-delay="0.1s">
                 <div class="service-item position-relative h-100">
                     <div class="service-text rounded p-4">
-                         <div class="scroll-wrapper" style="max-height: 400px; overflow-y: auto;">
-                        <div class="row g-4 wow fadeInUp" data-wow-delay="0.1s">
-                            <!-- Dùng col-1 để mỗi hàng chứa tối đa 12 thẻ -->
-                            <!-- Nếu thêm thẻ thứ 13 trở đi, nó tự xuống hàng -->
-
-                            <!-- Ví dụ: 15 thẻ -->
-                            @foreach ($questions as $index => $question)
+                        <div class="scroll-wrapper" style="max-height: 250px; overflow-y: auto;">
+                            <div class="d-flex flex-wrap gap-2 justify-content-center">
+                                  @foreach ($questions as $index => $question)
                                 @php
                                     $answers = [];
                                     $labelCorrect = '';
@@ -217,7 +211,7 @@
                                         }
                                     }
                                 @endphp
-                                <div class="col-2 col-sm-1 col-md-3  col-lg-2">
+                                <div>
                                     <a href="#" style="color:rgb(43, 39, 39); border-color:red" class="question-btn small"
                                         data-question="{{ $index + 1 }}" data-id={{ $question->QuestionID }}
                                         data-explanation="{{ $question->QuestionExplain }}"
@@ -237,8 +231,12 @@
                                 </div>
                             @endforeach
 
-                            <a href="{{ route("userpage.home") }}" class="btn btn-primary mt-3" id="end-test">Thoát</a>
-                        </div>
+                                <!-- Nút thoát nằm riêng một hàng -->
+                                <div class="w-100 mt-3">
+                                    <a href="{{ route('userpage.home') }}" class="btn btn-primary w-100"
+                                        id="end-test">Thoát</a>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>

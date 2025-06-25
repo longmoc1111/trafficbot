@@ -6,13 +6,12 @@
     <style>
         .question-item {
             font-size: 11px;
-            padding: 7px 7px;
             width: 35px;
             height: 35px;
-            line-height: 24px;
             margin: auto;
             border: 1px solid rgb(97, 149, 248);
         }
+
 
         .question-btn.active .question-item {
             background-color: rgb(156, 179, 213);
@@ -75,7 +74,7 @@
             margin-top: 16px;
             background-color: #F6FEF9;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-            font-size: 16px;
+            font-size: 13px;
             color: #333;
             line-height: 1.5;
         }
@@ -266,8 +265,8 @@
 
     <!-- practice Start -->
     <!-- <div class="text-center mb-4">
-                                                                                                                                                                            <button id="start-btn" class="btn btn-success">Bắt đầu làm bài</button>
-                                                                                                                                                                        </div> -->
+                                                                                                                                                                                <button id="start-btn" class="btn btn-success">Bắt đầu làm bài</button>
+                                                                                                                                                                            </div> -->
 
     <div class="container-lg d-none p-4" id="exam-section" style="box-shadow: 0 0 45px rgba(0, 0, 0, .06)">
 
@@ -277,35 +276,17 @@
                 style="background-color:#6Fc7e7">10:00</div>
         </div>
         <hr>
-        <div class="row g-4 d-flex">
-            <div class="col-lg-4 col-md-4 wow fadeInUp" data-wow-delay="0.1s">
+        <div class="row g-4 d-flex align-items-stretch">
+            <div class="col-lg-4 col-md-4 h-100 wow fadeInUp" data-wow-delay="0.1s">
                 <div class="service-item position-relative h-100">
-                    <div class="service-text rounded p-4">
-                        <div class="scroll-wrapper" style="max-height: 400px; overflow-y: auto;">
-                            <div class="row g-4 wow fadeInUp p-2  " data-wow-delay="0.1s">
-                                <!-- Dùng col-1 để mỗi hàng chứa tối đa 12 thẻ -->
-                                <!-- Nếu thêm thẻ thứ 13 trở đi, nó tự xuống hàng -->
-
-                                <!-- Ví dụ: 15 thẻ -->
-
+                    <div class="service-text rounded p-2">
+                        <div class="scroll-wrapper" style="max-height: 250px; overflow-y: auto;">
+                            <!-- Chỉ cần 1 container flex-wrap ở ngoài vòng foreach -->
+                            <div class="d-flex flex-wrap gap-2 justify-content-center">
                                 @foreach ($questions as $index => $question)
-
-                                    <!-- @php
-                                                                                                    $answers = [];
-
-                                                                                                    foreach ($question->answer_Question as $answer) {
-                                                                                                        $key = strtoupper($answer->AnswerLabel); // Đảm bảo là A, B, C, D
-
-                                                                                                        if (in_array($key, ["A", "B", "C", "D"])) {
-                                                                                                            $answers[$key . '_ID'] = $answer->AnswerID;     // Gán ID
-                                                                                                            $answers[$key . '_NAME'] = $answer->AnswerName; // Hiển thị nội dung nếu cần
-                                                                                                        }
-                                                                                                    }
-                                                                                                @endphp -->
-
-                                    <div class="col-2 col-sm-1 col-md-3  col-lg-2">
+                                    <div>
                                         <a href="#" style="color:rgb(43, 39, 39); border-color:red" class="question-btn small"
-                                            data-question="{{ $index + 1 }}" data-id={{ $question->QuestionID }}
+                                            data-question="{{ $index + 1 }}" data-id="{{ $question->QuestionID }}"
                                             data-img="{{ $question->ImageDescription }}"
                                             data-content="{{ $question->QuestionName }}"
                                             data-a-id="{{ $answers['A_ID'] ?? ''  }}" data-b-id="{{ $answers['B_ID'] ?? '' }}"
@@ -315,7 +296,7 @@
                                             data-c-name="{{ $answers['C_NAME'] ?? ''  }}"
                                             data-d-name="{{ $answers['D_NAME'] ?? ''  }}">
 
-                                            <p class="index-question question-item rounded text-center"
+                                            <p class="index-question question-item rounded text-center d-flex align-items-center justify-content-center"
                                                 style="box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);">
                                                 {{ $index + 1 }}
                                             </p>
@@ -324,27 +305,26 @@
                                 @endforeach
                             </div>
                         </div>
-                        <button class="btn btn-primary mt-3 w-100" data-bs-toggle="modal" data-bs-target="#endtestModal"
-                            id="end-test">Nộp bài</button>
-                        <button class="btn btn-primary mt-3 w-100" hidden id="preview">Xem kết quả</button>
                     </div>
+
                 </div>
             </div>
-            <div class="col-lg-8 col-md-8  wow fadeInUp" data-wow-delay="0.3s">
+            <div class="col-lg-8 col-md-8 h-100 wow fadeInUp" data-wow-delay="0.3s">
                 <div class="service-item position-relative h-100">
                     <div class="service-text rounded p-3">
                         @foreach($questions as $index => $question)
                             @php
-                                $answers = [];
-                                foreach ($question->answer_Question as $answer) {
-                                    $key = strtoupper($answer->AnswerLabel);
-                                    if (in_array($key, haystack: ["A", "B", "C", "D"])) {
-                                        $answers[$key . '_ID'] = $answer->AnswerID;
-                                        $answers[$key . '_NAME'] = $answer->AnswerName;
-                                    }
-                                }
+    $answers = [];
+    foreach ($question->answer_Question as $answer) {
+        $key = strtoupper($answer->AnswerLabel);
+        if (in_array($key, haystack: ["A", "B", "C", "D"])) {
+            $answers[$key . '_ID'] = $answer->AnswerID;
+            $answers[$key . '_NAME'] = $answer->AnswerName;
+        }
+    }
                             @endphp
-                            <div class="question-block" style="display: none; min-height: 350px; max-height: 600px; overflow-y: auto;  "
+                            <div class="question-block"
+                                style="display: none; min-height: 350px; max-height: 600px; overflow-y: auto;  "
                                 id="question-block-{{ $question->QuestionID }}" data-question-id="{{ $question->QuestionID }}">
                                 <div class="d-flex align-items-center">
                                     <h6 id="question-title" class="me-2 mb-0">Câu {{ $index + 1 }}:
@@ -468,8 +448,8 @@
                 <h3 class="text-center">Xác nhận</h3>
                 <p class="text-center">Bạn muốn kết thúc bài thi không ?</p>
                 <div class="text-center mb-3 d-flex justify-content-center">
-                    <button data-liecenid="{{ $license->LicenseTypeID }}"
-                        id="submit-btn" class="btn btn-danger w-30 mx-2 ">kết thúc</button>
+                    <button data-liecenid="{{ $license->LicenseTypeID }}" id="submit-btn"
+                        class="btn btn-danger w-30 mx-2 ">kết thúc</button>
                     <button data-bs-dismiss="modal" aria-label="Close" class="btn btn-primary w-30 mx-2">tiếp tục
                         thi</button>
                 </div>
@@ -528,36 +508,36 @@
     <!-- script -->
     <script>
         function loadExamSet(licenseID) {
-                const examSetSelect = document.getElementById("examset")
-                examSetSelect.innerText = ""
-                fetch(`/practice-test/${licenseID}`)
-                    .then(response => response.json())
-                    .then(data => {
+            const examSetSelect = document.getElementById("examset")
+            examSetSelect.innerText = ""
+            fetch(`/practice-test/${licenseID}`)
+                .then(response => response.json())
+                .then(data => {
 
-                        if (Array.isArray(data) && data.length > 0) {
-                            const random = document.createElement("option")
-                            data.forEach(function (examset) {
-                                const option = document.createElement("option")
-                                option.value = examset.ExamSetID
-                                option.text = examset.ExamSetName
-                                examSetSelect.appendChild(option)
-                            })
-                            random.value = "random"
-                            random.text = "Đề ngẫu nhiên"
-                            examSetSelect.appendChild(random)
-                        } else {
-                            examSetSelect.innerHTML = `<option>Không có đề thi nào</option>`
-                        }
-                    })
-                    .catch(error => {
-                        // console.error('Error fetching exam sets:', error);
-                        examSetSelect.innerHTML = '<option disabled>Lỗi khi tải đề thi</option>';
-                    });
-          
+                    if (Array.isArray(data) && data.length > 0) {
+                        const random = document.createElement("option")
+                        data.forEach(function (examset) {
+                            const option = document.createElement("option")
+                            option.value = examset.ExamSetID
+                            option.text = examset.ExamSetName
+                            examSetSelect.appendChild(option)
+                        })
+                        random.value = "random"
+                        random.text = "Đề ngẫu nhiên"
+                        examSetSelect.appendChild(random)
+                    } else {
+                        examSetSelect.innerHTML = `<option>Không có đề thi nào</option>`
+                    }
+                })
+                .catch(error => {
+                    // console.error('Error fetching exam sets:', error);
+                    examSetSelect.innerHTML = '<option disabled>Lỗi khi tải đề thi</option>';
+                });
+
         }
         document.getElementById('licenseType').addEventListener("change", function () {
             const licenseID = this.value
-            if(licenseID){
+            if (licenseID) {
                 loadExamSet(licenseID)
             }
         })
@@ -590,8 +570,8 @@
 
             let allExplanation = [];
 
-            const licenseID =  document.getElementById('licenseType').value
-            if(licenseID){
+            const licenseID = document.getElementById('licenseType').value
+            if (licenseID) {
                 loadExamSet(licenseID)
             }
 
@@ -894,13 +874,13 @@
 
             if (iscritical) {
                 iscriticalElemet.innerHTML = `
-                                                                    <p><strong>Kết quả:</strong> Không đạt - sai câu điểm liệt</p>`;
+                                                                        <p><strong>Kết quả:</strong> Không đạt - sai câu điểm liệt</p>`;
             } else if (correctCount < passCount) {
                 iscriticalElemet.innerHTML = `
-                                                                    <p><strong>Kết quả:</strong> Không đạt - yêu cầu tối thiểu đúng ${passCount}/${quantity} câu</p>`;
+                                                                        <p><strong>Kết quả:</strong> Không đạt - yêu cầu tối thiểu đúng ${passCount}/${quantity} câu</p>`;
             } else {
                 iscriticalElemet.innerHTML = `
-                                                                    <p><strong>Kết quả:</strong> Đạt</p>`;
+                                                                        <p><strong>Kết quả:</strong> Đạt</p>`;
             }
         }
 
