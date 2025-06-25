@@ -16,7 +16,8 @@ class LicenseType extends Model
     protected $primaryKey = "LicenseTypeID";
     
     public function examset_LicenseType(){
-        return $this->belongsToMany(ExamSet::class, "exam_set_license_type","LicenseTypeID","ExamSetID");
+        return $this->belongsToMany(ExamSet::class, "exam_set_license_type","LicenseTypeID","ExamSetID")
+                    ->orderBy("exam_sets.ExamSetID", "asc");
     }
     public function question_LicenseType(){
         return $this->belongsToMany(Question::class,"question_license_types","LicenseTypeID","QuestionID")

@@ -220,7 +220,6 @@ class QuizzController extends Controller
                 "score" => $correctCount,
                 "passed" => $passed,
                 "duration" => $timefinish
-
             ]);
         } else {
             $exam_reult = ExamResult::create([
