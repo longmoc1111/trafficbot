@@ -6,8 +6,11 @@
     <style>
         .question-item {
             font-size: 11px;
+            /* padding: 7px 7px; */
             width: 35px;
             height: 35px;
+            /* line-height: 50%; */
+            /* align-items: center; */
             margin: auto;
             border: 1px solid rgb(97, 149, 248);
         }
@@ -280,7 +283,7 @@
             <div class="col-lg-4 col-md-4 h-100 wow fadeInUp" data-wow-delay="0.1s">
                 <div class="service-item position-relative h-100">
                     <div class="service-text rounded p-2">
-                        <div class="scroll-wrapper" style="max-height: 250px; overflow-y: auto;">
+                        <div class="scroll-wrapper" style="max-height: 400px; overflow-y: auto;">
                             <!-- Chỉ cần 1 container flex-wrap ở ngoài vòng foreach -->
                             <div class="d-flex flex-wrap gap-2 justify-content-center">
                                 @foreach ($questions as $index => $question)
@@ -306,6 +309,9 @@
                             </div>
                         </div>
                     </div>
+                    <button class="btn btn-primary mt-3 w-100" data-bs-toggle="modal" data-bs-target="#endtestModal"
+                            id="end-test">Nộp bài</button>
+                        <button class="btn btn-primary mt-3 w-100" hidden id="preview">Xem kết quả</button>
 
                 </div>
             </div>
