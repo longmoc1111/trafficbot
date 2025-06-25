@@ -844,13 +844,14 @@
             })
                 .then((response) => response.json())
                 .then((data) => {
+                    console.log("da nhan du lieu: " + JSON.stringify(data))
 
-                    displayResultModal(data)
-                    data.result.forEach(result => {
-                        AnswerafterSubmit(result);
-                        QuestionIndexAfterSubmit(result)
-                        showExplanation(result)
-                    });
+                    // displayResultModal(data)
+                    // data.result.forEach(result => {
+                    //     AnswerafterSubmit(result);
+                    //     QuestionIndexAfterSubmit(result)
+                    //     showExplanation(result)
+                    // });
                 })
         }
         const submitBtn = document.getElementById("submit-btn")
