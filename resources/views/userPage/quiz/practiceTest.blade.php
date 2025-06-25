@@ -105,18 +105,19 @@
             width: 24px;
             height: 24px;
         }
-        .score-info-box li, 
+
+        .score-info-box li,
         .score-info-box p {
             font-size: 13px;
         }
-        .table-header th 
-        {
+
+        .table-header th {
             font-size: 13px;
         }
+
         .table-body td {
             font-size: 13px;
         }
-        
     </style>
 
 
@@ -145,7 +146,7 @@
                                             <th scope="col" style="width: 20%;">Số lượng </th>
                                         </tr>
                                     </thead>
-                                    <tbody id="categoryTable" class = "table-body">
+                                    <tbody id="categoryTable" class="table-body">
                                         <tr>
 
                                         </tr>
@@ -204,6 +205,7 @@
                                 @endforeach
 
 
+
                             </select>
                         </div>
                         <div class="mb-3">
@@ -234,8 +236,7 @@
             fetch(`/practice-test/${licenseID}`)
                 .then(response => response.json())
                 .then(data => {
-                    console.log("da nhan dư leu than cong" + JSON.stringify(data))
-
+                    const random = document.createElement("option")
                     if (Array.isArray(data) && data.length > 0) {
                         data.forEach(function (examset) {
                             const option = document.createElement("option")
@@ -243,12 +244,14 @@
                             option.text = examset.ExamSetName
                             examSetSelect.appendChild(option)
                         })
+                        random.value = "random"
+                        random.text = "Đề ngẫu nhiên"
+                        examSetSelect.appendChild(random)
                     } else {
                         examSetSelect.innerHTML = `<option>Không có đề thi nào</option>`
                     }
                 })
                 .catch(error => {
-                    console.error('Error fetching exam sets:', error);
                     examSetSelect.innerHTML = '<option disabled>Lỗi khi tải đề thi</option>';
                 });
         })
@@ -279,12 +282,12 @@
                             tbody.innerHTML = ``
                             data.dataCategory.forEach(function (item, index) {
                                 tbody.innerHTML += `
-                                        <tr>
-                                            <td>${index + 1}</td>
-                                            <td>${item.name}</td>
-                                            <td>${item.quantity}</td>
-                                        </tr>
-                                    `
+                                                <tr>
+                                                    <td>${index + 1}</td>
+                                                    <td>${item.name}</td>
+                                                    <td>${item.quantity}</td>
+                                                </tr>
+                                            `
                             })
                             licenseName.innerText = `Cấu trúc đề thi Hạng ${data.dataLicense.name}`
                             duration.innerText = data.dataLicense.duration

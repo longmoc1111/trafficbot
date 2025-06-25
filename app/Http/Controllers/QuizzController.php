@@ -9,6 +9,8 @@ use App\Models\QuestionCategory;
 use Auth;
 use Illuminate\Http\Request;
 use App\Models\LicenseType;
+use Illuminate\Support\Collection;
+
 use App\Models\ExamSet;
 
 
@@ -27,7 +29,7 @@ class QuizzController extends Controller
 
             $examSets = $license->examset_LicenseType;
             return view("userPage.quiz.practiceExam", compact("examSets", "license", "lastWordA"));
-        }else{
+        } else {
             return abort(404);
         }
 
@@ -77,18 +79,84 @@ class QuizzController extends Controller
     {
         $examsetID = $request->input("examSetID");
         $licenseID = $request->input("licenseType");
-        $examSet = ExamSet::find($examsetID);
-        $license = LicenseType::find($licenseID);
-        $licenseTypes = LicenseType::all();
-        $licenseName = $license->LicenseTypeName;
-        if ($licenseName) {
-            $wordA = explode(" ", $licenseName);
-            $lastWordA = end($wordA);
+        $QuestionsRandom = [];
+        $amount = [];
+        if ($examsetID == "random") {
+            
+            $critical = false;
+            $license = LicenseType::find($licenseID);
+             $licenseTypes = LicenseType::all();
+            $licenseName = $license->LicenseTypeName;
+            if ($licenseName) {
+                $wordA = explode(" ", $licenseName);
+                $lastWordA = end($wordA);
+            }
+            $answers = ["A" => "", "B" => "", "C" => "", "D" => ""];
+            $labels = ["A", "B", "C", "D"];
+            foreach ($license->questionCategory_LicenseType as $category) {
+                $amount[$category->CategoryID] = $category->pivot->Quantity;
+            }
+            
+
+            $questions = collect();
+
+            foreach ($amount as $categoryID => $count) {
+                $categoryQuestions = collect();
+
+                if ($critical === false) {
+                    $isCriticalQuestion = Question::where("CategoryID", $categoryID)
+                        ->whereHas("licenseType_Question", function ($query) use ($license) {
+                            $query->where("question_license_types.LicenseTypeID", $license->LicenseTypeID)
+                                ->where("question_license_types.Iscritical", 1);
+                        })
+                        ->inRandomOrder()
+                        ->first();
+                    
+                    if ($isCriticalQuestion) {
+                        $critical = true;
+                        $count--;
+                    }
+                }
+
+                if ($count > 0) {
+                    $normalQuestions = Question::where("CategoryID", $categoryID)
+                        ->whereHas("licenseType_Question", function ($query) use ($license) {
+                            $query->where("question_license_types.LicenseTypeID", $license->LicenseTypeID)
+                                ->where("question_license_types.Iscritical", 0);
+                        })
+                        ->inRandomOrder()
+                        ->limit($count)
+                        ->get();
+
+                    $categoryQuestions = $categoryQuestions->merge($normalQuestions);
+                }
+                $questions = $questions->merge($categoryQuestions); // Gộp vào bộ đề chính
+            }
+            if($isCriticalQuestion){
+                $total = $questions->count();
+                $index = rand(1, floor($total/2));
+                $before = $questions->slice(0, $index);
+                $after = $questions->slice($index);
+                $questions = $before->push($isCriticalQuestion)->merge($after);
+            }
+            return view("userPage.quiz.practiceStart", compact("questions", "examsetID", "answers", "labels", "license", "lastWordA", "licenseTypes"));
+        }else{
+            $examSet = ExamSet::find($examsetID);
+            $examsetID = $examSet->ExamSetID;
+            $license = LicenseType::find($licenseID);
+            $licenseTypes = LicenseType::all();
+            $licenseName = $license->LicenseTypeName;
+            if ($licenseName) {
+                $wordA = explode(" ", $licenseName);
+                $lastWordA = end($wordA);
+            }
+            $questions = $examSet->question_Examset()->get();
+            $answers = ["A" => "", "B" => "", "C" => "", "D" => ""];
+            $labels = ["A", "B", "C", "D"];
+            return view("userPage.quiz.practiceStart", compact("questions", "examsetID", "answers", "labels", "license", "lastWordA", "licenseTypes"));
         }
-        $questions = $examSet->question_Examset()->get();
-        $answers = ["A" => "", "B" => "", "C" => "", "D" => ""];
-        $labels = ["A", "B", "C", "D"];
-        return view("userPage.quiz.practiceStart", compact("questions", "examSet", "answers", "labels", "license", "lastWordA","licenseTypes"));
+
+       
     }
     public function PracticeStartRandom($licenseID)
     {
@@ -155,7 +223,7 @@ class QuizzController extends Controller
         }
 
 
-        if(Auth::check()) {
+        if (Auth::check()) {
             $exam_reult = ExamResult::create([
                 "userID" => Auth::user()->userID,
                 "LicenseTypeID" => $licenseTypeID,
@@ -198,34 +266,34 @@ class QuizzController extends Controller
     {
         $chapter = QuestionCategory::find($ID);
         $licenseType = LicenseType::where("LicenseTypeName", "A1")->first();
-        $chapters = QuestionCategory::whereHas("question_QuestionCategory", function($query) use ($licenseType){
-            $query->whereHas("licenseType_Question", function($subQuery) use ($licenseType) {
+        $chapters = QuestionCategory::whereHas("question_QuestionCategory", function ($query) use ($licenseType) {
+            $query->whereHas("licenseType_Question", function ($subQuery) use ($licenseType) {
                 $subQuery->where("question_license_types.LicenseTypeID", $licenseType->LicenseTypeID);
             });
         })->get();
         // dd($chapter);
-        $questions = Question::whereHas("licenseType_Question", function($query) use ($licenseType) {
-                    $query->where("question_license_types.LicenseTypeID" , $licenseType->LicenseTypeID);
+        $questions = Question::whereHas("licenseType_Question", function ($query) use ($licenseType) {
+            $query->where("question_license_types.LicenseTypeID", $licenseType->LicenseTypeID);
         })->where("CategoryID", $chapter->CategoryID)->get();
         $answers = ["A" => "", "B" => "", "C" => "", "D" => ""];
         $labels = ["A", "B", "C", "D"];
-        return view("userPage.quiz.collection", data: compact("chapter","licenseType","chapters","questions", "answers", "labels"));
+        return view("userPage.quiz.collection", data: compact("chapter", "licenseType", "chapters", "questions", "answers", "labels"));
     }
-     public function collectionBOne($ID)
+    public function collectionBOne($ID)
     {
         $chapter = QuestionCategory::find($ID);
         $licenseType = LicenseType::where("LicenseTypeName", "B1")->first();
-         $chapters = QuestionCategory::whereHas("question_QuestionCategory", function($query) use ($licenseType){
-            $query->whereHas("licenseType_Question", function($subQuery) use ($licenseType) {
+        $chapters = QuestionCategory::whereHas("question_QuestionCategory", function ($query) use ($licenseType) {
+            $query->whereHas("licenseType_Question", function ($subQuery) use ($licenseType) {
                 $subQuery->where("question_license_types.LicenseTypeID", $licenseType->LicenseTypeID);
             });
         })->get();
-        $questions = Question::whereHas("licenseType_Question", function($query) use ($licenseType) {
-                    $query->where("question_license_types.LicenseTypeID" , $licenseType->LicenseTypeID);
+        $questions = Question::whereHas("licenseType_Question", function ($query) use ($licenseType) {
+            $query->where("question_license_types.LicenseTypeID", $licenseType->LicenseTypeID);
         })->where("CategoryID", $chapter->CategoryID)->get();
         $answers = ["A" => "", "B" => "", "C" => "", "D" => ""];
         $labels = ["A", "B", "C", "D"];
-        return view("userPage.quiz.collection", data: compact("chapter","licenseType","chapters","questions", "answers", "labels"));
+        return view("userPage.quiz.collection", data: compact("chapter", "licenseType", "chapters", "questions", "answers", "labels"));
     }
 
 

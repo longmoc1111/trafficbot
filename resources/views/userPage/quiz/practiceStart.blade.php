@@ -272,7 +272,7 @@
     <div class="container-lg d-none p-4" id="exam-section" style="box-shadow: 0 0 45px rgba(0, 0, 0, .06)">
 
         <div class="d-flex justify-content-between align-items-center mb-3 px-3" data-wow-delay="0.1s">
-            <h3 class="display-7 mb-0 mt-2">Thi lý thuyết xe máy hạng {{ $lastWordA }} - {{ $examSet->ExamSetName }}</h3>
+            <h3 class="display-7 mb-0 mt-2">Thi lý thuyết xe máy hạng {{ $lastWordA }}</h3>
             <div class="btn display-7 mb-0 mt-3" id="exam-timmer" data-duration="{{ $license->LicenseTypeDuration }}"
                 style="background-color:#6Fc7e7">10:00</div>
         </div>
@@ -468,7 +468,7 @@
                 <h3 class="text-center">Xác nhận</h3>
                 <p class="text-center">Bạn muốn kết thúc bài thi không ?</p>
                 <div class="text-center mb-3 d-flex justify-content-center">
-                    <button data-examsetid="{{ $examSet->ExamSetID }}" data-liecenid="{{ $license->LicenseTypeID }}"
+                    <button data-examsetid="{{ $examsetID }}" data-liecenid="{{ $license->LicenseTypeID }}"
                         id="submit-btn" class="btn btn-danger w-30 mx-2 ">kết thúc</button>
                     <button data-bs-dismiss="modal" aria-label="Close" class="btn btn-primary w-30 mx-2">tiếp tục
                         thi</button>
@@ -535,12 +535,16 @@
                     .then(data => {
 
                         if (Array.isArray(data) && data.length > 0) {
+                            const random = document.createElement("option")
                             data.forEach(function (examset) {
                                 const option = document.createElement("option")
                                 option.value = examset.ExamSetID
                                 option.text = examset.ExamSetName
                                 examSetSelect.appendChild(option)
                             })
+                            random.value = "random"
+                            random.text = "Đề ngẫu nhiên"
+                            examSetSelect.appendChild(random)
                         } else {
                             examSetSelect.innerHTML = `<option>Không có đề thi nào</option>`
                         }
