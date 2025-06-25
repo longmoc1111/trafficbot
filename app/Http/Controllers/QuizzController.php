@@ -160,84 +160,84 @@ class QuizzController extends Controller
     }
     public function PracticeFinish($licenseTypeID, Request $request)
     {
-        // $submittedAnswers = $request->input("answers");
-        // $timefinish = $request->input("timeFinish");
-        // $isCriticalWrong = false;
-        // $result = [];
-        // $correctCount = 0;
-        // $sumQuestion = count($submittedAnswers);
-        // $licenseType = LicenseType::find($licenseTypeID);
-        // $passCount = $licenseType->LicenseTypePassCount;
-        // // $passed = false;
-        // foreach ($submittedAnswers as $questionID => $answerID) {
-        //     $question = Question::find($questionID);
-        //     $answer = Answer::where("AnswerID", $answerID)
-        //         ->where("QuestionID", $questionID)
-        //         ->first();
-        //     $findCorrect = Answer::where("QuestionID", $questionID)
-        //         ->where("isCorrect", true)
-        //         ->first();
-        //     $labelCorrect = $findCorrect->AnswerLabel;
-        //     $answerCorrect = $findCorrect->AnswerID;
-        //     $isCorrect = $answer ? $answer->IsCorrect : false;
-        //     if ($isCorrect) {
-        //         $correctCount += 1;
-        //     }
-        //     $Iscritical = Question::where("QuestionID", $questionID)->whereHas("licenseType_Question", function ($query) use ($licenseTypeID) {
-        //         $query->where("question_license_types.LicenseTypeID", $licenseTypeID)
-        //             ->where("question_license_types.IsCritical", true);
-        //     })->exists();
+        $submittedAnswers = $request->input("answers",[]);
+        $timefinish = $request->input("timeFinish");
+        $isCriticalWrong = false;
+        $result = [];
+        $correctCount = 0;
+        $sumQuestion = count($submittedAnswers);
+        $licenseType = LicenseType::find($licenseTypeID);
+        $passCount = $licenseType->LicenseTypePassCount;
+        // $passed = false;
+        foreach ($submittedAnswers as $questionID => $answerID) {
+            $question = Question::find($questionID);
+            $answer = Answer::where("AnswerID", $answerID)
+                ->where("QuestionID", $questionID)
+                ->first();
+            $findCorrect = Answer::where("QuestionID", $questionID)
+                ->where("isCorrect", true)
+                ->first();
+            $labelCorrect = $findCorrect->AnswerLabel;
+            $answerCorrect = $findCorrect->AnswerID;
+            $isCorrect = $answer ? $answer->IsCorrect : false;
+            if ($isCorrect) {
+                $correctCount += 1;
+            }
+            $Iscritical = Question::where("QuestionID", $questionID)->whereHas("licenseType_Question", function ($query) use ($licenseTypeID) {
+                $query->where("question_license_types.LicenseTypeID", $licenseTypeID)
+                    ->where("question_license_types.IsCritical", true);
+            })->exists();
 
-        //     if ($question && $Iscritical == true && !$isCorrect) {
-        //         $isCriticalWrong = true;
-        //     }
+            if ($question && $Iscritical == true && !$isCorrect) {
+                $isCriticalWrong = true;
+            }
 
-        //     $result[] = [
-        //         "QuestionID" => $questionID,
-        //         "AnswerID" => $answerID,
-        //         "explanation" => $question->QuestionExplain,
-        //         "isCorrect" => $isCorrect,
-        //         "labelCorrect" => $labelCorrect,
-        //         "answerCorrect" => $answerCorrect,
-        //         "time" => $timefinish,
-        //         "sumQuestion" => $sumQuestion,
-        //         // "Iscritical" => $Iscritical,
-        //         // "name"=>$name
+            $result[] = [
+                "QuestionID" => $questionID,
+                "AnswerID" => $answerID,
+                "explanation" => $question->QuestionExplain,
+                "isCorrect" => $isCorrect,
+                "labelCorrect" => $labelCorrect,
+                "answerCorrect" => $answerCorrect,
+                "time" => $timefinish,
+                "sumQuestion" => $sumQuestion,
+                // "Iscritical" => $Iscritical,
+                // "name"=>$name
 
-        //     ];
-        // }
-        // if ($correctCount >= $passCount && $isCorrect == true) {
-        //     $passed = true;
-        // } else {
-        //     $passed = false;
-        // }
+            ];
+        }
+        if ($correctCount >= $passCount && $isCorrect == true) {
+            $passed = true;
+        } else {
+            $passed = false;
+        }
 
 
-        // if (Auth::check()) {
-        //     $exam_reult = ExamResult::create([
-        //         "userID" => Auth::user()->userID,
-        //         "LicenseTypeID" => $licenseTypeID,
-        //         "score" => $correctCount,
-        //         "passed" => $passed,
-        //         "duration" => $timefinish
+        if (Auth::check()) {
+            $exam_reult = ExamResult::create([
+                "userID" => Auth::user()->userID,
+                "LicenseTypeID" => $licenseTypeID,
+                "score" => $correctCount,
+                "passed" => $passed,
+                "duration" => $timefinish
 
-        //     ]);
-        // } else {
-        //     $exam_reult = ExamResult::create([
-        //         "userID" => null,
-        //         "LicenseTypeID" => $licenseTypeID,
-        //         "score" => $correctCount,
-        //         "passed" => $passed,
-        //         "duration" => $timefinish
-        //     ]);
-        // }
+            ]);
+        } else {
+            $exam_reult = ExamResult::create([
+                "userID" => null,
+                "LicenseTypeID" => $licenseTypeID,
+                "score" => $correctCount,
+                "passed" => $passed,
+                "duration" => $timefinish
+            ]);
+        }
 
         return response()->json([
             'message' => 'Dữ liệu đã nhận thành công',
-            // "passCount" => $passCount,
-            // 'result' => $result,
-            // 'iscriticalWrong' => $isCriticalWrong,
-            // "correctCount" => $correctCount,
+            "passCount" => $passCount,
+            'result' => $result,
+            'iscriticalWrong' => $isCriticalWrong,
+            "correctCount" => $correctCount,
         ]);
     }
 
