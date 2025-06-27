@@ -10,7 +10,9 @@ use Illuminate\Http\Request;
 use App\Models\User;
 use App\Models\Role;
 use Str;
+use Symfony\Component\Console\Input\Input;
 use Symfony\Component\VarDumper\Caster\RedisCaster;
+use Validator;
 
 
 
@@ -242,6 +244,37 @@ class AuthController extends Controller
                 return redirect()->route("admintrafficbot.listaccount")->with("update_success", "đã có lỗi xảy ra, vui lòng cập nhật sau!");
 
             }
+        }
+
+    }
+    function changePassword($ID, Request $request){
+        $validator = Validator::make($request->all(),[
+            "currentPassword"=>"required",
+            "newPassword"=>"required|min:6",
+            "newPasswordConfirm"=>"required|same:newPassword"
+        ],[
+            "currentPassword.required"=>"vui lòng điền mật khẩu hiện tại!",
+            "newPassword.required"=>"vui lòng điền mật khẩu mới!",
+            "newPassword.min"=>"Mật khẩu chứa ít nhất 6 ký tự!",
+            "newPasswordConfirm.required" =>"vui lòng điền mật khẩu xác nhận!",
+            "newPasswordConfirm.same" => "Mật khẩu xác nhận không trùng khớp!",
+        ]);
+        if($validator->fails()){
+            return back()->withErrors($validator)
+                        ->with("active_tab", "account-change-password");
+        }
+        $user = User::find($ID);
+        if(!Hash::check($request->currentPassword,$user->password)){
+            return back()->withErrors(["current_password" => "Mật khẩu cũ không chính xác!"])
+                            ->with("active_tab", "account-change-password");
+        }
+        $user->password = Hash::make($request->newPassword);
+        $user->save();
+        if($user){
+        return redirect()->route("userpage.profile",["ID"=>$user->userID])->with("change_succes","Thay đổi mật khẩu thành công!");
+        }else{
+        return redirect()->route("userpage.profile",["ID"=>$user->userID])->with("change_fails","Thay đổi mật khẩu thành công!");
+
         }
 
     }

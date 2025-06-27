@@ -16,7 +16,7 @@ return new class extends Migration
             $table->text("SignageName");
             $table->text("SignageImage");
             $table->text("SignagesExplanation");
-            $table->unsignedBigInteger("SignageTypeID");
+            $table->unsignedBigInteger("SignageTypeID")->nullable();
             $table->foreign("SignageTypeID")->references("SignageTypeID")->on("signage_types");
             $table->timestamps();
         });

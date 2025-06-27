@@ -78,10 +78,14 @@ class SignageController extends Controller
 
     public function deleteSignageTypes($ID)
     {
-        $signage = SignageType::find($ID);
-        if ($signage) {
-            $signage->delete();
-            return redirect()->route("admintrafficbot.listsignagetypes")->with("delete_success", "xóa biển báo thành công!");
+        $signageType = SignageType::find($ID);
+        if ($signageType) {
+            foreach($signageType->signageType_signage as $signage){
+                $signage->update(["SignageTypeID" => null]);
+            };
+            $signageType->delete();
+
+            return redirect()->route("admintrafficbot.listsignagetypes")->with("delete_success", "xóa loại biển báo thành công!");
         } else {
             return redirect()->route("admintrafficbot.listsignagetypes")->with("delete_fails", "Đã có lỗi xảy ra - vui lòng xóa lại sau !");
 

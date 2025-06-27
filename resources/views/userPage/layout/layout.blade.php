@@ -187,7 +187,7 @@
                         </a>
                         <ul class="dropdown-menu dropdown-menu-end shadow animated fadeIn"
                             aria-labelledby="accountDropdown">
-                            <li><a class="dropdown-item" href="account-info.html">Thông tin tài khoản</a></li>
+                            <li><a class="dropdown-item" href="{{ route("userpage.profile",["ID"=>Auth::user()->userID]) }}">Thông tin tài khoản</a></li>
                             <li><a class="dropdown-item" href="change-password.html">Đổi mật khẩu</a></li>
                             <li>
                                 <hr class="dropdown-divider">
@@ -218,7 +218,7 @@
 @yield("main")
 
 
-
+@yield("footer")
 <!-- Footer Start -->
 <div class="container-fluid bg-dark footer mt-5 py-5 wow fadeIn" data-wow-delay="0.1s">
     <div class="container py-5">

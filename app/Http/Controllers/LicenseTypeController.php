@@ -77,6 +77,8 @@ class LicenseTypeController extends Controller
         if (isset($licenseType)) {
             $licenseType->examset_LicenseType()->detach();
             $licenseType->question_LicenseType()->detach();
+            $licenseType->questionCategory_LicenseType()->detach();
+            $licenseType->result_LicenseType()->delete();
         }
         $licenseType->delete();
         return redirect()->route("admintrafficbot.listlicensetype")->with("delete_license", "xóa $licenseTypeName thành công  !");

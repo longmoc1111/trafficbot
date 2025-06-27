@@ -43,9 +43,6 @@
                                             <th scope="col" class="px-6 py-3 text-start text-sm text-default-500">
                                                 Tên giấy phép</th>
                                             <th scope="col" class="px-6 py-3 text-start text-sm text-default-500">
-                                                Mô tả giấy phép
-                                            </th>
-                                            <th scope="col" class="px-6 py-3 text-start text-sm text-default-500">
                                                 Thời gian thi
                                             </th>
                                             <th scope="col" class="px-6 py-3 text-start text-sm text-default-500">
@@ -63,9 +60,6 @@
                                             <tr>
                                                 <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-default-800">
                                                     {{ $licensetype->LicenseTypeName }}
-                                                </td>
-                                                <td class="px-6 py-4 whitespace-nowrap text-sm text-default-800">
-                                                    {{ $licensetype->LicenseTypeDescription }}
                                                 </td>
                                                 <td class="px-6 py-4 whitespace-nowrap text-sm text-default-800">
                                                     {{ $licensetype->LicenseTypeDuration }} Phút

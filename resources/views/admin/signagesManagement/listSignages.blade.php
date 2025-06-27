@@ -9,12 +9,12 @@
             <h4 class="text-default-900 text-lg font-medium mb-2">Danh sách biển báo</h4>
 
             <!-- <div class="md:flex hidden items-center gap-3 text-sm font-semibold">
-                            <a href="#" class="text-sm font-medium text-default-700">OpenDash</a>
-                            <i class="material-symbols-rounded text-xl flex-shrink-0 text-default-500">chevron_right</i>
-                            <a href="#" class="text-sm font-medium text-default-700">Tables</a>
-                            <i class="material-symbols-rounded text-xl flex-shrink-0 text-default-500">chevron_right</i>
-                            <a href="#" class="text-sm font-medium text-default-700" aria-current="page">Basic Tables</a>
-                        </div> -->
+                                <a href="#" class="text-sm font-medium text-default-700">OpenDash</a>
+                                <i class="material-symbols-rounded text-xl flex-shrink-0 text-default-500">chevron_right</i>
+                                <a href="#" class="text-sm font-medium text-default-700">Tables</a>
+                                <i class="material-symbols-rounded text-xl flex-shrink-0 text-default-500">chevron_right</i>
+                                <a href="#" class="text-sm font-medium text-default-700" aria-current="page">Basic Tables</a>
+                            </div> -->
         </div>
         <!-- Page Title End -->
 
@@ -78,9 +78,15 @@
                                                         style="max-width: 200px; word-wrap: break-word;">
                                                         {{ trim($signage->SignageName) }}
                                                     </td>
-                                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-default-800">
-                                                        {{ $signage->signage_SignageType->SignagesTypeName }}
-                                                    </td>
+                                                    @if(!empty($signage->signage_SignageType->SignagesTypeName))
+                                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-default-800">
+                                                            {{ $signage->signage_SignageType->SignagesTypeName }}
+                                                        </td>
+                                                    @else
+                                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-default-800">
+                                                            Không
+                                                        </td>
+                                                    @endif
                                                     <td class="px-6 py-4 whitespace-nowrap text-sm text-default-800">
                                                         <img style="max-width: 100px;" class=""
                                                             src="{{ asset("storage/uploads/imageSignage/$signage->SignageImage")}}"
@@ -288,9 +294,16 @@
                                         <h3 class="text-lg font-bold text-gray-800 mb-2">
                                             {{ $signage->SignageName }}
                                         </h3>
-                                        <p class="text-gray-600 mb-1">
-                                            <strong>Loại biển báo :</strong> {{ $signage->signage_SignageType->SignagesTypeName }}
-                                        </p>
+                                        @if(!empty($signage->signage_SignageType->SignagesTypeName))
+                                            <p class="text-gray-600 mb-1">
+                                                <strong>Loại biển báo :</strong> {{ $signage->signage_SignageType->SignagesTypeName }}
+                                            </p>
+                                        @else
+                                            <p class="text-gray-600 mb-1">
+                                                <strong>Loại biển báo :</strong> Không
+                                            </p>
+                                        @endif
+
                                         <p class="text-gray-600">
                                             <strong>Giải thích:</strong> {{ $signage->SignagesExplanation }}
                                         </p>

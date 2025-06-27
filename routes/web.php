@@ -3,6 +3,7 @@
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\ChatBotController;
 use App\Http\Controllers\DashBoardController;
+use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\QuestionCategoryController;
 use App\Http\Controllers\QuizzController;
 use App\Http\Controllers\SignageController;
@@ -16,12 +17,12 @@ use App\Models\LicenseType;
 use Illuminate\Support\Facades\Route;
 
 
-Route::middleware("admin")->controller(DashBoardController::class)->prefix("admintrafficbot")->name("admintrafficbot")->group(function(){
+Route::middleware(["auth","admin"])->controller(DashBoardController::class)->prefix("admintrafficbot")->name("admintrafficbot")->group(function(){
         route::get("/dashboard", "dashBoard")->name(".dashboard");
 
 }); 
 
-Route::middleware("admin")->controller(QuestionController::class)->prefix("admintrafficbot")->name("admintrafficbot")->group(function(){
+Route::middleware(["auth","admin"])->controller(QuestionController::class)->prefix("admintrafficbot")->name("admintrafficbot")->group(function(){
     Route::get("/question", "listQuestion")->name(".question");
     Route::get("/question/serach", "serachQuestion")->name(".question.search");
     Route::get("/question/create","createQuestion")->name(".question.create");
@@ -37,7 +38,7 @@ Route::middleware("admin")->controller(QuestionController::class)->prefix("admin
 
 });
 
-Route::middleware("admin")->controller(QuestionCategoryController::class)->prefix("admintrafficbot")->name("admintrafficbot")->group(function(){
+Route::middleware(["auth","admin"])->controller(QuestionCategoryController::class)->prefix("admintrafficbot")->name("admintrafficbot")->group(function(){
      route::get("question/category","questionCategory")->name(".question.category");
      route::get("question/category/search","searchCategory")->name(".question.category.search");
      route::get("question/category/create","createCategory")->name(".question.createcategory");
@@ -47,10 +48,10 @@ Route::middleware("admin")->controller(QuestionCategoryController::class)->prefi
 
 
 });
-Route::middleware("admin")->controller(SignageController::class)->prefix("admintrafficbot")->name("admintrafficbot")->group(function(){
+Route::middleware(["auth","admin"])->controller(SignageController::class)->prefix("admintrafficbot")->name("admintrafficbot")->group(function(){
     Route::get("/listsignage","listSignage")->name(".listsignage");
 });
-Route::middleware("admin")->controller(LicenseTypeController::class)->prefix("admintrafficbot")->name("admintrafficbot")->group(function(){
+Route::middleware(["auth","admin"])->controller(LicenseTypeController::class)->prefix("admintrafficbot")->name("admintrafficbot")->group(function(){
     Route::get("/license/list", "listLicenseType")->name(".listlicensetype");
     Route::get("/license/list/create","createLicenseType")->name(".licensetype.create");
     Route::get("/license/list/edit/{ID}","editLicenseType")->name(".licensetype.edit");
@@ -61,7 +62,7 @@ Route::middleware("admin")->controller(LicenseTypeController::class)->prefix("ad
 
 
 });
-Route::middleware("admin")->controller(ExamSetController::class)->prefix("admintrafficbot")->name("admintrafficbot")->group(function(){
+Route::middleware(["auth","admin"])->controller(ExamSetController::class)->prefix("admintrafficbot")->name("admintrafficbot")->group(function(){
     Route::get("/exam_set", "listExamSet")->name(".examset");
     Route::get("/exam_set/add/{ID}",action: "createExamSet")->name(".examset.create");
     Route::post("/exam_set/store","storeExamSet")->name(".examset.store");
@@ -71,7 +72,7 @@ Route::middleware("admin")->controller(ExamSetController::class)->prefix("admint
     Route::get("/exam_set/show/{ExamSetID}","showExamSet")->name(".examset.show");
 });
 
-Route::middleware("admin")->controller(ChatBotController::class)->prefix("admintrafficbot")->name("admintrafficbot")->group(function(){
+Route::middleware(["auth","admin"])->controller(ChatBotController::class)->prefix("admintrafficbot")->name("admintrafficbot")->group(function(){
    route::get("/chat_bot","dataList")->name(".chatbot");
    route::post("/chat_bot/store","storeChatBot")->name(".chatbot.store");
    route::post("/chat_bot/update/{ID}","updateChatBot")->name(".chatbot.update");
@@ -89,7 +90,9 @@ route::controller(UserPageController::class)->name("userpage")->group(function()
 
 });
 
-
+route::controller(ProfileController::class)->name("userpage")->group(function(){
+    route::get("/profile/{ID}","profile")->name(".profile");
+});
 route::controller(QuizzController::class)->name("userpage")->group(function() {
     route::get("/practice-test", "practiceTest")->name(".practice.test");
     route::get("/practice-test/{licenseID}", "getExam")->name("practice.getexam");

@@ -126,6 +126,14 @@
     <div class="container-xxl about my-5">
         <div class="container">
             <div class="row g-0">
+                <div class="col-lg-6">
+                    <div class="h-100 d-flex align-items-center justify-content-center" style="min-height: 300px;">
+                        <button type="button" class="btn-modal" data-bs-toggle="modal" data-bs-target="#videoModal">
+                            <span>Bắt đầu</span>
+                        </button>
+                    </div>
+                </div>
+
                 <div class="col-lg-6 pt-lg-5 wow fadeIn" data-wow-delay="0.5s">
                     <div class="bg-white rounded-top p-4 mt-3">
                         <div class="type-btn mb-2  ">
@@ -157,7 +165,7 @@
                         <div class="score-info-box p-4 rounded shadow-sm bg-light mb-4">
                             <h6 class="fw-bold text-primary">📌 Cách tính điểm:</h6>
                             <ul class="mb-0 ps-3 small">
-                                <li class="mb-2 ">⏱️ Thời gian làm bài: <strong id="duration"></strong></li>
+                                <li class="mb-2 ">⏱️ Thời gian làm bài: <strong id="duration"></strong> phút</li>
                                 <li class="mb-2">✅ Mỗi câu chỉ có duy nhất <strong>1 đáp án đúng</strong></li>
                                 <li class="mb-2">🎯 Phải đúng tối thiểu <strong id="passCount"></strong> để đạt</li>
                             </ul>
@@ -172,13 +180,7 @@
 
                     </div>
                 </div>
-                <div class="col-lg-6">
-                    <div class="h-100 d-flex align-items-center justify-content-center" style="min-height: 300px;">
-                        <button type="button" class="btn-modal" data-bs-toggle="modal" data-bs-target="#videoModal">
-                            <span>Bắt đầu</span>
-                        </button>
-                    </div>
-                </div>
+                
             </div>
         </div>
     </div>
@@ -275,19 +277,18 @@
                     fetch(`/practice-info/${licenseID}"`)
                         .then(response => response.json())
                         .then(data => {
-                            console.log("nhan du lieu thanh cong" + JSON.stringify(data))
                             if (data.dataCategory == 0) {
                                 tbody.innerHTML = `<tr><td colspan = "3">Không có dữ liệu</td></tr>`
                             }
                             tbody.innerHTML = ``
                             data.dataCategory.forEach(function (item, index) {
                                 tbody.innerHTML += `
-                                                <tr>
-                                                    <td>${index + 1}</td>
-                                                    <td>${item.name}</td>
-                                                    <td>${item.quantity}</td>
-                                                </tr>
-                                            `
+                                                    <tr>
+                                                        <td>${index + 1}</td>
+                                                        <td>${item.name}</td>
+                                                        <td>${item.quantity}</td>
+                                                    </tr>
+                                                `
                             })
                             licenseName.innerText = `Cấu trúc đề thi Hạng ${data.dataLicense.name}`
                             duration.innerText = data.dataLicense.duration

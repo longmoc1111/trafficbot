@@ -97,41 +97,12 @@
                                                 <td
                                                     class="px-6 py-4 whitespace-nowrap text-end text-sm font-medium flex justify-end gap-x-2">
                                                     <div class="hs-tooltip">
-                                                        <button type="button"
-                                                            class="text-red-500 hover:text-red-800 hs-tooltip-toggle"
-                                                            data-hs-overlay="#modal-{{ $question->QuestionID }}"
-                                                            data-fc-placement="bottom">
-                                                            <span class="material-symbols-rounded text-2xl">
-                                                                delete_forever
-                                                            </span>
-                                                        </button>
-                                                        <span
-                                                            class="hs-tooltip-content hs-tooltip-shown:opacity-100 hs-tooltip-shown:visible opacity-0 transition-opacity inline-block absolute invisible z-10 py-1 px-2 bg-gray-900 text-xs font-medium text-white rounded shadow-sm"
-                                                            role="tooltip">
-                                                            Xóa vĩnh viễn
-                                                        </span>
-                                                    </div>
-                                                    <div class="hs-tooltip">
-                                                        <a href="{{ route("admintrafficbot.question.edit_question", $question->QuestionID) }}"
-                                                            type="button" class="text-info hover:text-info hs-tooltip-toggle"
-                                                            data-fc-placement="top">
-                                                            <span class="material-symbols-rounded text-2xl">
-                                                                edit
-                                                            </span>
-                                                        </a>
-                                                        <span
-                                                            class="hs-tooltip-content hs-tooltip-shown:opacity-100 hs-tooltip-shown:visible opacity-0 transition-opacity inline-block absolute invisible z-10 py-1 px-2 bg-gray-900 text-xs font-medium text-white rounded shadow-sm"
-                                                            role="tooltip">
-                                                            chỉnh sửa
-                                                        </span>
-                                                    </div>
-                                                    <div class="hs-tooltip">
                                                         <a href="{{ route("admintrafficbot.question.detail", $question->QuestionID) }}"
                                                             type="button"
                                                             class="text-blue-500 hover:text-blue-700 hs-tooltip-toggle"
                                                             data-fc-placement="top">
                                                             <span class="material-symbols-rounded text-2xl">
-                                                                arrow_right_alt
+                                                                 visibility
                                                             </span>
                                                         </a>
                                                         <span
