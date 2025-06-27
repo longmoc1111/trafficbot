@@ -347,6 +347,7 @@
 
     </div>
 
+  
 
     <script>
         passed = @json($passed);
@@ -358,10 +359,9 @@
     <script src="/assets/izitoast/js/iziToast.min.js"></script>
     <!-- Charts js -->
     <script src="/assets/userPage/lib/apexcharts/apexcharts.min.js"></script>
+    <script type="text/javascript"></script>
     <script src="/assets/userPage/js/dashboard-profile.js"></script>
-    <script type="text/javascript">
 
-    </script>
 </body>
 <script>
     @if(session("change_succes"))
