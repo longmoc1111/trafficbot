@@ -10,14 +10,6 @@
             <!-- Page Title Start -->
            
             <!-- Page Title End -->
-            <div class="flex flex-col mb-3">
-                <div class="card border rounded shadow w-full">
-                    <div class="flex items-center justify-between px-6 py-4 border-b">
-                        <span> <strong class = "text-red-600"> Lưu ý: </strong> Câu điểm liệt sẽ được chọn ngẫu nhiên, số lượng câu cần nhập {{ $examSet->licenseType_ExamSet->pluck("LicenseTypeQuantity")->first() - 1 }}
-                    </span>
-                    </div>
-                </div>  
-            </div>
             <div class="flex flex-col">
                 <div class="card border rounded shadow w-full">
                     <div class="flex items-center justify-between px-6 py-4 border-b">
