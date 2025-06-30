@@ -4,24 +4,12 @@
     <main>
         <form action="{{ route("admintrafficbot.question.store") }}" method="POST" enctype="multipart/form-data">
             @csrf
-            <!-- Page Title Start -->
-            <div class="flex items-center md:justify-between flex-wrap gap-2 mb-6">
-                <h4 class="text-default-900 text-lg font-medium mb-2"></h4>
-
-                <div class="md:flex hidden items-center gap-3 text-sm font-semibold">
-                    <a href="#" class="text-sm font-medium text-default-700">OpenDash</a>
-                    <i class="material-symbols-rounded text-xl flex-shrink-0 text-default-500">chevron_right</i>
-                    <a href="#" class="text-sm font-medium text-default-700">Forms</a>
-                    <i class="material-symbols-rounded text-xl flex-shrink-0 text-default-500">chevron_right</i>
-                    <a href="#" class="text-sm font-medium text-default-700" aria-current="page">Input</a>
-                </div>
-            </div>
-            <!-- Page Title End -->
+            
 
             <div class="flex flex-col gap-6">
                 <div class="card border rounded shadow">
                     <div class="flex items-center justify-between px-6 py-4 border-b">
-                        <h4 class="text-lg font-semibold">Thêm câu hỏi mới cho</h4>
+                        <h4 class="text-lg font-semibold">Thêm câu hỏi mới</h4>
                         <button type="submit"
                             class="btn border-success text-success hover:bg-success hover:text-white">Tạo</button>
                     </div>

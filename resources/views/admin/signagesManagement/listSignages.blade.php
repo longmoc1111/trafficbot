@@ -575,7 +575,7 @@
                                 </button>
                                 <button type="submit"
                                     class="py-2 px-5 inline-flex items-center justify-center font-medium tracking-wide border align-middle duration-500 text-sm text-center bg-primary hover:bg-primary-700 border-primary hover:border-primary-700 text-white rounded-md">
-                                    Cập nhật
+                                    Tạo
                                 </button>
 
                             </div>

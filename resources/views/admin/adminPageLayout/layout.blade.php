@@ -148,13 +148,7 @@
                                         Danh sách tài khoản
                                     </a>
                                 </li>
-                                <li class="menu-item">
-                                    <a class='flex items-center gap-x-3.5 rounded-md px-5 py-2 text-sm font-medium text-default-700 hover:bg-default-900/5'
-                                        href='/opendash/ui-avatars'>
-                                        <i class="i-tabler-circle-filled scale-[.25] text-lg opacity-75"></i>
-                                        Phân quyền tài khoản
-                                    </a>
-                                </li>
+                        
                                 <!-- <li class="menu-item">
                                     <a class='flex items-center gap-x-3.5 rounded-md px-5 py-2 text-sm font-medium text-default-700 hover:bg-default-900/5'
                                         href='/opendash/ui-buttons'>
