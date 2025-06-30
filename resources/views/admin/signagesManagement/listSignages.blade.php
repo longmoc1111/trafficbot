@@ -285,7 +285,7 @@
                                 <div class="flex border rounded-lg shadow-sm overflow-hidden bg-white max-w-full">
                                     <!-- Phần ảnh bên trái -->
                                     <div class="flex-shrink-0 " style="border-right: 3px solid #6b72801A">
-                                        <img src="/assets/adminPage/SignagesImage/{{ $signage->SignageImage }}" alt="Image"
+                                        <img src="{{ asset("storage/uploads/imageSignage/$signage->SignageImage") }} " alt="Image"
                                             class="w-40 h-40 object-contain p-2">
                                     </div>
 
