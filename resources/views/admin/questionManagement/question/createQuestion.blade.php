@@ -111,75 +111,6 @@
                                 </div>
 
 
-                                <div class="mb-4">
-                                    <label class="text-gray-700 text-sm font-medium mb-2 block">
-                                        Áp dụng cho giấy phép
-                                    </label>
-                                    <div
-                                        class="flex items-center justify-between bg-gray-50 rounded-md border border-gray-200 shadow-sm  mb-3 p-3">
-                                        <div class="flex justify-end w-full gap-6">
-                                            <!-- Chọn tất cả Áp dụng -->
-                                            <label style="margin-right: 4px;" class="inline-flex items-center text-sm text-gray-600 font-semibold">
-                                                <span style="margin-right: 10px;">chọn Tất cả</span>
-                                                <input type="checkbox" id="select-all-license"
-                                                    class="form-checkbox text-blue-600 rounded-sm">
-
-                                            </label>
-
-                                            <!-- Chọn tất cả Là điểm liệt -->
-                                            <label  class="inline-flex items-center text-sm text-red-600 font-semibold">
-                                                <span style="margin-right: 10px;">chọn Tất cả</span>
-
-                                                <input type="checkbox" id="select-all-critical"
-                                                    class="form-checkbox text-red-500 rounded-sm">
-
-                                            </label>
-                                        </div>
-                                    </div>
-
-                                    <div class="space-y-3">
-                                        @foreach ($licenseTypes as $license)
-                                            <div
-                                                class="flex items-center justify-between bg-gray-50 p-3 rounded-md border border-gray-200 shadow-sm">
-                                                <div class="text-sm font-medium text-gray-800 w-1/3">
-                                                    {{ $license->LicenseTypeName }}
-                                                </div>
-
-                                                <div class="flex items-center gap-4 w-2/3">
-                                                    <label  class="inline-flex items-center text-sm text-gray-600">
-                                                        <span style="margin-right: 10px;">Áp dụng</span>
-                                                        <input type="checkbox" name="licenseTypes[]"
-                                                            value="{{ $license->LicenseTypeID }}"
-                                                            class="form-checkbox text-blue-600 rounded-sm">
-
-                                                    </label>
-
-                                                    <label class="inline-flex items-center text-sm text-red-600">
-                                                        <span style="margin-right: 10px;">Câu điểm liệt</span>
-
-                                                        <input type="checkbox" name="criticalTypes[]"
-                                                            value="{{ $license->LicenseTypeID }}"
-                                                            class="form-checkbox text-red-500 rounded-sm">
-                                                    </label>
-                                                </div>
-                                            </div>
-                                        @endforeach
-                                    </div>
-                                </div>
-
-
-
-
-                                <div class="mb-3">
-                                    <label for="description_image"
-                                        class="text-default-800 text-sm font-medium inline-block mb-2">Ảnh mô tả(đối với câu
-                                        hỏi biển báo, sa hình)</label>
-                                    <input type="file" name="ImageDescription" id="description_image" accept="image/*"
-                                        class="form-input">
-                                </div>
-
-                            </div>
-                            <div>
 
                                 <div class="mb-3">
                                     <div class="flex items-center gap-4 mb-2">
@@ -365,6 +296,76 @@
 
 
 
+                                <div class="mb-3">
+                                    <label for="description_image"
+                                        class="text-default-800 text-sm font-medium inline-block mb-2">Ảnh mô tả(đối với câu
+                                        hỏi biển báo, sa hình)</label>
+                                    <input type="file" name="ImageDescription" id="description_image" accept="image/*"
+                                        class="form-input">
+                                </div>
+                            </div>
+                            <div class="mb-3">
+                                <label class="text-gray-700 text-sm font-medium mb-2 block">
+                                    Áp dụng cho giấy phép
+                                </label>
+                                <div
+                                    class="flex items-center justify-between bg-gray-50 rounded-md border border-gray-200 shadow-sm  mb-3 p-3">
+                                    <div class="flex justify-end w-full gap-6">
+                                        <!-- Chọn tất cả Áp dụng -->
+                                        <label style="margin-right: 4px;"
+                                            class="inline-flex items-center text-sm text-gray-600 font-semibold">
+                                            <span style="margin-right: 10px;">chọn Tất cả</span>
+                                            <input type="checkbox" id="select-all-license"
+                                                class="form-checkbox text-blue-600 rounded-sm">
+
+                                        </label>
+
+                                        <!-- Chọn tất cả Là điểm liệt -->
+                                        <label class="inline-flex items-center text-sm text-red-600 font-semibold">
+                                            <span style="margin-right: 10px;">chọn Tất cả</span>
+
+                                            <input type="checkbox" id="select-all-critical"
+                                                class="form-checkbox text-red-500 rounded-sm">
+
+                                        </label>
+                                    </div>
+                                </div>
+
+                                <div class="space-y-3">
+                                    @foreach ($licenseTypes as $license)
+                                        <div
+                                            class="flex items-center justify-between bg-gray-50 p-3 rounded-md border border-gray-200 shadow-sm">
+                                            <div class="text-sm font-medium text-gray-800 w-1/3">
+                                                {{ $license->LicenseTypeName }}
+                                            </div>
+
+                                            <div class="flex items-center gap-4 w-2/3">
+                                                <label class="inline-flex items-center text-sm text-gray-600">
+                                                    <span style="margin-right: 10px;">Áp dụng</span>
+                                                    <input type="checkbox" name="licenseTypes[]"
+                                                        value="{{ $license->LicenseTypeID }}"
+                                                        class="form-checkbox text-blue-600 rounded-sm">
+
+                                                </label>
+
+                                                <label class="inline-flex items-center text-sm text-red-600">
+                                                    <span style="margin-right: 10px;">Câu điểm liệt</span>
+
+                                                    <input type="checkbox" name="criticalTypes[]"
+                                                        value="{{ $license->LicenseTypeID }}"
+                                                        class="form-checkbox text-red-500 rounded-sm">
+                                                </label>
+                                            </div>
+                                        </div>
+                                    @endforeach
+                                </div>
+                            </div>
+                            <div>
+
+
+
+
+
                             </div>
 
                         </div>
@@ -377,7 +378,7 @@
 
     </main>
     <script>
-        
+
     </script>
 
 @endsection
@@ -399,20 +400,20 @@
             });
         })();
     </script>
-    
+
     <script>
-        
-        document.addEventListener("DOMContentLoaded", function(){
-            const allLicenseType  = document.getElementById("select-all-license")
+
+        document.addEventListener("DOMContentLoaded", function () {
+            const allLicenseType = document.getElementById("select-all-license")
             const allCritical = document.getElementById("select-all-critical");
 
             const licenseCheckbox = document.querySelectorAll("input[name='licenseTypes[]']")
             const criticalCheckbox = document.querySelectorAll("input[name='criticalTypes[]']")
 
-            allLicenseType.addEventListener("change" , function(){
+            allLicenseType.addEventListener("change", function () {
                 licenseCheckbox.forEach(checkbox => checkbox.checked = this.checked)
             })
-            allCritical.addEventListener("change", function(){
+            allCritical.addEventListener("change", function () {
                 criticalCheckbox.forEach(checkbox => checkbox.checked = this.checked)
             })
         })
