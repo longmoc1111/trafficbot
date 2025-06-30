@@ -29,7 +29,7 @@ var genderChartOptions = {
         },
     },
     series: [failed, passed],
-    labels: ["Không đạt", "đạt"],
+    labels: ["đạt", "Không đạt"],
     colors: genderChartColors,
     dataLabels: { enabled: false },
     responsive: [

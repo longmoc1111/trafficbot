@@ -17,7 +17,7 @@ return new class extends Migration
             $table->text("ImageDescription")->nullable();
             $table->boolean("IsCritical");
             $table->text("QuestionExplain")->nullable();
-            $table->unsignedBigInteger("CategoryID");
+            $table->unsignedBigInteger("CategoryID")->nullable();
             $table->foreign("CategoryID")->references("CategoryID")->on("question_categories");
             $table->timestamps();
         });

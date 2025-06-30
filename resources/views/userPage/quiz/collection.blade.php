@@ -226,7 +226,7 @@
                                         }
                                     }
                                 @endphp
-                                <div class="col-2 col-sm-1 col-md-3  col-lg-2">
+                                <div  >
                                     <a href="#" style="color:rgb(43, 39, 39); border-color:red" class="question-btn small"
                                         data-question="{{ $index + 1 }}" data-id={{ $question->QuestionID }}
                                         data-explanation="{{ $question->QuestionExplain }}"

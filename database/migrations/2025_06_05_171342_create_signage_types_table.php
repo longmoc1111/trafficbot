@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('signage_types', function (Blueprint $table) {
             $table->id("SignageTypeID");
-            $table->text("SignagesTypeName");
+            $table->string("SignagesTypeName");
             $table->text("SignagesTypeDescription");      
             $table->timestamps();
         });

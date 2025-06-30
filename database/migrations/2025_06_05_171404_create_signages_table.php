@@ -13,8 +13,8 @@ return new class extends Migration
     {
         Schema::create('signages', function (Blueprint $table) {
             $table->id("SignageID");
-            $table->text("SignageName");
-            $table->text("SignageImage");
+            $table->string("SignageName");
+            $table->string("SignageImage");
             $table->text("SignagesExplanation");
             $table->unsignedBigInteger("SignageTypeID")->nullable();
             $table->foreign("SignageTypeID")->references("SignageTypeID")->on("signage_types");
