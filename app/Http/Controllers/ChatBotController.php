@@ -3,19 +3,25 @@
 namespace App\Http\Controllers;
 
 use App\Models\ChatBot;
+use App\Models\ChatCategory;
 use File;
 use Illuminate\Http\Request;
 use Validator;
+
 
 class ChatBotController extends Controller
 {
     public function dataList()
     {
         $dataList = ChatBot::all();
-        return view("admin.chatBotManagement.dataList", compact("dataList"));
+        $categories = ChatCategory::all();
+        $optionFile = ChatCategory::where("CategoryName", "PDF")->first();
+        $optionURL = ChatCategory::where("CategoryName", "URL")->first();
+        return view("admin.chatBotManagement.dataList", compact("dataList", "optionFile", "optionURL"));
     }
     public function storeChatBot(Request $request)
     {
+        $dataType = 
         $validator = Validator::make($request->all(), [
             "FileName" => "required",
             "FileDesciption" => "required",
@@ -32,22 +38,22 @@ class ChatBotController extends Controller
         }
         $validate = $validator->validated();
 
-        if ($request->hasFile("File")) {
-            $file = $request->file("File");
-            $fileWithoutExt = pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME);
-            $fileNameExt = $file->getClientOriginalExtension();
-            $newFileName = $fileWithoutExt . "_" . time() . "." . $fileNameExt;
-            $validate["File"] = $newFileName;
-            $file->move(public_path("assets/chatbot/data"), $newFileName);
-        }
+        // if ($request->hasFile("File")) {
+        //     $file = $request->file("File");
+        //     $fileWithoutExt = pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME);
+        //     $fileNameExt = $file->getClientOriginalExtension();
+        //     $newFileName = $fileWithoutExt . "_" . time() . "." . $fileNameExt;
+        //     $validate["File"] = $newFileName;
+        //     $file->move(public_path("assets/chatbot/data"), $newFileName);
+        // }
 
-        $dataFile = ChatBot::create($validate);
-        if ($dataFile) {
-            return redirect()->route("admintrafficbot.chatbot")->with("create_success", "Thêm mới dữ liệu thành công");
-        } else {
-            return redirect()->route("admintrafficbot.chatbot")->with("create_fails", "Thêm mới dữ liệu không thành công");
+        // $dataFile = ChatBot::create($validate);
+        // if ($dataFile) {
+        //     return redirect()->route("admintrafficbot.chatbot")->with("create_success", "Thêm mới dữ liệu thành công");
+        // } else {
+        //     return redirect()->route("admintrafficbot.chatbot")->with("create_fails", "Thêm mới dữ liệu không thành công");
 
-        }
+        // }
     }
 
     public function updateChatBot($ID, Request $request)
@@ -119,5 +125,5 @@ class ChatBotController extends Controller
         } else {
             return redirect()->route("admintrafficbot.chatbot")->with("delete_fails", "xóa dữ liệu không thành công");
         }
-    }
+    } 
 }

@@ -187,7 +187,9 @@
                         </a>
                         <ul class="dropdown-menu dropdown-menu-end shadow animated fadeIn"
                             aria-labelledby="accountDropdown">
-                            <li><a class="dropdown-item" href="{{ route("userpage.profile",["ID"=>Auth::user()->userID]) }}">Thông tin tài khoản</a></li>
+                            <li><a class="dropdown-item"
+                                    href="{{ route("userpage.profile", ["ID" => Auth::user()->userID]) }}">Thông tin tài
+                                    khoản</a></li>
                             <li><a class="dropdown-item" href="change-password.html">Đổi mật khẩu</a></li>
                             <li>
                                 <hr class="dropdown-divider">
@@ -279,7 +281,7 @@
         </div>
     </div> -->
 
-    <div class="chatbot">
+      <div class="chatbot">
         <!-- Chatbot Toggler -->
         <button id="chatbot-toggler">
             <span class="material-symbols-rounded">mode_comment</span>
@@ -314,7 +316,7 @@
             <!-- Chatbot Footer -->
             <div class="chat-footer">
                 <form action="#" class="chat-form">
-                    <textarea placeholder="Tin nhắn..." class="message-input" required></textarea>
+                    <textarea placeholder="Tin nhắn..." class="message-input" name="message" required></textarea>
                     <div class="chat-controls">
                         <button type="button" id="emoji-picker"
                             class="material-symbols-outlined">sentiment_satisfied</button>
@@ -332,13 +334,9 @@
         <!-- Linking Emoji Mart script for emoji picker -->
         <script src="https://cdn.jsdelivr.net/npm/emoji-mart@latest/dist/browser.js"></script>
         <!-- Linking custom script -->
-        <script type="importmap">
-    {
-      "imports": {
-        "@google/genai": "https://esm.run/@google/genai"
-      }
-    }
-  </script>
+        <script src="/assets/chatbot/chatbot.js">
+        </script>
+
 
     </div>
 </div>
@@ -351,26 +349,6 @@
     }
   </script> -->
 
-<script>
-    @if(!empty($signagesData))
-        window.signagesData = @json($signagesData);
-    @else
-        window.signagesData =[];
-
-    @endif
-    @if(!empty($pdfs))
-        window.pdfs = {!! json_encode($pdfs) !!} || null;
-
-    @else
-        window.pdfs =[];
-
-    @endif
-
-
-</script>
-
-<script type="module" src="/assets/chatbot/chatbot.js">
-</script>
 
 
 <!-- JavaScript Libraries -->

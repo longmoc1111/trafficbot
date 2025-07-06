@@ -13,9 +13,11 @@ return new class extends Migration
     {
         Schema::create('chat_bots', function (Blueprint $table) {
             $table->id("ChatbotID");
-            $table->text("FileName");
-            $table->text("FileDesciption");
-            $table->text("File");
+            $table->string("DocumentName");
+            $table->text("DocumentDesciption")->nullable();
+            $table->string("File")->nullable();
+            $table->text("LinkURL")->nullable();
+
             $table->timestamps();
         });
     }

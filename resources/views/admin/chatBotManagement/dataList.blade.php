@@ -8,12 +8,12 @@
             <h4 class="text-default-900 text-lg font-medium mb-2">Quản lý dữ liệu chatbot</h4>
 
             <!-- <div class="md:flex hidden items-center gap-3 text-sm font-semibold">
-                                                <a href="#" class="text-sm font-medium text-default-700">OpenDash</a>
-                                                <i class="material-symbols-rounded text-xl flex-shrink-0 text-default-500">chevron_right</i>
-                                                <a href="#" class="text-sm font-medium text-default-700">Tables</a>
-                                                <i class="material-symbols-rounded text-xl flex-shrink-0 text-default-500">chevron_right</i>
-                                                <a href="#" class="text-sm font-medium text-default-700" aria-current="page">Basic Tables</a>
-                                            </div> -->
+                                                                    <a href="#" class="text-sm font-medium text-default-700">OpenDash</a>
+                                                                    <i class="material-symbols-rounded text-xl flex-shrink-0 text-default-500">chevron_right</i>
+                                                                    <a href="#" class="text-sm font-medium text-default-700">Tables</a>
+                                                                    <i class="material-symbols-rounded text-xl flex-shrink-0 text-default-500">chevron_right</i>
+                                                                    <a href="#" class="text-sm font-medium text-default-700" aria-current="page">Basic Tables</a>
+                                                                </div> -->
         </div>
         <!-- Page Title End -->
 
@@ -34,9 +34,9 @@
 
                     </div>
                     <!-- <a href="{{ route("admintrafficbot.question.create") }}"
-                                                                                                            class="btn bg-primary/25 text-primary hover:bg-primary hover:text-white">
-                                                                                                            Thêm câu hỏi
-                                                                                                        </a> -->
+                                                                                                                                class="btn bg-primary/25 text-primary hover:bg-primary hover:text-white">
+                                                                                                                                Thêm câu hỏi
+                                                                                                                            </a> -->
 
                 </div>
                 <div>
@@ -91,7 +91,8 @@
                                                             </span>
                                                         </div>
                                                         <div class="hs-tooltip">
-                                                            <a id = "open_modal_edit" href="" type="button" onclick="event.preventDefault()"
+                                                            <a id="open_modal_edit" href="" type="button"
+                                                                onclick="event.preventDefault()"
                                                                 class="text-info hover:text-info hs-tooltip-toggle"
                                                                 data-fc-placement="top"
                                                                 data-hs-overlay="#modal-edit_{{ $data->ChatbotID }}">
@@ -142,14 +143,23 @@
                         <div class="flex flex-col border border-default-200 shadow-sm rounded-lg  pointer-events-auto">
                             <div class="flex justify-between items-center py-3 px-4 border-b border-default-200">
                                 <h3 class="text-lg font-medium text-default-900 ">
-                                    Thêm File
+                                    Thêm dữ liệu
                                 </h3>
                                 <button type="button" class="text-default-600 cursor-pointer"
                                     data-hs-overlay="#modal-create">
                                     <i class="i-tabler-x text-lg"></i>
                                 </button>
                             </div>
-                            <div class="p-4 overflow-y-auto">
+                           <div class="mb-3"  class = "p-4">
+                                <label for="DataType" class="text-gray-700 text-sm font-semibold mb-2 block">
+                                    Chọn loại dữ liệu
+                                </label>
+                                <select id="DataType" name="DataType" class="form-select " onchange="toggleDataTypeFields()">
+                                    <option   value="{{$optionFile->CategoryID}}" selected>{{$optionFile->CategoryName}}</option>
+                                    <option  value="{{ $optionURL->CategoryID }}">{{$optionURL->CategoryName}}</option>
+                                </select>
+                            </div>
+                            <div id="file-fields" class = "p-4">
                                 <div class="mb-3">
                                     <label for="FileName" class="text-gray-700 text-sm font-semibold mb-2 block">
                                         Tên file
@@ -160,45 +170,58 @@
                                             {{ $message }}
                                         </div>
                                     @enderror
-
                                     <input type="text" id="FileName" name="FileName" value=""
                                         class="form-input w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
                                         onfocus="document.getElementById('FileName_errorr')?.classList.add('hidden')">
-
                                 </div>
 
                                 <div class="mb-3">
-                                    <label for="example-email"
+                                    <label for="FileDesciption"
                                         class="text-default-800 text-sm font-medium inline-block mb-2">
-                                        Mô tả file</label>
+                                        Mô tả file
+                                    </label>
                                     @error('FileDesciption', "create")
                                         <div id="FileDesciption_errorr"
                                             class="flex items-center bg-red-100 text-red-700 text-sm px-4 mb-2">
                                             {{ $message }}
                                         </div>
                                     @enderror
-                                    <textarea type="text" id="FileDesciption" name="FileDesciption"
-                                        class="form-input"  onfocus="document.getElementById('FileDesciption_errorr')?.classList.add('hidden')"></textarea>
+                                    <textarea id="FileDesciption" name="FileDesciption" class="form-input"
+                                        onfocus="document.getElementById('FileDesciption_errorr')?.classList.add('hidden')"></textarea>
                                 </div>
-                                <div class="mb-3">
-                                    <label for="description_image"
-                                        class="text-default-800 text-sm font-semibold mb-2 block">File(PDF)</label>
+
+                                <div class="mb-3" class = "p-4">
+                                    <label for="File" class="text-default-800 text-sm font-semibold mb-2 block">File
+                                        (PDF)</label>
                                     @error('File', "create")
                                         <div id="File_errorr"
                                             class="flex items-center bg-red-100 text-red-700 text-sm px-4 mb-2">
                                             {{ $message }}
                                         </div>
                                     @enderror
-                                    <input type="file" name="File" id="file" accept="application/pdf"
-                                        class="form-input" value=""  onfocus="document.getElementById('File_errorr')?.classList.add('hidden')">
+                                    <input type="file" name="File" id="file" accept="application/pdf" class="form-input"
+                                        value="" onfocus="document.getElementById('File_errorr')?.classList.add('hidden')">
                                     <div class="justify-center flex">
                                         <img id="preview-file_create" src="" alt="Image"
                                             class="hidden w-32 h-32 object-contain p-2">
                                     </div>
-
+                                </div>
+                            </div>
+                            <div id="url-fields" class="hidden">
+                                <div class="mb-3">
+                                    <label for="URL" class="text-gray-700 text-sm font-semibold mb-2 block">Nhập URL</label>
+                                    <input type="url" id="URL" name="URL"
+                                        class="form-input w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
                                 </div>
 
+                                <div class="mb-3">
+                                    <label for="URLDescription" class="text-gray-700 text-sm font-semibold mb-2 block">Mô
+                                        tả</label>
+                                    <textarea id="URLDescription" name="URLDescription" class="form-input"></textarea>
+                                </div>
                             </div>
+
+
                             <div class="flex justify-end items-center gap-x-2 py-3 px-4 border-t border-default-200">
                                 <button type="button"
                                     class="py-2 px-5 inline-flex items-center justify-center font-medium tracking-wide border align-middle duration-500 text-sm text-center bg-primary/5 hover:bg-primary border-primary/10 hover:border-primary text-primary hover:text-white rounded-md"
@@ -253,7 +276,7 @@
 
                                             <input type="text" id="FileName" name="FileName" value="{{ $data->FileName }}"
                                                 class="form-input w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                                                onfocus = "document.getElementById('FileName_errorr')?.classList.add('hidden')">
+                                                onfocus="document.getElementById('FileName_errorr')?.classList.add('hidden')">
                                         </div>
 
                                         <div class="mb-3">
@@ -266,9 +289,8 @@
                                                     {{ $message }}
                                                 </div>
                                             @enderror
-                                            <textarea type="text" id="FileDesciption" name="FileDesciption"
-                                                class="form-input" onfocus="document.getElementById('FileDesciption_errorr')?.classList.add('hidden')"
-                                                >{{ $data->FileDesciption }}</textarea>
+                                            <textarea type="text" id="FileDesciption" name="FileDesciption" class="form-input"
+                                                onfocus="document.getElementById('FileDesciption_errorr')?.classList.add('hidden')">{{ $data->FileDesciption }}</textarea>
                                         </div>
                                         <div class="mb-3">
                                             <label for="File_errorr"
@@ -280,8 +302,8 @@
                                                 </div>
                                             @enderror
                                             <input type="text" name="oldFile" id="" hidden value="{{ $data->File }}">
-                                            <input type="file" name="File" id="File" accept="application/pdf"
-                                                class="form-input" value="" onfocus="document.getElementById('File_errorr')?.classList.add('hidden')">
+                                            <input type="file" name="File" id="File" accept="application/pdf" class="form-input"
+                                                value="" onfocus="document.getElementById('File_errorr')?.classList.add('hidden')">
                                             <div class="justify-center flex">
                                                 <img id="preview-file_create" src="" alt="Image"
                                                     class="hidden w-32 h-32 object-contain p-2">
@@ -363,6 +385,28 @@
 @endsection
 
 @section("footer")
+  <script>
+    function toggleDataTypeFields() {
+        const selectedValue = document.getElementById('DataType').value;
+
+        const fileCategoryID = "{{ $optionFile->CategoryID }}";
+        const fileFields = document.getElementById('file-fields');
+        const urlFields = document.getElementById('url-fields');
+
+        if (selectedValue === fileCategoryID) {
+            fileFields.classList.remove('hidden');
+            urlFields.classList.add('hidden');
+        } else {
+            fileFields.classList.add('hidden');
+            urlFields.classList.remove('hidden');
+        }
+    }
+
+    // Gọi khi load lần đầu
+    document.addEventListener('DOMContentLoaded', toggleDataTypeFields);
+</script>
+
+
 @endsection
 
 @section("izitoast")

@@ -12,78 +12,142 @@
 
 </head>
 <style>
-    .custom-sidebar .list-group-item {
-        padding: 12px 20px;
-        font-weight: 500;
-        color: #495057;
-        border: none;
-        border-left: 3px solid transparent;
-        transition: all 0.3s ease;
-        background-color: #f8f9fa;
-    }
+   /* Sidebar */
+.custom-sidebar .list-group-item {
+    padding: 14px 22px;
+    font-weight: 500;
+    color: #444;
+    border: none;
+    border-left: 4px solid transparent;
+    background-color: #fff;
+    transition: all 0.3s ease;
+}
 
-    .custom-sidebar .list-group-item:hover {
-        background-color: #e9ecef;
-        border-left: 3px solid #007bff;
-        color: #007bff;
-    }
+.custom-sidebar .list-group-item:hover {
+    background-color: #f1f5f9;
+    border-left: 4px solid #0d6efd;
+    color: #0d6efd;
+}
 
-    .custom-sidebar .list-group-item.active {
-        background-color: #007bff;
-        color: #fff;
-        border-left: 3px solid #0056b3;
-        font-weight: bold;
-    }
+.custom-sidebar .list-group-item.active {
+    background-color: #0d6efd;
+    color: #fff;
+    border-left: 4px solid #084298;
+    font-weight: 600;
+}
 
-    .custom-sidebar {
-        border-radius: 8px;
-        overflow: hidden;
-        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
-    }
+/* Avatar Section */
+.avatar-profile-box {
+    display: flex;
+    align-items: center;
+    padding: 1.25rem;
+    background-color: #ffffff;
+    border-radius: 12px;
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.05);
+    gap: 1.5rem;
+}
 
+.avatar-preview {
+    width: 100px;
+    height: 100px;
+    object-fit: cover;
+    border-radius: 50%;
+    border: 3px solid #dee2e6;
+    transition: border-color 0.3s ease;
+}
+
+.avatar-preview:hover {
+    border-color: #0d6efd;
+}
+
+.avatar-profile-box .media-body h5 {
+    margin-bottom: 6px;
+    font-weight: 700;
+    font-size: 1.25rem;
+    color: #333;
+}
+
+.avatar-profile-box .media-body p {
+    margin-bottom: 0;
+    font-size: 0.95rem;
+    color: #6c757d;
+}
+
+/* Card Title */
+.card-body h5 {
+    font-weight: 600;
+    color: #333;
+}
+
+/* Table Styling */
+.table th,
+.table td {
+    vertical-align: middle;
+    font-size: 0.95rem;
+}
+
+.table th {
+    background-color: #f8f9fa;
+    color: #333;
+    font-weight: 600;
+}
+
+/* Badge Status */
+.badge.bg-success {
+    background-color: #28a745 !important;
+}
+
+.badge.bg-warning {
+    background-color: #ffc107 !important;
+    color: #212529 !important;
+}
+
+/* Form */
+.form-label {
+    font-weight: 500;
+    color: #495057;
+}
+
+.form-control {
+    border-radius: 6px;
+}
+
+/* Update Button */
+.btn.btn-primary {
+    padding: 0.5rem 1.25rem;
+    font-size: 0.95rem;
+    font-weight: 500;
+    border-radius: 6px;
+    transition: all 0.3s ease;
+}
+
+.btn.btn-primary:hover {
+    background-color: #084298;
+}
+
+/* Chart Card */
+.card.h-100 {
+    border-radius: 12px;
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.05);
+}
+
+/* Responsive Adjustments */
+@media (max-width: 768px) {
     .avatar-profile-box {
-        display: flex;
-        align-items: center;
-        padding: 1rem;
-        background-color: #ffffff;
-        border-radius: 10px;
-        /* border: 1px solid #e0e0e0; */
-        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.04);
-        gap: 1.5rem;
+        flex-direction: column;
+        text-align: center;
     }
 
     .avatar-preview {
-        width: 90px;
-        height: 90px;
-        object-fit: cover;
-        border-radius: 50%;
-        border: 2px solid #dee2e6;
-        transition: border-color 0.3s ease;
+        width: 80px;
+        height: 80px;
     }
 
-    .avatar-preview:hover {
-        border-color: #007bff;
+    .custom-sidebar {
+        margin-bottom: 20px;
     }
+}
 
-    .avatar-profile-box .media-body h5 {
-        margin-bottom: 4px;
-        font-weight: 600;
-    }
-
-    .avatar-profile-box .media-body p {
-        margin-bottom: 8px;
-        font-size: 0.9rem;
-        color: #6c757d;
-    }
-
-    .account-settings-fileinput {
-        display: none;
-    }
-
-    .btn-outline-primary.btn-sm {
-        padding: 0.375rem 0.75rem;
-        font-size: 0.85rem;
-    }
 </style>
 
 <body>

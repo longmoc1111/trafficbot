@@ -1,6 +1,3 @@
-//lấy phần tử textra có class là message-input
-const API_KEY = "AIzaSyBKsenBMOobTmmlEAAcfxHuO56MlmRd9Mk";
-import { GoogleGenAI } from "@google/genai";
 const messageInput = document.querySelector(".message-input");
 const chatBody = document.querySelector(".chat-body");
 const senMessageBtn = document.querySelector("#send-message");
@@ -8,7 +5,7 @@ const fileInput = document.querySelector("#file-input");
 const chatbotToggler = document.querySelector("#chatbot-toggler");
 const closeChatbot = document.querySelector("#close-chatbot");
 
-const ai = new GoogleGenAI({ apiKey: API_KEY });
+ 
 
 //tạo 1 đối tượng để lưu tin nhắn
 const userData = {
@@ -21,152 +18,75 @@ const userData = {
     signages: null,
 };
 let chat;
-const startChat = async () => {
-    chat = ai.chats.create({
-        model: "gemini-2.0-flash",
-        history: [],
-    });
-};
-await startChat();
-
+ 
 const generateBotResponse = async (commingMessageDiv) => {
-    console.log(chat.history)
     const messageElement = commingMessageDiv.querySelector(".message-text");
-    const pdfPaths = window.pdfs.map(
-        (pdf) => `../assets/chatbot/data/${pdf.file}`
-    );
-    userData.pdfs = await Promise.all(
-        pdfPaths.map((path) => loadPdfFile(path))
-    );
-    userData.signages = window.signagesData || [];
-    // const pdfPath = window.pdfs.map(pdf => `../assets/chatbot/${$pdf.file}`);
+ 
+
+    // Lấy file PDF và biển báo từ frontend (nếu có)
+    // const pdfPaths = window.pdfs.map(
+    //     (pdf) => `../assets/chatbot/data/${pdf.file}`
+    // );
+    // userData.pdfs = await Promise.all(
+    //     pdfPaths.map((path) => loadPdfFile(path))
+    // );
+    // userData.signages = window.signagesData || [];
+
     try {
+        // Kiểm tra input
         if (!userData.message || userData.message.trim() === "") {
-            console.warn("không có nội dung để gửi");
+            console.warn("Không có nội dung để gửi.");
             return;
         }
-        if (!chat) {
-            console.warn("chưa khởi tạo phiên chat");
-            return;
-        }
-        const parts = [
-            {
-                text: `
-Bạn là trafficBot một trợ lý thân thiện, giúp người dùng hiểu rõ về luật giao thông đường bộ.
-Đối với các câu trả lời hãy thêm phần chủ ngữ.
-Hãy trả lời câu hỏi sau ngắn gọn, tự nhiên. Không được nhắc đến các cụm từ như theo đoạn văn cung cấp, hay theo văn bản cung cấp hay theo đoạn văn bản.
-nếu được yêu câu gửi ảnh thì sẽ chấm hết câu và chỉ hiển thị tên ảnh ở cuối và không hiển thị ảnh mô tả hay title về mô tả ảnh.
-đối với câu hỏi chung chung hay giải thích ngắn gọn nhất và không cần thiết phải đưa ra ảnh mô tả nếu người hỏi không hỏi.
-nếu người dùng hỏi về ảnh mô tả hãy đưa ra một vidu về nó, không được tạo bất kỳ ảnh nào mà không có trong tài liệu.
-đối với các câu hỏi liên quan đến kinh nghiệm thi hay mẹo thi không đưa ra bất kỳ ảnh hinh họa hay mô tả nào.
 
-
-Câu hỏi: "${userData.message}" `,
+        // Gửi nội dung về Laravel backend (sử dụng route POST /chatbot/send)
+        const result = await fetch("/chatbot/send", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                "X-CSRF-TOKEN": document
+                    .querySelector('meta[name="csrf-token"]')
+                    .getAttribute("content"),
             },
-            ...userData.pdfs.map((pdf) => ({
-                inlineData: {
-                    mimeType: "application/pdf",
-                    data: pdf,
-                },
-            })),
-            ...userData.signages.map((item) => ({
-                text: `Biển báo:${item.SignageName} - giải thích: ${item.SignagesExplanation} -  ảnh mô tả: ${item.SignageImage} `,
-            })),
-        ];
-        const result = await chat.sendMessage({ message: parts });
-        const apiReponse = result.text?.trim() || "";
-        messageElement.innerText = ""; // Clear để thay thế bằng nội dung có xử lý
-
-        if (apiReponse) {
-            const lines = apiReponse
-                .split(/\n|\*/)
-                .map((line) => line.trim())
-                .filter((line) => line);
-
-            for (const line of lines) {
-                // Kiểm tra nếu dòng chỉ là danh sách ảnh
-                if (
-                    /^([^\s]+\.(jpg|png|jpeg|gif))(,\s*[^\s]+\.(jpg|png|jpeg|gif))*$/i.test(
-                        line
-                    )
-                ) {
-                    const imageNames = line
-                        .split(",")
-                        .map((name) => name.trim());
-                    for (const imageName of imageNames) {
-                        if (imageName) {
-                            messageElement.insertAdjacentHTML(
-                                "beforeend",
-                                `<div class="model">
-                            <p>Hình ảnh minh hoạ:</p>
-                            <img src="/assets/adminPage/SignagesImage/${imageName}" alt="${imageName}" style="max-width: 150px;" />
-                        </div>`
-                            );
-                        }
-                    }
-                } else {
-                    // Nếu là dòng có mô tả + ảnh mô tả theo định dạng đầy đủ
-                    const signageMatch = line.match(
-                        /^Biển báo:\s*(.+?)\s+giải thích:\s*(.+?)\s+ảnh mô tả:\s*([^\s]+)$/i
-                    );
-                    if (signageMatch) {
-                        const signageName = signageMatch[1].trim();
-                        const explanation = signageMatch[2].trim();
-                        const imageName = signageMatch[3].trim();
-
-                        messageElement.insertAdjacentHTML(
-                            "beforeend",
-                            `<div class="model">
-                        <p><strong>${signageName}</strong>: ${explanation}</p>
-                        <img src="/assets/adminPage/SignagesImage/${imageName}" alt="${signageName}" style="max-width: 150px; display: block; margin: 10px auto;" />
-                    </div>`
-                        );
-                    } else {
-                        // Nếu dòng có mô tả và có thể có ảnh ở cuối
-                        const match = line.match(
-                            /(.+?)\s+([^\s]+\.(jpg|png|jpeg|gif))$/i
-                        );
-                        let contentText = line;
-                        let imageName = null;
-                        if (match) {
-                            contentText = match[1].trim();
-                            imageName = match[2].trim();
-                        }
-
-                        // Nếu có nội dung thực sự thì mới tạo
-                        if (contentText || imageName) {
-                            messageElement.insertAdjacentHTML(
-                                "beforeend",
-                                `<div class="model">
-                                  <p>${contentText}</p>
-                                  ${
-                                      imageName
-                                          ? `<img src="/assets/adminPage/SignagesImage/${imageName}" alt="${imageName}" style="max-width: 150px;" />`
-                                          : ""
-                                  }
-                              </div>`
-                            );
-                        }
-                    }
-                }
-            }
-        }
-        chat.history.push({
-            role: "user",
-            parts: [{ text: userData.message }],
+            body: JSON.stringify({
+                message: userData.message,
+                // pdfs: userData.pdfs,
+                // signages: userData.signages,
+            }),
         });
-        chat.history.push({
-            role: "model",
-            parts: [{ text: apiReponse }],
-        });
+
+        const data = await result.json();
+        console.log(data)
+        const apiResponse = data.reply || data.error || "Không có phản hồi.";
+        console.log(data);
+        // Hiển thị nội dung trả về
+        messageElement.innerText = ""; // Xoá nội dung cũ
+
+        const lines = apiResponse
+            .split(/\n|\*/)
+            .map((line) => line.trim())
+            .filter((line) => line);
+
+       for (const line of lines) {
+    const trimmedLine = line.trim();
+    if (trimmedLine) {
+        messageElement.insertAdjacentHTML(
+            "beforeend",
+            `<div class="model"><p>${trimmedLine}</p></div>`
+        );
+    }
+}
+
     } catch (error) {
-        messageElement.innerText = "Không thể gửi phản hồi ngay lúc này !";
+        console.error("Lỗi khi gửi yêu cầu:", error);
+        messageElement.innerText = "Không thể gửi phản hồi ngay lúc này!";
         messageElement.style.color = "#ff0000";
     } finally {
         commingMessageDiv.classList.remove("thinking");
         chatBody.scroll({ top: chatBody.scrollHeight, behavior: "smooth" });
     }
 };
+
 
 // tạo hàm thành phần tin nhắn bên trong là content và class
 const createMessageElemnt = (content, ...classes) => {
@@ -184,6 +104,7 @@ const createMessageElemnt = (content, ...classes) => {
 const handleOutgoingMessage = (e) => {
     e.preventDefault();
     userData.message = messageInput.value.trim();
+    console.log(userData.message);
     messageInput.value = "";
     //tạo nội dung tin nhắn bọc
     const messageContent = `<div class="message-text">${userData.message}</div>`;
@@ -234,21 +155,21 @@ messageInput.addEventListener("keydown", (e) => {
     }
 });
 
-const loadPdfFile = async (pdfPath) => {
-    try {
-        const response = await fetch(pdfPath);
-        const blob = await response.blob();
+// const loadPdfFile = async (pdfPath) => {
+//     try {
+//         const response = await fetch(pdfPath);
+//         const blob = await response.blob();
 
-        return await new Promise((resolve, reject) => {
-            const reader = new FileReader();
-            reader.onloadend = () => resolve(reader.result.split(",")[1]); // Lấy phần base64
-            reader.onerror = reject;
-            reader.readAsDataURL(blob);
-        });
-    } catch (error) {
-        console.error("Failed to load PDF:", pdfPath, error);
-    }
-};
+//         return await new Promise((resolve, reject) => {
+//             const reader = new FileReader();
+//             reader.onloadend = () => resolve(reader.result.split(",")[1]); // Lấy phần base64
+//             reader.onerror = reject;
+//             reader.readAsDataURL(blob);
+//         });
+//     } catch (error) {
+//         console.error("Failed to load PDF:", pdfPath, error);
+//     }
+// };
 
 // fileInput.addEventListener("change", () => {
 //   const file = fileInput.files[0];

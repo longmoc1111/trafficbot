@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AIchatController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\ChatBotController;
 use App\Http\Controllers\DashBoardController;
@@ -129,4 +130,7 @@ route::middleware("admin")->controller(SignageController::class)->prefix("admint
       route::post("/signages/list/update{ID}","updateSignages")->name(".signages.update");
       route::delete("/signages/list/delete/{ID}","deleteSignages")->name(".signages.delete");
 });
+Route::get('/chatbot', [AIchatController::class, 'chatbot'])->name('chatbot');
+Route::post('/chatbot/send', [AIchatController::class, 'sendMessage'])->name('chatbot.send');
+
 
