@@ -17,7 +17,7 @@ return new class extends Migration
             $table->text("DocumentDesciption")->nullable();
             $table->string("File")->nullable();
             $table->text("LinkURL")->nullable();
-
+            $table->string("SelectorURL")->nullable();
             $table->timestamps();
         });
     }

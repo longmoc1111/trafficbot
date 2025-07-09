@@ -63,12 +63,15 @@ class ChatBotController extends Controller
             $validator = Validator::make($request->all(), [
                 "URLName" => "required",
                 "LinkURL" => "required|url",
-                "DescriptionURL" => "required"
+                "DescriptionURL" => "required",
+                "selectorURL"=>"required"
             ], [
                 "URLName.required" => "Không được để trống!",
                 "LinkURL.required" => "Không được để trống!",
                 "LinkURL.url" => "Hãy nhập đúng định dang url!",
                 "DescriptionURL.required" => "Không được để trống!",
+                "selectorURL.required" => "Không được để trống!",
+
 
             ]);
             if ($validator->fails()) {
@@ -78,7 +81,8 @@ class ChatBotController extends Controller
                 "DocumentName"=> $request->URLName,
                 "DocumentDesciption"=>$request->DescriptionURL,
                 "LinkURL"=>$request->LinkURL,
-                "CategoryID"=>$dataID
+                "CategoryID"=>$dataID,
+                "SelectorURL"=>$request->selectorURL
             ];
                  $createData = ChatBot::create($data);
             if($createData){

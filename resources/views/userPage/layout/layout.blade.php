@@ -286,7 +286,7 @@
         <button id="chatbot-toggler">
             <span class="material-symbols-rounded">mode_comment</span>
             <span class="material-symbols-rounded">close</span>
-        </button>
+        </button> 
         <div class="chatbot-popup">
             <!-- Chatbot Header -->
             <div class="chat-header">

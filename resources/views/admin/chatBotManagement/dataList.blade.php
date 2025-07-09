@@ -242,8 +242,18 @@
                                         class="form-input w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
                                         onfocus="document.getElementById('LinkURL_errorr')?.classList.add('hidden')">
                                 </div>
-
-
+                                    <div class="mb-3">
+                                    <label for="selectorURL" class="text-gray-700 text-sm font-semibold mb-2 block">Vị trí cần lấy dữ liệu(class hoặc ID)</label>
+                                    @error('selectorURL', "create_url")
+                                        <div id="selectorURL_errorr"
+                                            class="flex items-center bg-red-100 text-red-700 text-sm px-4 mb-2">
+                                            {{ $message }}
+                                        </div>
+                                    @enderror
+                                    <input type="text" id="selectorURL" name="selectorURL"
+                                        class="form-input w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                        onfocus="document.getElementById('selectorURL_errorr')?.classList.add('hidden')">
+                                </div>
                                 <div class="mb-3">
                                     <label for="DescriptionURL"
                                         class="text-default-800 text-sm font-medium inline-block mb-2">

@@ -26,7 +26,7 @@ class AIchatController extends Controller
         })->get();
         \Log::info("url", $dataURL);
         try {
-            \Log::info('sendMessage payload:', $request->all());
+            \Log::info('sendMessage:', $request->all());
             $content = '';
             $textFromWeb = '';
             foreach ($Urls as $url) {
@@ -39,16 +39,16 @@ class AIchatController extends Controller
 
                     $response = Http::get("http://localhost:3000/crawl", [
                         'url' => $urlToGet,
-                        'selector' => $selector, // ✅ Gửi selector mong muốn
+                        'selector' => $selector,
                     ]);
 
                     if ($response->successful()) {
                         $content = $response->json('content');
-                        \Log::info("✅ Đã lấy nội dung từ $urlToGet");
+                        \Log::info(" nội dung từ $urlToGet");
                         $textFromWeb .= trim($content) . "\n\n";
                         \Log::info("nội dung của văn bản" . $textFromWeb);
                     } else {
-                        \Log::warning("❌ Lỗi khi crawl $urlToGet", [
+                        \Log::warning("Lỗi crawl $urlToGet", [
                             'response' => $response->body()
                         ]);
                     }
