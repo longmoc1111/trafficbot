@@ -8,12 +8,12 @@
             <h4 class="text-default-900 text-lg font-medium mb-2">Quản lý dữ liệu chatbot</h4>
 
             <!-- <div class="md:flex hidden items-center gap-3 text-sm font-semibold">
-                                                                    <a href="#" class="text-sm font-medium text-default-700">OpenDash</a>
-                                                                    <i class="material-symbols-rounded text-xl flex-shrink-0 text-default-500">chevron_right</i>
-                                                                    <a href="#" class="text-sm font-medium text-default-700">Tables</a>
-                                                                    <i class="material-symbols-rounded text-xl flex-shrink-0 text-default-500">chevron_right</i>
-                                                                    <a href="#" class="text-sm font-medium text-default-700" aria-current="page">Basic Tables</a>
-                                                                </div> -->
+                                                                                        <a href="#" class="text-sm font-medium text-default-700">OpenDash</a>
+                                                                                        <i class="material-symbols-rounded text-xl flex-shrink-0 text-default-500">chevron_right</i>
+                                                                                        <a href="#" class="text-sm font-medium text-default-700">Tables</a>
+                                                                                        <i class="material-symbols-rounded text-xl flex-shrink-0 text-default-500">chevron_right</i>
+                                                                                        <a href="#" class="text-sm font-medium text-default-700" aria-current="page">Basic Tables</a>
+                                                                                    </div> -->
         </div>
         <!-- Page Title End -->
 
@@ -34,9 +34,9 @@
 
                     </div>
                     <!-- <a href="{{ route("admintrafficbot.question.create") }}"
-                                                                                                                                class="btn bg-primary/25 text-primary hover:bg-primary hover:text-white">
-                                                                                                                                Thêm câu hỏi
-                                                                                                                            </a> -->
+                                                                                                                                                    class="btn bg-primary/25 text-primary hover:bg-primary hover:text-white">
+                                                                                                                                                    Thêm câu hỏi
+                                                                                                                                                </a> -->
 
                 </div>
                 <div>
@@ -72,7 +72,6 @@
                                                     <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-default-800">
                                                         {{ $data->File}}
 
-                                                    </td>
                                                     <td
                                                         class="px-6 py-4 whitespace-nowrap text-end text-sm font-medium flex justify-end gap-x-2">
                                                         <div class="hs-tooltip">
@@ -150,50 +149,55 @@
                                     <i class="i-tabler-x text-lg"></i>
                                 </button>
                             </div>
-                           <div class="mb-3"  class = "p-4">
+                            <div class="p-3">
                                 <label for="DataType" class="text-gray-700 text-sm font-semibold mb-2 block">
                                     Chọn loại dữ liệu
                                 </label>
-                                <select id="DataType" name="DataType" class="form-select " onchange="toggleDataTypeFields()">
-                                    <option   value="{{$optionFile->CategoryID}}" selected>{{$optionFile->CategoryName}}</option>
-                                    <option  value="{{ $optionURL->CategoryID }}">{{$optionURL->CategoryName}}</option>
+                                <select id="DataType" name="DataType" class="form-select" onchange="toggleDataTypeFields()">
+                                    <option value="{{ $optionFile->CategoryID }}" {{ old('DataType') == $optionFile->CategoryID ? 'selected' : '' }}>
+                                        {{ $optionFile->CategoryName }}
+                                    </option>
+                                    <option value="{{ $optionURL->CategoryID }}" {{ old('DataType') == $optionURL->CategoryID ? 'selected' : '' }}>
+                                        {{ $optionURL->CategoryName }}
+                                    </option>
                                 </select>
                             </div>
-                            <div id="file-fields" class = "p-4">
+                            <!-- lựa chon thêm file -->
+                            <div id="file-fields" class="p-4">
                                 <div class="mb-3">
-                                    <label for="FileName" class="text-gray-700 text-sm font-semibold mb-2 block">
+                                    <label for="DocumentName" class="text-gray-700 text-sm font-semibold mb-2 block">
                                         Tên file
                                     </label>
-                                    @error('FileName', "create")
-                                        <div id="FileName_errorr"
+                                    @error('DocumentName', "create_file")
+                                        <div id="DocumentName_errorr"
                                             class="flex items-center bg-red-100 text-red-700 text-sm px-4 mb-2">
                                             {{ $message }}
                                         </div>
                                     @enderror
-                                    <input type="text" id="FileName" name="FileName" value=""
+                                    <input type="text" id="DocumentName" name="DocumentName" value=""
                                         class="form-input w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                                        onfocus="document.getElementById('FileName_errorr')?.classList.add('hidden')">
+                                        onfocus="document.getElementById('DocumentName_errorr')?.classList.add('hidden')">
                                 </div>
 
                                 <div class="mb-3">
-                                    <label for="FileDesciption"
+                                    <label for="DocumentDesciption"
                                         class="text-default-800 text-sm font-medium inline-block mb-2">
                                         Mô tả file
                                     </label>
-                                    @error('FileDesciption', "create")
-                                        <div id="FileDesciption_errorr"
+                                    @error('DocumentDesciption', "create_file")
+                                        <div id="DocumentDesciption_errorr"
                                             class="flex items-center bg-red-100 text-red-700 text-sm px-4 mb-2">
                                             {{ $message }}
                                         </div>
                                     @enderror
-                                    <textarea id="FileDesciption" name="FileDesciption" class="form-input"
-                                        onfocus="document.getElementById('FileDesciption_errorr')?.classList.add('hidden')"></textarea>
+                                    <textarea id="DocumentDesciption" name="DocumentDesciption" class="form-input"
+                                        onfocus="document.getElementById('DocumentDesciption_errorr')?.classList.add('hidden')"></textarea>
                                 </div>
 
-                                <div class="mb-3" class = "p-4">
-                                    <label for="File" class="text-default-800 text-sm font-semibold mb-2 block">File
-                                        (PDF)</label>
-                                    @error('File', "create")
+                                <div class="mb-3" class="p-4">
+                                    <label for="File" class="text-default-800 text-sm font-semibold mb-2 block">File PDF(Tối
+                                        đa 2MB)</label>
+                                    @error('File', "create_file")
                                         <div id="File_errorr"
                                             class="flex items-center bg-red-100 text-red-700 text-sm px-4 mb-2">
                                             {{ $message }}
@@ -207,19 +211,55 @@
                                     </div>
                                 </div>
                             </div>
-                            <div id="url-fields" class="hidden">
+                            <!-- end phần lựa chọn thêm file -->
+
+                            <!-- lựa chọn url -->
+                            <div id="url-fields" class="hidden p-3">
                                 <div class="mb-3">
-                                    <label for="URL" class="text-gray-700 text-sm font-semibold mb-2 block">Nhập URL</label>
-                                    <input type="url" id="URL" name="URL"
-                                        class="form-input w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                                    <label for="URLName" class="text-gray-700 text-sm font-semibold mb-2 block">
+                                        Tên đường dẫn
+                                    </label>
+                                    @error('URLName', "create_url")
+                                        <div id="URLName_errorr"
+                                            class="flex items-center bg-red-100 text-red-700 text-sm px-4 mb-2">
+                                            {{ $message }}
+                                        </div>
+                                    @enderror
+                                    <input type="text" id="URLName" name="URLName" value=""
+                                        class="form-input w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                        onfocus="document.getElementById('URLName_errorr')?.classList.add('hidden')">
+                                </div>
+                                <div class="mb-3">
+                                    <label for="LinkURL" class="text-gray-700 text-sm font-semibold mb-2 block">Nhập
+                                        URL</label>
+                                    @error('LinkURL', "create_url")
+                                        <div id="LinkURL_errorr"
+                                            class="flex items-center bg-red-100 text-red-700 text-sm px-4 mb-2">
+                                            {{ $message }}
+                                        </div>
+                                    @enderror
+                                    <input type="url" id="LinkURL" name="LinkURL"
+                                        class="form-input w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                        onfocus="document.getElementById('LinkURL_errorr')?.classList.add('hidden')">
                                 </div>
 
+
                                 <div class="mb-3">
-                                    <label for="URLDescription" class="text-gray-700 text-sm font-semibold mb-2 block">Mô
-                                        tả</label>
-                                    <textarea id="URLDescription" name="URLDescription" class="form-input"></textarea>
+                                    <label for="DescriptionURL"
+                                        class="text-default-800 text-sm font-medium inline-block mb-2">
+                                        Mô tả đường dẫn
+                                    </label>
+                                    @error('DescriptionURL', "create_url")
+                                        <div id="DocumentDesciption_errorr"
+                                            class="flex items-center bg-red-100 text-red-700 text-sm px-4 mb-2">
+                                            {{ $message }}
+                                        </div>
+                                    @enderror
+                                    <textarea id="DescriptionURL" name="DescriptionURL" class="form-input"
+                                        onfocus="document.getElementById('DescriptionURL_errorr')?.classList.add('hidden')"></textarea>
                                 </div>
                             </div>
+                            <!-- end phần lựa chọn url -->
 
 
                             <div class="flex justify-end items-center gap-x-2 py-3 px-4 border-t border-default-200">
@@ -274,7 +314,7 @@
                                                 </div>
                                             @enderror
 
-                                            <input type="text" id="FileName" name="FileName" value="{{ $data->FileName }}"
+                                            <input type="text" id="FileName" name="DocumentName" value="{{ $data->FileName }}"
                                                 class="form-input w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
                                                 onfocus="document.getElementById('FileName_errorr')?.classList.add('hidden')">
                                         </div>
@@ -385,26 +425,51 @@
 @endsection
 
 @section("footer")
-  <script>
-    function toggleDataTypeFields() {
-        const selectedValue = document.getElementById('DataType').value;
+    <script>
+        function toggleDataTypeFields() {
+            const selectedValue = document.getElementById('DataType').value;
 
-        const fileCategoryID = "{{ $optionFile->CategoryID }}";
-        const fileFields = document.getElementById('file-fields');
-        const urlFields = document.getElementById('url-fields');
+            const fileCategoryID = "{{ $optionFile->CategoryID }}";
+            const fileFields = document.getElementById('file-fields');
+            const urlFields = document.getElementById('url-fields');
 
-        if (selectedValue === fileCategoryID) {
-            fileFields.classList.remove('hidden');
-            urlFields.classList.add('hidden');
-        } else {
-            fileFields.classList.add('hidden');
-            urlFields.classList.remove('hidden');
+            if (selectedValue === fileCategoryID) {
+                fileFields.classList.remove('hidden');
+                urlFields.classList.add('hidden');
+                document.getElementById("URLName").value = "";
+                document.getElementById("LinkURL").value = "";
+                document.getElementById("DescriptionURL").value = "";
+            } else {
+                document.getElementById("DocumentName").value = "";
+                document.getElementById("DocumentDesciption").value = "";
+                document.getElementById("file").value = "";
+                fileFields.classList.add('hidden');
+                urlFields.classList.remove('hidden');
+            }
         }
-    }
 
-    // Gọi khi load lần đầu
-    document.addEventListener('DOMContentLoaded', toggleDataTypeFields);
-</script>
+        document.addEventListener('DOMContentLoaded', () => {
+            toggleDataTypeFields();
+        });
+        @if($errors->create_file->any() || $errors->create_url->any())
+            window.addEventListener("load", function () {
+                setTimeout(function () {
+                    document.getElementById("open_modal_create").click();
+                    document.getElementById("DataType").value = "{{ old('DataType') }}";
+                    toggleDataTypeFields();
+                }, 300);
+            });
+        @endif
+
+        @if($errors->update->any())
+            window.addEventListener("load", function () {
+                setTimeout(function () {
+                    document.getElementById("open_modal_edit").click()
+                }, 300)
+            })
+
+        @endif
+    </script>
 
 
 @endsection
@@ -418,8 +483,8 @@
             })
         @endif
 
-        @if(session("create_fails"))
-            iziToast.success({
+        @if(session("create_fail"))
+            iziToast.warning({
                 message: "{{ session("create_fails") }}",
                 position: "topRight"
             })
@@ -431,7 +496,7 @@
             })
         @endif
         @if(session("update_fails"))
-            iziToast.success({
+            iziToast.warning({
                 message: "{{ session("update_fails") }}",
                 position: "topRight"
             })
@@ -451,22 +516,7 @@
         @endif
 
 
-        @if($errors->create->any())
-            window.addEventListener("load", function () {
-                setTimeout(function () {
-                    document.getElementById("open_modal_create").click()
-                }, 300)
-            })
-        @endif
 
-        @if($errors->update->any())
-            window.addEventListener("load", function () {
-                setTimeout(function () {
-                    document.getElementById("open_modal_edit").click()
-                }, 300)
-            })
-
-        @endif
 
         // document.getElementById("description_image").addEventListener("change", function (event) {
         //     const file = event.target.files[0];

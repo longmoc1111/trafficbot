@@ -3,7 +3,8 @@
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
-    "dev": "concurrently \"php --file=../artisan serve\" \"node crawler.js\""
+    "dev": "concurrently \"php --file=../artisan serve\" \"node crawler.js\"",
+    "build": "node crawler.js"
   },
   "keywords": [],
   "author": "",

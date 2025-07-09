@@ -2,59 +2,126 @@
 
 namespace App\Http\Controllers;
 
+use Exception;
 use Illuminate\Http\Request;
 use Http;
+use Storage;
 use Str;
 use Illuminate\Support\Facades\Session;
+use App\Models\ChatBot;
 class AIchatController extends Controller
 {
 
     public function sendMessage(Request $request)
     {
+        $dataURL = [];
+        // $Pdfs = Chatbot::whereHas("category_Chatbot", function($query){
+        //     $query->where("CategoryName", "PDF");
+        // })->get();
+        // foreach($Pdfs as $pdf){
+
+        // }
+        $Urls = ChatBot::whereHas("category_Chatbot", function ($query) {
+            $query->where("CategoryName", "URL");
+        })->get();
+        \Log::info("url", $dataURL);
         try {
             \Log::info('sendMessage payload:', $request->all());
-            $urls = [
-                "https://thuvienphapluat.vn/phap-luat/ho-tro-phap-luat/muc-xu-phat-vi-pham-giao-thong-xe-may-o-to-2025-cac-loi-thuong-gap-moi-nhat-theo-nghi-dinh-168-999966-197118.html",
-            ];
-
+            $content = '';
             $textFromWeb = '';
-            foreach ($urls as $urlToScrape) {
-                if (!filter_var($urlToScrape, FILTER_VALIDATE_URL)) {
-                    continue;
-                }
+            foreach ($Urls as $url) {
+                if ($url->Content == null) {
+                    $urlToGet = $url->LinkURL;
+                    $selector = $url->SelectorURL;
+                    if (!filter_var($urlToGet, FILTER_VALIDATE_URL)) {
+                        continue;
+                    }
 
-                $response = Http::get("http://localhost:3000/crawl", [
-                    'url' => $urlToScrape
-                ]);
-
-                if ($response->successful()) {
-                    $content = $response->json('content');
-                    \Log::info("Đã lấy nội dung từ $urlToScrape");
-                    $textFromWeb .= trim($content) . "\n\n";
-                } else {
-                    \Log::warning("Lỗi khi crawl $urlToScrape", [
-                        'response' => $response->body()
+                    $response = Http::get("http://localhost:3000/crawl", [
+                        'url' => $urlToGet,
+                        'selector' => $selector, // ✅ Gửi selector mong muốn
                     ]);
+
+                    if ($response->successful()) {
+                        $content = $response->json('content');
+                        \Log::info("✅ Đã lấy nội dung từ $urlToGet");
+                        $textFromWeb .= trim($content) . "\n\n";
+                        \Log::info("nội dung của văn bản" . $textFromWeb);
+                    } else {
+                        \Log::warning("❌ Lỗi khi crawl $urlToGet", [
+                            'response' => $response->body()
+                        ]);
+                    }
+                    if (empty($textFromWeb)) {
+                        return response()->json([
+                            'error' => 'Không thể lấy nội dung từ các URL đã cung cấp.'
+                        ], 500);
+                    }
+                    $ChatDocument = Chatbot::find($url->ChatbotID);
+                    $ChatDocument->update([
+                        "Content" => $textFromWeb,
+                    ]);
+                } else {
+                    $content = $url->Content;
                 }
             }
 
-            if (empty($textFromWeb)) {
-                return response()->json([
-                    'error' => 'Không thể lấy nội dung từ các URL đã cung cấp.'
-                ], 500);
-            }
+
 
             //Giới hạn độ dài
             $textFromWeb = \Str::limit($textFromWeb, 15000);
 
             // Chuẩn bị prompt
             $userMessage = $request->input('message', 'Giải thích nội dung.');
-            $prompt = "Bạn là trợ lý thân thiên .\n\n"
-                . "đây là phần thông tin được cung cấp hãy trả lời ngắn gọn và dễ hiểu:\n"
-                . "không cần nhắc lại việc đây là thông tin được cũng cấp... hãy trả lời như một con người:\n"
-                . "Hãy chào lại một cách thân thiện khi được chào:\n"
-                . $textFromWeb . "\n\n"
-                . "Câu hỏi: \"$userMessage\"";
+           $prompt = <<<PROMPT
+            Bạn là trafficbot một trợ lý ảo thân thiện, được tích hợp trên website cung cấp thông tin về **Luật Giao thông Đường bộ Việt Nam**.
+
+            **Nhiệm vụ của bạn**:
+            - Giải thích luật rõ ràng, chính xác, dễ hiểu cho người dân.
+            - Trả lời ngắn gọn, đúng trọng tâm, tránh lặp lại nội dung nguồn.
+
+            **Hướng dẫn trả lời**:
+
+            1. Nếu người dùng chào (ví dụ: "Chào bạn", "Hi", "Có ai không"):
+            → Chỉ cần chào lại ngắn gọn, **duy nhất 1 lần đầu tiên**, ví dụ:
+            → *"Chào bạn 👋 Mình có thể giúp gì về luật giao thông hôm nay?"*
+            → *"Chào bạn, Mình có thể hổ trợ gì cho bạn"*
+            → hay thay đổi liên tục các câu chào k nhất thiết phải theo mẫu ví dụ trên.
+
+            2. Nếu người dùng hỏi thẳng về luật:
+            → Bỏ qua phần chào, **đi thẳng vào trả lời**.
+
+            3. Trả lời ngắn gọn, rõ ràng:
+            - Dùng gạch đầu dòng nếu cần chia ý.
+            - Hạn chế lặp lại toàn bộ văn bản luật.
+            - Không cần dẫn lại nguồn, không dùng “dưới đây là…” hay “theo bạn cung cấp…”.
+
+            4. Nếu câu hỏi liên quan đến **xử phạt, điểm bằng lái**:
+            - Ghi rõ mức phạt theo từng loại phương tiện.
+            - Nếu có mức phạt cao hơn khi gây tai nạn, cần phân biệt rõ.
+
+            5. Không phán xét người dùng:
+            - Không nói “Bạn đã vi phạm”, thay vào đó: “Hành vi này bị xem là vi phạm theo quy định hiện hành…”
+            
+            6. khi người dùng cảm ơn hay nhưng câu kết thúc cuộc hội thoại (ví dụ như: ok, được, tốt...) hãy phản hồi một cách thân thiện. 
+            ---
+
+            **Thông tin văn bản pháp lý từ hệ thống:**
+            $textFromWeb
+
+            **Nguồn nội dung bổ sung (nếu có):**
+            $content
+
+            ---
+
+             **Câu hỏi của người dùng**: "$userMessage"
+
+            ---
+
+            ✍️ Hãy trả lời như một chuyên gia luật giao thông, **trực tiếp – dễ hiểu – đúng trọng tâm**:
+            PROMPT;
+
+
 
             //Gọi Gemini API
             $apiKey = env('GEMINI_API_KEY');
@@ -87,11 +154,18 @@ class AIchatController extends Controller
             //Trả kết quả về
             $data = $geminiResponse->json();
             $reply = data_get($data, 'candidates.0.content.parts.0.text', 'Không có phản hồi.');
+
             $history = Session::get('chat_history', []);
             $history[] = [
-                'user_message' => $userMessage,
-                'ai_reply' => $reply,
+                'user' => $userMessage,
+                'model' => $reply,
             ];
+
+            // Giới hạn tối đa 50 đoạn hội thoại
+            if (count($history) > 50) {
+                $history = array_slice($history, -50);
+            }
+
             session()->put('chat_history', $history);
             \Log::info("Full chat history", $history);
             return response()->json(['reply' => $reply]);
@@ -104,6 +178,22 @@ class AIchatController extends Controller
                 'error' => 'Lỗi nội bộ server.',
                 'message' => $e->getMessage(),
             ], 500);
+        }
+    }
+    private function Pdfcontent($fileName){
+        $filePath = "filePDF/".$fileName;
+        if(!Storage::disk("public")->exists($filePath)){
+            \Log::warning("File PDF không tồn tại");
+            return null;
+        }
+        try{
+            $binary = Storage::disk("public")->get($filePath);
+            return [
+                "data" => base64_encode($binary),
+            ];      
+        }catch(Exception $e){
+            \Log::error("lỗi khi đọc PDF",["message"=>$e->getMessage()]);
+            return null;
         }
     }
 }
