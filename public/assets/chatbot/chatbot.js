@@ -5,8 +5,6 @@ const fileInput = document.querySelector("#file-input");
 const chatbotToggler = document.querySelector("#chatbot-toggler");
 const closeChatbot = document.querySelector("#close-chatbot");
 
- 
-
 //tạo 1 đối tượng để lưu tin nhắn
 const userData = {
     message: null,
@@ -18,10 +16,9 @@ const userData = {
     signages: null,
 };
 let chat;
- 
+
 const generateBotResponse = async (commingMessageDiv) => {
     const messageElement = commingMessageDiv.querySelector(".message-text");
- 
 
     // Lấy file PDF và biển báo từ frontend (nếu có)
     // const pdfPaths = window.pdfs.map(
@@ -56,27 +53,16 @@ const generateBotResponse = async (commingMessageDiv) => {
         });
 
         const data = await result.json();
-        console.log(data)
-        const apiResponse = data.reply || data.error || "Không có phản hồi.";
         console.log(data);
-        // Hiển thị nội dung trả về
-        messageElement.innerText = ""; // Xoá nội dung cũ
 
-        const lines = apiResponse
-            .split(/\n|\*/)
-            .map((line) => line.trim())
-            .filter((line) => line);
+        const apiResponse = data.reply || data.error || "Không có phản hồi.";
 
-       for (const line of lines) {
-    const trimmedLine = line.trim();
-    if (trimmedLine) {
-        messageElement.insertAdjacentHTML(
-            "beforeend",
-            `<div class="model"><p>${trimmedLine}</p></div>`
-        );
-    }
-}
-
+        let formatted = apiResponse
+            .replace(/\*\*(.*?)\*\*/g, "<strong>$1</strong>")
+            .split("\n\n")
+            .map((paragraph) => `<p>${paragraph.replace(/\n/g, "<br>")}</p>`)
+            .join("");
+        messageElement.innerHTML = `<div class="model">${formatted}</div>`;
     } catch (error) {
         console.error("Lỗi khi gửi yêu cầu:", error);
         messageElement.innerText = "Không thể gửi phản hồi ngay lúc này!";
@@ -86,7 +72,6 @@ const generateBotResponse = async (commingMessageDiv) => {
         chatBody.scroll({ top: chatBody.scrollHeight, behavior: "smooth" });
     }
 };
-
 
 // tạo hàm thành phần tin nhắn bên trong là content và class
 const createMessageElemnt = (content, ...classes) => {
@@ -155,40 +140,6 @@ messageInput.addEventListener("keydown", (e) => {
     }
 });
 
-// const loadPdfFile = async (pdfPath) => {
-//     try {
-//         const response = await fetch(pdfPath);
-//         const blob = await response.blob();
-
-//         return await new Promise((resolve, reject) => {
-//             const reader = new FileReader();
-//             reader.onloadend = () => resolve(reader.result.split(",")[1]); // Lấy phần base64
-//             reader.onerror = reject;
-//             reader.readAsDataURL(blob);
-//         });
-//     } catch (error) {
-//         console.error("Failed to load PDF:", pdfPath, error);
-//     }
-// };
-
-// fileInput.addEventListener("change", () => {
-//   const file = fileInput.files[0];
-//   if (!file) {
-//     return;
-//   }
-//   const reader = new FileReader();
-//   reader.onload = (e) => {
-//     const base64 = e.target.result.split(",")[1];
-
-//     userData.file = {
-//       data: base64,
-//       mime_type: file.type,
-//     };
-//   };
-//   console.log(userData.file);
-//   fileInput.value = "";
-//   reader.readAsDataURL(file);
-// });
 
 const picker = new EmojiMart.Picker({
     theme: "light",

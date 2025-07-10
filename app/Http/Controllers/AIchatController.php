@@ -17,7 +17,7 @@ class AIchatController extends Controller
     public function sendMessage(Request $request)
     {
         $dataURL = [];
-        $dataPDF = [];
+        $chatHistory = [];
         $pdfContent = "";
         $Pdfs = Chatbot::whereHas("category_Chatbot", function ($query) {
             $query->where("CategoryName", "PDF");
@@ -155,6 +155,27 @@ class AIchatController extends Controller
             ✍️ Hãy trả lời như một chuyên gia luật giao thông, **trực tiếp – dễ hiểu – đúng trọng tâm**:
             PROMPT;
 
+             foreach(Session::get("chat_history", []) as $item){
+                $chatHistory[] = [
+                    "role" => "user",
+                    "parts" => [["text" => $item["user"]]]
+                ];
+                $chatHistory[] = [
+                    "role" => "model",
+                    "parts" => [["text" => $item["model"]]]
+                ];
+            }
+
+            //chuan bị noi dung
+
+            $contents = array_merge($chatHistory,[
+                [
+                    "role" => "user",
+                    "parts" => [
+                        ["text" => $prompt],
+                    ]
+                ]
+            ]);
 
 
             //Gọi Gemini API
@@ -165,13 +186,7 @@ class AIchatController extends Controller
                 'Content-Type' => 'application/json',
                 'X-goog-api-key' => $apiKey,
             ])->post($url, [
-                        'contents' => [
-                            [
-                                'parts' => [
-                                    ['text' => $prompt],
-                                ],
-                            ],
-                        ],
+                        'contents' => $contents,
                     ]);
 
             if (!$geminiResponse->successful()) {
@@ -194,7 +209,7 @@ class AIchatController extends Controller
                 'user' => $userMessage,
                 'model' => $reply,
             ];
-
+           
             // Giới hạn tối đa 50 đoạn hội thoại
             if (count($history) > 50) {
                 $history = array_slice($history, -50);
