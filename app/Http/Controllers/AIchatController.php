@@ -37,7 +37,7 @@ class AIchatController extends Controller
                         continue;
                     }
 
-                    $response = Http::get("http://localhost:3000/crawl", [
+                    $response = Http::get("https://node-crawler-gw8b.onrender.com/scrape", [
                         'url' => $urlToGet,
                         'selector' => $selector,
                     ]);

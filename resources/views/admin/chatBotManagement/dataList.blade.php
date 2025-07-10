@@ -8,12 +8,12 @@
             <h4 class="text-default-900 text-lg font-medium mb-2">Quản lý dữ liệu chatbot</h4>
 
             <!-- <div class="md:flex hidden items-center gap-3 text-sm font-semibold">
-                                                                                        <a href="#" class="text-sm font-medium text-default-700">OpenDash</a>
-                                                                                        <i class="material-symbols-rounded text-xl flex-shrink-0 text-default-500">chevron_right</i>
-                                                                                        <a href="#" class="text-sm font-medium text-default-700">Tables</a>
-                                                                                        <i class="material-symbols-rounded text-xl flex-shrink-0 text-default-500">chevron_right</i>
-                                                                                        <a href="#" class="text-sm font-medium text-default-700" aria-current="page">Basic Tables</a>
-                                                                                    </div> -->
+                                                                                                <a href="#" class="text-sm font-medium text-default-700">OpenDash</a>
+                                                                                                <i class="material-symbols-rounded text-xl flex-shrink-0 text-default-500">chevron_right</i>
+                                                                                                <a href="#" class="text-sm font-medium text-default-700">Tables</a>
+                                                                                                <i class="material-symbols-rounded text-xl flex-shrink-0 text-default-500">chevron_right</i>
+                                                                                                <a href="#" class="text-sm font-medium text-default-700" aria-current="page">Basic Tables</a>
+                                                                                            </div> -->
         </div>
         <!-- Page Title End -->
 
@@ -34,9 +34,9 @@
 
                     </div>
                     <!-- <a href="{{ route("admintrafficbot.question.create") }}"
-                                                                                                                                                    class="btn bg-primary/25 text-primary hover:bg-primary hover:text-white">
-                                                                                                                                                    Thêm câu hỏi
-                                                                                                                                                </a> -->
+                                                                                                                                                            class="btn bg-primary/25 text-primary hover:bg-primary hover:text-white">
+                                                                                                                                                            Thêm câu hỏi
+                                                                                                                                                        </a> -->
 
                 </div>
                 <div>
@@ -154,12 +154,16 @@
                                     Chọn loại dữ liệu
                                 </label>
                                 <select id="DataType" name="DataType" class="form-select" onchange="toggleDataTypeFields()">
-                                    <option value="{{ $optionFile->CategoryID }}" {{ old('DataType') == $optionFile->CategoryID ? 'selected' : '' }}>
-                                        {{ $optionFile->CategoryName }}
-                                    </option>
-                                    <option value="{{ $optionURL->CategoryID }}" {{ old('DataType') == $optionURL->CategoryID ? 'selected' : '' }}>
-                                        {{ $optionURL->CategoryName }}
-                                    </option>
+                                    @if($optionFile->CategoryID == null && $optionURL->CategoryID == null)
+                                        <option value="">chưa tồn tại</option>
+                                    @else
+                                        <option value="{{ $optionFile->CategoryID }}" {{ old('DataType') == $optionFile->CategoryID ? 'selected' : '' }}>
+                                            {{ $optionFile->CategoryName }}
+                                        </option>
+                                        <option value="{{ $optionURL->CategoryID }}" {{ old('DataType') == $optionURL->CategoryID ? 'selected' : '' }}>
+                                            {{ $optionURL->CategoryName }}
+                                        </option>
+                                    @endif
                                 </select>
                             </div>
                             <!-- lựa chon thêm file -->
@@ -242,8 +246,9 @@
                                         class="form-input w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
                                         onfocus="document.getElementById('LinkURL_errorr')?.classList.add('hidden')">
                                 </div>
-                                    <div class="mb-3">
-                                    <label for="selectorURL" class="text-gray-700 text-sm font-semibold mb-2 block">Vị trí cần lấy dữ liệu(class hoặc ID)</label>
+                                <div class="mb-3">
+                                    <label for="selectorURL" class="text-gray-700 text-sm font-semibold mb-2 block">Vị trí
+                                        cần lấy dữ liệu(class hoặc ID)</label>
                                     @error('selectorURL', "create_url")
                                         <div id="selectorURL_errorr"
                                             class="flex items-center bg-red-100 text-red-700 text-sm px-4 mb-2">
