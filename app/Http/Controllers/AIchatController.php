@@ -5,22 +5,23 @@ namespace App\Http\Controllers;
 use Exception;
 use Illuminate\Http\Request;
 use Http;
+use Laravel\Pail\ValueObjects\Origin\Console;
 use Storage;
 use Str;
 use Illuminate\Support\Facades\Session;
 use App\Models\ChatBot;
+use Smalot\PdfParser\Parser;
 class AIchatController extends Controller
 {
 
     public function sendMessage(Request $request)
     {
         $dataURL = [];
-        // $Pdfs = Chatbot::whereHas("category_Chatbot", function($query){
-        //     $query->where("CategoryName", "PDF");
-        // })->get();
-        // foreach($Pdfs as $pdf){
-
-        // }
+        $dataPDF = [];
+        $pdfContent = "";
+        $Pdfs = Chatbot::whereHas("category_Chatbot", function ($query) {
+            $query->where("CategoryName", "PDF");
+        })->get();
         $Urls = ChatBot::whereHas("category_Chatbot", function ($query) {
             $query->where("CategoryName", "URL");
         })->get();
@@ -65,15 +66,23 @@ class AIchatController extends Controller
                     $content = $url->Content;
                 }
             }
+            foreach ($Pdfs as $pdf) {
+                $pdfName = $pdf->DocumentName;
+                $pdfcontent = $this->Pdfcontent($pdf->File);
+                if ($pdfcontent) {
+                    $pdfContent .= "**{$pdfName}**:\n" . trim($pdfcontent["data"]) . "\n\n";
+                    \Log::info("Dương dan file:". $pdfContent);
+                } else {
+                    \Log::warning("Không tồn tại file PDF:", ["file" => $pdfName]);
+                }
 
-
-
+            }
             //Giới hạn độ dài
             $textFromWeb = \Str::limit($textFromWeb, 15000);
 
             // Chuẩn bị prompt
             $userMessage = $request->input('message', 'Giải thích nội dung.');
-           $prompt = <<<PROMPT
+            $prompt = <<<PROMPT
             Bạn là trafficbot một trợ lý ảo thân thiện, được tích hợp trên website cung cấp thông tin về **Luật Giao thông Đường bộ Việt Nam**.
 
             **Nhiệm vụ của bạn**:
@@ -82,11 +91,10 @@ class AIchatController extends Controller
 
             **Hướng dẫn trả lời**:
 
-            1. Nếu người dùng chào (ví dụ: "Chào bạn", "Hi", "Có ai không"):
-            → Chỉ cần chào lại ngắn gọn, **duy nhất 1 lần đầu tiên**, ví dụ:
-            → *"Chào bạn 👋 Mình có thể giúp gì về luật giao thông hôm nay?"*
-            → *"Chào bạn, Mình có thể hổ trợ gì cho bạn"*
-            → hay thay đổi liên tục các câu chào k nhất thiết phải theo mẫu ví dụ trên.
+            1. Khi người dùng gửi lời chào (ví dụ: "Chào bạn", "Hi", "Có ai không"):
+            → Chỉ cần chào lại ngắn gọn, **duy nhất 1 lần đầu tiên**,
+            -  khi người dùng đi thằng vào câu hỏi không liên quan đến việc chào hỏi 
+            → hãy chào một cách ngắn gọn nhất và đi thẳng vào vấn đề câu hỏi
 
             2. Nếu người dùng hỏi thẳng về luật:
             → Bỏ qua phần chào, **đi thẳng vào trả lời**.
@@ -103,11 +111,37 @@ class AIchatController extends Controller
             5. Không phán xét người dùng:
             - Không nói “Bạn đã vi phạm”, thay vào đó: “Hành vi này bị xem là vi phạm theo quy định hiện hành…”
             
-            6. khi người dùng cảm ơn hay nhưng câu kết thúc cuộc hội thoại (ví dụ như: ok, được, tốt...) hãy phản hồi một cách thân thiện. 
+            6. Khi người dùng cảm ơn hay nói những câu kết thúc cuộc hội thoại (ví dụ: "ok", "được", "tốt", "cảm ơn", "tạm biệt", "bye", "thế nhé"...), hãy phản hồi một cách thân thiện và gần gũi, dưới đây là một số ví dụ và hãy thay theo ngữ cảnh:
+
+            → *"Cảm ơn bạn đã trò chuyện! Chúc bạn lái xe an toàn nhé 🚗💨"*
+
+            → *"Rất vui được hỗ trợ bạn. Hẹn gặp lại! 👋"*
+
+            → *"OK, nếu cần hỗ trợ thêm, cứ nhắn mình nhé!"*
+
+            → *"Tạm biệt nhé, mình luôn sẵn sàng nếu bạn cần!"*
+
+            → *"Chúc bạn một ngày tốt lành! Có thắc mắc gì cứ quay lại hỏi nhé 😊"*
+
             ---
 
-            **Thông tin văn bản pháp lý từ hệ thống:**
+
+            7. trả lời các câu  hỏi liên quan đến mẹo ôn thi giấy phép
+            - Chỉ chia sẻ **một phần các mẹo thông dụng**, gợi ý người học nên đọc luật kỹ để hiểu rõ.
+            - Nếu có thể, chia nội dung bằng các dấu gạch đầu dòng để người đọc dễ nhớ.
+            - chia sẽ 3 đến 4 mẹo và nếu người dùng muốn biết thêm thì hãy cho người dùng biết.
+            ---
+            **Lưu ý trong prompt**:
+            - Không dùng từ như "chọn luôn" một cách cứng nhắc.
+            - Không liệt kê hết tất cả các mẹo để tránh dài và khô cứng.
+            - Nên khuyến khích người học đọc luật.
+
+
+            **các nguồn thông tin từ hệ thống:**
             $textFromWeb
+            
+            **Nguồn thông tin từ PDF**
+            $pdfContent
 
             **Nguồn nội dung bổ sung (nếu có):**
             $content
@@ -180,19 +214,23 @@ class AIchatController extends Controller
             ], 500);
         }
     }
-    private function Pdfcontent($fileName){
-        $filePath = "filePDF/".$fileName;
-        if(!Storage::disk("public")->exists($filePath)){
+    private function Pdfcontent($fileName)
+    {
+        \Log::info("tên file: " . $fileName);
+        if (!Storage::disk("public")->exists("filePDF/".$fileName)) {
             \Log::warning("File PDF không tồn tại");
             return null;
         }
-        try{
-            $binary = Storage::disk("public")->get($filePath);
+        try {
+            $filePath = storage_path("app/public/filePDF/".$fileName);
+            $parser = new Parser();
+            $pdf = $parser->parseFile($filePath);
+            $content = $pdf->getText();
             return [
-                "data" => base64_encode($binary),
-            ];      
-        }catch(Exception $e){
-            \Log::error("lỗi khi đọc PDF",["message"=>$e->getMessage()]);
+                "data" => $content,
+            ];
+        } catch (Exception $e) {
+            \Log::error("lỗi khi đọc PDF", ["message" => $e->getMessage()]);
             return null;
         }
     }
