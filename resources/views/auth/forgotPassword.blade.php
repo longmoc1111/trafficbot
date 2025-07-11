@@ -1,10 +1,6 @@
 @extends("auth.layout.authPageLayout");
-@section("title", "forgot_password")
+@section("title", "Quên mật khẩu")
 @section("main")
-
-	<style>
-	
-	</style>
 
 	<body>
 		<section class="fxt-template-animation fxt-template-layout11">

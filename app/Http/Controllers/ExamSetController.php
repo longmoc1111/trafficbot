@@ -40,7 +40,7 @@ class ExamSetController extends Controller
             $query->where("license_types.LicenseTypeID", $currenlicenseID);
         })->get();
         $License = LicenseType::get();
-        return view("admin.examSetManagement.createExamSet", compact("currenlicenseID" ,"listLicense","License", "listExamset"));
+        return view("admin.examSetManagement.createExamSet", compact("currenlicenseID", "listLicense", "License", "listExamset"));
     }
     public function storeExamSet(Request $request)
     {
@@ -71,7 +71,7 @@ class ExamSetController extends Controller
             $newExamSet = ExamSet::find($examSetID);
             if ($newExamSet) {
                 $newExamSet->licenseType_ExamSet()->attach($licenseTypeID);
-                return redirect()->route("admintrafficbot.examset",["choose_License" => $licenseTypeID])->with("Thêm mới bộ đề thành công !");
+                return redirect()->route("admintrafficbot.examset", ["choose_License" => $licenseTypeID])->with("Thêm mới bộ đề thành công !");
             } else {
                 return back()->with("err_examset_not_found", "Bộ đề bạn chọn không tồn tại !");
             }

@@ -62,6 +62,13 @@ class AuthController extends Controller
     }
     public function registerPost(Request $request)
     {
+        $oldUser = User::where("email", $request->email)->first();
+        if($oldUser && $oldUser->status != "active"){
+            $hours = $oldUser->created_at->diffInHours(now());
+            if($hours > 24){
+                $oldUser->delete(); 
+            }
+        }
         $validate = $request->validate(
             [
                 "name" => "required",
@@ -93,7 +100,7 @@ class AuthController extends Controller
         ]);
         Mail::to($user->email)->send(new ActivationMail($token, $user));
         if ($user) {
-            return redirect()->route("login")->with("register_success", "Tạo tài khoản thành công!<br>kiểm tra email để kích họat tài khoản của bạn !");
+            return redirect()->route("login")->with("register_success", "Tạo tài khoản thành công<br>kiểm tra email để kích họat tài khoản của bạn !");
         } else {
             return back()->with("register_fail", "Tạo tài khoản thất bại, vui lòng thử lại !");
         }
@@ -101,6 +108,7 @@ class AuthController extends Controller
 
     public function activateMail($token)
     {
+        
         $user = User::where("activation_token", $token)->first();
         if ($user) {
             $user->status = "active";

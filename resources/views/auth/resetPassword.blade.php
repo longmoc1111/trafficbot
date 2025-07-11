@@ -1,6 +1,6 @@
 
 @extends("auth.layout.authPageLayout");
-@section("title","forgot_password")
+@section("title","Đặt lại mật khẩu")
 
 @section("main")
 <body>

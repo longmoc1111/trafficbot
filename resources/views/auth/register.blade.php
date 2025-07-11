@@ -1,6 +1,6 @@
 
 @extends("auth.layout.authPageLayout");
-@section("title","Register")
+@section("title","Đăng ký")
 
 @section("main")
 <body>

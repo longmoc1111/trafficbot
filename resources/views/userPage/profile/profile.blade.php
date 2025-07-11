@@ -146,6 +146,11 @@
     .custom-sidebar {
         margin-bottom: 20px;
     }
+    #gender-chart {
+    width: 100% !important;
+    height: auto !important;
+    max-width: 100%;
+}
 }
 
 </style>

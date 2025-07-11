@@ -1,8 +1,6 @@
 <!DOCTYPE html>
 
-<body lang="en">
-
-    <head>
+<head>
         <meta charset="utf-8">
         <title>@yield("title")</title>
         <meta content="width=device-width, initial-scale=1.0" name="viewport">
@@ -10,7 +8,7 @@
         <meta content="" name="description">
         <meta name="csrf-token" content="{{ csrf_token() }}">
         <!-- Favicon -->
-        <link href="img/favicon.ico" rel="icon">
+        <link rel="icon" href="{{ asset('assets/logo/icon.png') }}" type="image/png">
 
         <!-- Google Web Fonts -->
         <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -38,6 +36,9 @@
         <!-- Template Stylesheet -->
         <link href="/assets/userPage/css/style.css" rel="stylesheet">
     </head>
+<body lang="en">
+
+    
     <style>
         /* Hiệu ứng fade cho dropdown */
         .animated.fadeIn {

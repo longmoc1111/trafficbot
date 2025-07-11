@@ -9,7 +9,7 @@
     <meta content="MyraStudio" name="author">
 
     <!-- App favicon -->
-    <link rel="shortcut icon" href="assets/images/favicon.ico">
+     <link rel="icon" href="{{ asset('assets/logo/icon.png') }}" type="image/png">
 
     <!-- Icons css  (Mandatory in All Pages) -->
     <link href="/assets/adminPage/css/icons.min.css" rel="stylesheet" type="text/css">

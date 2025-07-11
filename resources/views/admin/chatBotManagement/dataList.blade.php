@@ -23,13 +23,13 @@
                     <div class="flex gap-2">
                         <div>
                             <select name="" class="form-select" id="example-select">
-                                <option value="chưa có giấy phép">chưa có giấy phép</option>
+                                <option value="chưa có giấy phép">update later</option>
                             </select>
                         </div>
 
                         <button id="open_modal_create" data-hs-overlay="#modal-create" data-fc-placement="bottom"
                             class="btn bg-primary/25 text-primary hover:bg-primary hover:text-white">
-                            Thêm file
+                            Tạo
                         </button>
 
                     </div>
@@ -49,10 +49,10 @@
                                             <th scope="col" class="px-6 py-3 text-start text-sm text-default-500">
                                                 Tên file</th>
                                             <th scope="col" class="px-6 py-3 text-start text-sm text-default-500">
-                                                Mô tả
+                                                Loại dữ liệu
                                             </th>
                                             <th scope="col" class="px-6 py-3 text-start text-sm text-default-500">
-                                                File
+                                                Mô tả
                                             </th>
                                             <th scope="col" class="px-6 py-3 text-end text-sm text-default-500">
                                                 Action</th>
@@ -62,15 +62,21 @@
                                         @if(!empty($dataList))
                                             @foreach($dataList as $data)
                                                 <tr>
-                                                    <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-default-800">
-                                                        {{ $data->FileName }}
+                                                    <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-default-800"
+                                                    style="white-space: normal; word-wrap: break-word; max-width: 300px;">
+                                                        {{ $data->DocumentName }}
                                                     </td>
-                                                    <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-default-800">
-                                                        {{ $data->FileDesciption}}
+                                                     <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-default-800"
+                                                    style="white-space: normal; word-wrap: break-word; max-width: 300px;">
+                                                        {{ $data->category_Chatbot->CategoryName}}
 
                                                     </td>
-                                                    <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-default-800">
-                                                        {{ $data->File}}
+                                                    <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-default-800"
+                                                    style="white-space: normal; word-wrap: break-word; max-width: 300px;">
+                                                        {{ $data->DocumentDesciption}}
+
+                                                    </td>
+                                        
 
                                                     <td
                                                         class="px-6 py-4 whitespace-nowrap text-end text-sm font-medium flex justify-end gap-x-2">
@@ -397,7 +403,7 @@
                             <div class="flex flex-col border border-default-200 shadow-sm rounded-lg  pointer-events-auto">
                                 <div class="flex justify-between items-center py-3 px-4 border-b border-default-200">
                                     <h3 class="text-lg font-medium text-default-900">
-                                        xóa bộ đề
+                                        xóa dữ liệu
                                     </h3>
                                     <button type="button" class="text-default-600 cursor-pointer"
                                         data-hs-overlay="#modal_delete_{{ $data->ChatbotID }}">
@@ -406,8 +412,7 @@
                                 </div>
                                 <div class="p-4 overflow-y-auto">
                                     <p class="mt-1 text-default-600">
-                                        Việc xóa sẽ gây ảnh hưởng đến các giấy phép khác,
-                                        bạn có chắc muốn xóa bộ đề này ?
+                                        bạn có chắc muốn xóa dữ liệu này đề này ?
                                     </p>
                                 </div>
                                 <div class="flex justify-end items-center gap-x-2 py-3 px-4 border-t border-default-200">
@@ -423,7 +428,7 @@
                                         @method("DELETE")
                                         <button type="submit"
                                             class="py-2 px-5 inline-flex items-center justify-center font-medium tracking-wide border align-middle duration-500 text-sm text-center bg-primary hover:bg-primary-700 border-primary hover:border-primary-700 text-white rounded-md">
-                                            Đồng ý
+                                            Xác nhận
                                         </button>
                                     </form>
                                 </div>

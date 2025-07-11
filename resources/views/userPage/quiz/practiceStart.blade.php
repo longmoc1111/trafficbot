@@ -310,7 +310,7 @@
                         </div>
                            <button class="btn btn-primary mt-3 w-100" data-bs-toggle="modal" data-bs-target="#endtestModal"
                             id="end-test">Nộp bài</button>
-                        <button class="btn btn-primary mt-3 w-100" hidden id="preview">Xem kết quả</button>
+                            <button class="btn btn-primary mt-3 w-100" hidden id="preview">Xem kết quả</button>
                     </div>
                  
 
@@ -321,14 +321,14 @@
                     <div class="service-text rounded p-3">
                         @foreach($questions as $index => $question)
                             @php
-    $answers = [];
-    foreach ($question->answer_Question as $answer) {
-        $key = strtoupper($answer->AnswerLabel);
-        if (in_array($key, haystack: ["A", "B", "C", "D"])) {
-            $answers[$key . '_ID'] = $answer->AnswerID;
-            $answers[$key . '_NAME'] = $answer->AnswerName;
-        }
-    }
+                                $answers = [];
+                                foreach ($question->answer_Question as $answer) {
+                                    $key = strtoupper($answer->AnswerLabel);
+                                    if (in_array($key, haystack: ["A", "B", "C", "D"])) {
+                                        $answers[$key . '_ID'] = $answer->AnswerID;
+                                        $answers[$key . '_NAME'] = $answer->AnswerName;
+                                    }
+                                }
                             @endphp
                             <div class="question-block"
                                 style="display: none; min-height: 350px; max-height: 600px; overflow-y: auto;  "
@@ -428,7 +428,7 @@
 
                     <!-- Nút X góc trên bên phải -->
                     <button type="button" class="btn-close position-absolute top-0 end-0 m-3" data-bs-dismiss="modal"
-                        aria-label="Close"></button>
+                        aria-label="Close"> <i class="bi bi-x fs-4"></i></button>
 
                     <h3 class="text-center mb-3 text-primary"><strong>Kết quả thi</strong></h3>
                     <hr>
