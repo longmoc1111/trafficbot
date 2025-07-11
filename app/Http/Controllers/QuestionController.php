@@ -56,14 +56,15 @@ class QuestionController extends Controller
 
         $licenseTypes = $request->input('licenseTypes', []);
         $criticalTypes = $request->input('criticalTypes', []);
-
+        //tạo 1 mãng trung gian để gán giá trị vào bảng trung gian giữa question và licensetype
         $syncData = [];
         foreach ($licenseTypes as $licenseId) {
             $syncData[$licenseId] = [
                 'IsCritical' => in_array($licenseId, $criticalTypes),
             ];
         }
-
+        // dd($criticalTypes);
+        //phần validate dữ liệu
         $validateData = $request->validate(
             [
                 "QuestionName" => "required",
@@ -75,7 +76,7 @@ class QuestionController extends Controller
                 "QuestionExplain.required" => "Không được để trống!",
             ]
         );
-        $answers = $request->get('Answers');
+        $answers = $request->input('Answers', []);
         $isCorrectIndex = $request->get('IsCorrectIndex');
         if (is_null($isCorrectIndex)) {
             return back()->with("iscorrect_null", "bạn chưa chọn đáp án đúng cho câu hỏi!");
@@ -103,14 +104,11 @@ class QuestionController extends Controller
         $question = Question::create([
             "QuestionName" => $validateData["QuestionName"],
             "QuestionExplain" => $validateData["QuestionExplain"],
-
             "CategoryID" => $validateData["CategoryID"],
             "ImageDescription" => $validateData["ImageDescription"] ?? null,
 
         ]);
-
-        $licenseType = (array) $request->get("LicenseTypeID");
-        if (isset($licenseType)) {
+        if (!empty($syncData)) {
             $question->licenseType_Question()->sync($syncData);
         }
 
@@ -128,7 +126,6 @@ class QuestionController extends Controller
             ]);
         }
         return redirect()->route("admintrafficbot.question")->with("add_question", "thêm câu hỏi mới thành công !");
-
 
     }
     public function deleteQuestion(string $id)
@@ -169,6 +166,7 @@ class QuestionController extends Controller
         $answers = $question->answer_Question()->get()->keyBy("AnswerLabel");
         foreach ($answers as $index => $answer) {
             $arrAnswers[] = [
+                "AnswerID" => $answer->AnswerID,
                 "AnswerName" => $answer->AnswerName,
                 "AnswerLabel" => $answer->AnswerLabel,
                 "IsCorrect" => $answer->IsCorrect
@@ -178,14 +176,14 @@ class QuestionController extends Controller
     }
     public function updateQuestion(string $id, Request $request)
     {
+         
         $licenseTypes = $request->input("licenseTypes", []);
         $critical = $request->input("criticalTypes", []);
-        $answerRequest = $request->get("Answers");
-        $isCorrectIndex = $request->get("IsCorrectIndex");
+        $answerIDs = $request->input("AnswerIDs", []);
+        $answerRequest = $request->get(key: "Answers");
+        $isCorrectIndex = $request->get("IsCorrectIndex") ?? null;
         $dataSync = [];
-        foreach ($licenseTypes as $licenseTypeID) {
-            $dataSync[$licenseTypeID] = ["Iscritical" => in_array($licenseTypeID, $critical)];
-        }
+
         $validateData = $request->validate(
             [
                 "QuestionName" => "required",
@@ -200,22 +198,17 @@ class QuestionController extends Controller
         $AnswerFilter = array_filter($answerRequest, function ($value) {
             return !is_null($value) && trim($value) !== '';
         });
-
         if (empty($AnswerFilter)) {
             return back()->with("answer_null", "Hãy tạo ít nhất 1 câu trả lời!");
         }
         if (is_null($isCorrectIndex)) {
             return back()->with("iscorrect_null", "bạn chưa chọn đáp án đúng cho câu hỏi!");
         }
-
-        foreach ($AnswerFilter as $index => $answer) {
-            $Answers[] = [
-                "Answers" => $answer,
-                "IsCorrect" => ($isCorrectIndex != null && intval($isCorrectIndex) === $index)
-            ];
+        foreach ($licenseTypes as $licenseTypeID) {
+            $dataSync[$licenseTypeID] = ["Iscritical" => in_array($licenseTypeID, $critical)];
         }
-        $labels = ["A", "B", "C", "D"];
-        $labelForQS = array_slice($labels, 0, count($Answers));
+
+
         $question = Question::find($id);
         if (!$question) {
             return back()->with("err_id", "Không tìm thấy câu hỏi cần cập nhật !");
@@ -243,24 +236,38 @@ class QuestionController extends Controller
         if ($question) {
             $question->licenseType_Question()->sync($dataSync);
         }
-        $answer = $question->answer_Question()->get()->keyBy("AnswerLabel");
-        foreach ($Answers as $index => $data) {
-            if (isset($answer[$labelForQS[$index]])) {
-                $answer[$labelForQS[$index]]->update([
-                    "AnswerName" => $data["Answers"],
-                    "IsCorrect" => $data["IsCorrect"],
+
+        $labels = ["A", "B", "C", "D"];
+        $labelIndex = 0;
+        foreach ($answerRequest as $index => $name) {
+            $answerID = $answerIDs[$index] ?? null;
+            if (is_null($name) || trim($name) === "") {
+                if ($answerID) {
+                    Answer::where("AnswerID", $answerID)->delete();
+                }
+                continue;
+            }
+            $label = $labels[$labelIndex] ?? null;
+            $labelIndex++;
+            if ($answerID) {
+                Answer::where("AnswerID", $answerID)->update([
+                    "AnswerName" => $name,
+                    "AnswerLabel" => $label,
+                    "IsCorrect" => ($isCorrectIndex !== null && intval($isCorrectIndex) === $index),
                     "QuestionID" => $question->QuestionID
                 ]);
             } else {
                 Answer::create([
-                    "AnswerLabel" => $labelForQS[$index],
-                    "AnswerName" => $data["Answers"],
-                    "IsCorrect" => $data["IsCorrect"],
+                    "AnswerName" => $name,
+                    "AnswerLabel" => $label,
+                    "IsCorrect" => ($isCorrectIndex !== null && intval($isCorrectIndex) === $index),
                     "QuestionID" => $question->QuestionID
                 ]);
             }
-
         }
+
+
+
         return redirect()->route("admintrafficbot.question")->with("update_question", "cập nhật câu hỏi thành công !");
 
 
@@ -322,6 +329,16 @@ class QuestionController extends Controller
         if ($countQuestion != $quantity) {
             return back()->withErrors(["quantity_error" => "Bộ đề yêu cầu số lượng $quantity câu hỏi!"]);
         }
+        // foreach($amounts as $categoryID => $count){
+        //     $iscritical = Question::where("CategoryID", $categoryID)
+        //         ->whereDoesntHave("examset_Question", function($q1) use($licenseTypeID){
+        //         $q1->whereHas("licenseType_Examset", function($q2) use($licenseTypeID){
+        //             $q2->where("exam_set_license_type.LicenseTypeID",$licenseTypeID );
+        //         });
+        //     })->get();
+        //     $questionIdToAttach[] = $iscritical;
+        // }
+        // dd($questionIdToAttach);
         $questionIdToAttach = [];
         foreach ($amounts as $categoryID => $count) {
             if ($isCritical == false) {
@@ -330,12 +347,15 @@ class QuestionController extends Controller
                         $query->where('question_license_types.LicenseTypeID', $licenseTypeID)
                             ->where("question_license_types.Iscritical", 1);
                     })
-                    ->whereDoesntHave("examSet_Question")
+                    ->whereDoesntHave("examSet_Question", function($q1) use($licenseTypeID){
+                        $q1->whereHas("licenseType_Examset", function($q2) use($licenseTypeID){
+                            $q2->where("exam_set_license_type.LicenseTypeID", $licenseTypeID);
+                        });
+                    })
                     ->inRandomOrder()
                     ->pluck("QuestionID")
                     ->first();
                 if ($isCriticalQuestion) {
-                    $questionIdToAttach[] = $isCriticalQuestion;
                     $isCritical = true;
                     $count--;
                 } else {
@@ -348,7 +368,11 @@ class QuestionController extends Controller
                         $query->where("question_license_types.LicenseTypeID", $licenseTypeID)
                             ->where("question_license_types.Iscritical", 0);
                     })
-                    ->whereDoesntHave("examSet_Question")
+                    ->whereDoesntHave("examSet_Question", function($q1) use($licenseTypeID){
+                        $q1->whereHas("licenseType_Examset", function($q2) use($licenseTypeID){
+                            $q2->where("exam_set_license_type.LicenseTypeID", $licenseTypeID);
+                        });
+                    })
                     ->inRandomOrder()
                     ->limit($count)
                     ->pluck("QuestionID")
@@ -357,6 +381,13 @@ class QuestionController extends Controller
 
             }
         }
+        if(isset($isCriticalQuestion)){
+            $maxInsertIndex = floor(count($questionIdToAttach) / 2);
+            $insertIndex = rand(0, $maxInsertIndex);
+            array_splice($questionIdToAttach, $insertIndex, 0 , $isCriticalQuestion);
+        }
+        // dd($questionIdToAttach);
+      
         foreach ($questionIdToAttach as $index => $item) {
             $questionCreated += $item;
         }

@@ -117,31 +117,10 @@
                                                     class=" form-radio text-primary" id="customRadio1">)
                                             </div>
                                         </div>
-
-                                        @error("CorrectAnswer")
-                                            <div id="dismiss-alert_1"
-                                                class="hs-removing:translate-x-5 hs-removing:opacity-0 transition duration-300 bg-red-100 border rounded-md "
-                                                role="alert">
-                                                <div class="flex items-center gap-3">
-                                                    <div class="flex-shrink-0">
-                                                        <i class="i-tabler-circle-x text-red-600"></i>
-                                                    </div>
-                                                    <div class="flex-grow">
-                                                        <div class="text-sm text-red-800 font-medium">
-                                                            {{ $message }}
-                                                        </div>
-                                                    </div>
-                                                    <button data-hs-remove-element="#dismiss-alert_1" type="button"
-                                                        id="dismiss-test"
-                                                        class="ms-auto h-8 w-8 rounded-full bg-gray-200 flex justify-center items-center">
-                                                        <i class="i-tabler-x text-xl text-red-600"></i>
-                                                    </button>
-                                                </div>
-                                            </div>
-
-                                        @enderror
                                         <input name="Answers[]" type="text" id="example-palaceholder" class="form-input"
                                             value="{{ $arrAnswers[0]["AnswerName"] }}">
+                                               <input  name="AnswerIDs[]" type="hidden" id="example-palaceholder" class="form-input"
+                                            value="{{ $arrAnswers[0]["AnswerID"] }}">
                                     </div>
 
                                 @else
@@ -160,29 +139,6 @@
                                                     class=" form-radio text-primary" id="customRadio1">)
                                             </div>
                                         </div>
-
-                                        @error("CorrectAnswer")
-                                            <div id="dismiss-alert_1"
-                                                class="hs-removing:translate-x-5 hs-removing:opacity-0 transition duration-300 bg-red-100 border rounded-md "
-                                                role="alert">
-                                                <div class="flex items-center gap-3">
-                                                    <div class="flex-shrink-0">
-                                                        <i class="i-tabler-circle-x text-red-600"></i>
-                                                    </div>
-                                                    <div class="flex-grow">
-                                                        <div class="text-sm text-red-800 font-medium">
-                                                            {{ $message }}
-                                                        </div>
-                                                    </div>
-                                                    <button data-hs-remove-element="#dismiss-alert_1" type="button"
-                                                        id="dismiss-test"
-                                                        class="ms-auto h-8 w-8 rounded-full bg-gray-200 flex justify-center items-center">
-                                                        <i class="i-tabler-x text-xl text-red-600"></i>
-                                                    </button>
-                                                </div>
-                                            </div>
-
-                                        @enderror
                                         <input name="Answers[]" type="text" id="example-palaceholder" class="form-input"
                                             value="">
                                     </div>
@@ -205,31 +161,10 @@
                                                     class=" form-radio text-primary" id="customRadio1">)
                                             </div>
                                         </div>
-
-                                        @error("CorrectAnswer")
-                                            <div id="dismiss-alert_1"
-                                                class="hs-removing:translate-x-5 hs-removing:opacity-0 transition duration-300 bg-red-100 border rounded-md "
-                                                role="alert">
-                                                <div class="flex items-center gap-3">
-                                                    <div class="flex-shrink-0">
-                                                        <i class="i-tabler-circle-x text-red-600"></i>
-                                                    </div>
-                                                    <div class="flex-grow">
-                                                        <div class="text-sm text-red-800 font-medium">
-                                                            {{ $message }}
-                                                        </div>
-                                                    </div>
-                                                    <button data-hs-remove-element="#dismiss-alert_1" type="button"
-                                                        id="dismiss-test"
-                                                        class="ms-auto h-8 w-8 rounded-full bg-gray-200 flex justify-center items-center">
-                                                        <i class="i-tabler-x text-xl text-red-600"></i>
-                                                    </button>
-                                                </div>
-                                            </div>
-
-                                        @enderror
                                         <input name="Answers[]" type="text" id="example-palaceholder" class="form-input"
                                             value="{{ $arrAnswers[1]["AnswerName"] }}">
+                                             <input  name="AnswerIDs[]" type="hidden" id="example-palaceholder" class="form-input"
+                                            value="{{ $arrAnswers[1]["AnswerID"] }}">
                                     </div>
                                   @else
                                     <div class="mb-3">
@@ -247,29 +182,6 @@
                                                     class=" form-radio text-primary" id="customRadio1">)
                                             </div>
                                         </div>
-
-                                        @error("CorrectAnswer")
-                                            <div id="dismiss-alert_1"
-                                                class="hs-removing:translate-x-5 hs-removing:opacity-0 transition duration-300 bg-red-100 border rounded-md "
-                                                role="alert">
-                                                <div class="flex items-center gap-3">
-                                                    <div class="flex-shrink-0">
-                                                        <i class="i-tabler-circle-x text-red-600"></i>
-                                                    </div>
-                                                    <div class="flex-grow">
-                                                        <div class="text-sm text-red-800 font-medium">
-                                                            {{ $message }}
-                                                        </div>
-                                                    </div>
-                                                    <button data-hs-remove-element="#dismiss-alert_1" type="button"
-                                                        id="dismiss-test"
-                                                        class="ms-auto h-8 w-8 rounded-full bg-gray-200 flex justify-center items-center">
-                                                        <i class="i-tabler-x text-xl text-red-600"></i>
-                                                    </button>
-                                                </div>
-                                            </div>
-
-                                        @enderror
                                         <input name="Answers[]" type="text" id="example-palaceholder" class="form-input"
                                             value="">
                                     </div>
@@ -291,30 +203,11 @@
                                             </div>
                                         </div>
 
-                                        @error("CorrectAnswer")
-                                            <div id="dismiss-alert_1"
-                                                class="hs-removing:translate-x-5 hs-removing:opacity-0 transition duration-300 bg-red-100 border rounded-md "
-                                                role="alert">
-                                                <div class="flex items-center gap-3">
-                                                    <div class="flex-shrink-0">
-                                                        <i class="i-tabler-circle-x text-red-600"></i>
-                                                    </div>
-                                                    <div class="flex-grow">
-                                                        <div class="text-sm text-red-800 font-medium">
-                                                            {{ $message }}
-                                                        </div>
-                                                    </div>
-                                                    <button data-hs-remove-element="#dismiss-alert_1" type="button"
-                                                        id="dismiss-test"
-                                                        class="ms-auto h-8 w-8 rounded-full bg-gray-200 flex justify-center items-center">
-                                                        <i class="i-tabler-x text-xl text-red-600"></i>
-                                                    </button>
-                                                </div>
-                                            </div>
-
-                                        @enderror
+                                        
                                         <input name="Answers[]" type="text" id="example-palaceholder" class="form-input"
                                             value="{{ $arrAnswers[2]["AnswerName"] }}">
+                                            <input  name="AnswerIDs[]" type="hidden" id="example-palaceholder" class="form-input"
+                                            value="{{ $arrAnswers[2]["AnswerID"] }}">
                                     </div>
                                   @else
                                     <div class="mb-3">
@@ -332,29 +225,6 @@
                                                     class=" form-radio text-primary" id="customRadio1">)
                                             </div>
                                         </div>
-
-                                        @error("CorrectAnswer")
-                                            <div id="dismiss-alert_1"
-                                                class="hs-removing:translate-x-5 hs-removing:opacity-0 transition duration-300 bg-red-100 border rounded-md "
-                                                role="alert">
-                                                <div class="flex items-center gap-3">
-                                                    <div class="flex-shrink-0">
-                                                        <i class="i-tabler-circle-x text-red-600"></i>
-                                                    </div>
-                                                    <div class="flex-grow">
-                                                        <div class="text-sm text-red-800 font-medium">
-                                                            {{ $message }}
-                                                        </div>
-                                                    </div>
-                                                    <button data-hs-remove-element="#dismiss-alert_1" type="button"
-                                                        id="dismiss-test"
-                                                        class="ms-auto h-8 w-8 rounded-full bg-gray-200 flex justify-center items-center">
-                                                        <i class="i-tabler-x text-xl text-red-600"></i>
-                                                    </button>
-                                                </div>
-                                            </div>
-
-                                        @enderror
                                         <input name="Answers[]" type="text" id="example-palaceholder" class="form-input"
                                             value="">
                                     </div>
@@ -362,9 +232,9 @@
                                 @if(!empty($arrAnswers[3]) && $arrAnswers[3]["AnswerLabel"] == "D")
                                     <div class="mb-3">
                                         <div class="flex items-center gap-4 mb-2">
-                                            <!-- Label Đáp án A -->
+                                            <!-- Label Đáp án D -->
                                             <label for="example-date" class="text-default-800 text-sm font-medium">
-                                                Đáp án {{ $arrAnswers[0]["AnswerLabel"] }} (
+                                                Đáp án {{ $arrAnswers[3]["AnswerLabel"] }} (
                                             </label>
 
                                             <!-- Radio đáp án đúng -->
@@ -376,32 +246,12 @@
                                             </div>
                                         </div>
 
-                                        @error("CorrectAnswer")
-                                            <div id="dismiss-alert_1"
-                                                class="hs-removing:translate-x-5 hs-removing:opacity-0 transition duration-300 bg-red-100 border rounded-md "
-                                                role="alert">
-                                                <div class="flex items-center gap-3">
-                                                    <div class="flex-shrink-0">
-                                                        <i class="i-tabler-circle-x text-red-600"></i>
-                                                    </div>
-                                                    <div class="flex-grow">
-                                                        <div class="text-sm text-red-800 font-medium">
-                                                            {{ $message }}
-                                                        </div>
-                                                    </div>
-                                                    <button data-hs-remove-element="#dismiss-alert_1" type="button"
-                                                        id="dismiss-test"
-                                                        class="ms-auto h-8 w-8 rounded-full bg-gray-200 flex justify-center items-center">
-                                                        <i class="i-tabler-x text-xl text-red-600"></i>
-                                                    </button>
-                                                </div>
-                                            </div>
-
-                                        @enderror
                                         <input name="Answers[]" type="text" id="example-palaceholder" class="form-input"
-                                            placeholder="{{ $arrAnswers[3]["AnswerName"] }}">
+                                            value="{{ $arrAnswers[3]["AnswerName"] }}">
+                                              <input  name="AnswerIDs[]" type="hidden" id="example-palaceholder" class="form-input"
+                                            value="{{ $arrAnswers[3]["AnswerID"] }}">
                                     </div>
-  @else
+                                    @else
                                     <div class="mb-3">
                                         <div class="flex items-center gap-4 mb-2">
                                             <!-- Label Đáp án A -->
@@ -417,29 +267,6 @@
                                                     class=" form-radio text-primary" id="customRadio1">)
                                             </div>
                                         </div>
-
-                                        @error("CorrectAnswer")
-                                            <div id="dismiss-alert_1"
-                                                class="hs-removing:translate-x-5 hs-removing:opacity-0 transition duration-300 bg-red-100 border rounded-md "
-                                                role="alert">
-                                                <div class="flex items-center gap-3">
-                                                    <div class="flex-shrink-0">
-                                                        <i class="i-tabler-circle-x text-red-600"></i>
-                                                    </div>
-                                                    <div class="flex-grow">
-                                                        <div class="text-sm text-red-800 font-medium">
-                                                            {{ $message }}
-                                                        </div>
-                                                    </div>
-                                                    <button data-hs-remove-element="#dismiss-alert_1" type="button"
-                                                        id="dismiss-test"
-                                                        class="ms-auto h-8 w-8 rounded-full bg-gray-200 flex justify-center items-center">
-                                                        <i class="i-tabler-x text-xl text-red-600"></i>
-                                                    </button>
-                                                </div>
-                                            </div>
-
-                                        @enderror
                                         <input name="Answers[]" type="text" id="example-palaceholder" class="form-input"
                                             value="">
                                     </div>

@@ -30,6 +30,7 @@ class AIchatController extends Controller
             \Log::info('sendMessage:', $request->all());
             $content = '';
             $textFromWeb = '';
+            //duyệt url để lấy name và file
             foreach ($Urls as $url) {
                 if ($url->Content == null) {
                     $urlToGet = $url->LinkURL;

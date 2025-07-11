@@ -17,8 +17,8 @@ class ExamSet extends Model
     }
     public function question_Examset(){
         return $this->belongsToMany(Question::class,"question_exam_sets","ExamSetID","QuestionID")
-         ->withTimestamps()
-         ->withPivot("QuestionExamsetID")
-          ->orderBy('QuestionExamsetID'); ;
+        ->withTimestamps()
+        ->withPivot("QuestionExamsetID")
+        ->orderBy('QuestionExamsetID'); ;
     }
 }

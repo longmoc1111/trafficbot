@@ -4,8 +4,6 @@
     <main>
         <form action="{{ route("admintrafficbot.question.store") }}" method="POST" enctype="multipart/form-data">
             @csrf
-            
-
             <div class="flex flex-col gap-6">
                 <div class="card border rounded shadow">
                     <div class="flex items-center justify-between px-6 py-4 border-b">
@@ -154,27 +152,6 @@
                                                 class=" form-radio text-primary" id="customRadio1">)
                                         </div>
                                     </div>
-                                    @error("WrongAnswer1")
-                                        <div id="dismiss-alert_2"
-                                            class="hs-removing:translate-x-5 hs-removing:opacity-0 transition duration-300 bg-red-100 border rounded-md "
-                                            role="alert">
-                                            <div class="flex items-center gap-3">
-                                                <div class="flex-shrink-0">
-                                                    <i class="i-tabler-circle-x text-red-600"></i>
-                                                </div>
-                                                <div class="flex-grow">
-                                                    <div class="text-sm text-red-800 font-medium">
-                                                        {{ $message }}
-                                                    </div>
-                                                </div>
-                                                <button data-hs-remove-element="#dismiss-alert_2" type="button"
-                                                    id="dismiss-test"
-                                                    class="ms-auto h-8 w-8 rounded-full bg-gray-200 flex justify-center items-center">
-                                                    <i class="i-tabler-x text-xl text-red-600"></i>
-                                                </button>
-                                            </div>
-                                        </div>
-                                    @enderror
                                     <input name="Answers[]" type="text" id="example-palaceholder" class="form-input"
                                         placeholder="">
                                 </div>
@@ -190,27 +167,7 @@
                                                 class=" form-radio text-primary" id="customRadio1">)
                                         </div>
                                     </div>
-                                    @error("WrongAnswer2")
-                                        <div id="dismiss-alert_3"
-                                            class="hs-removing:translate-x-5 hs-removing:opacity-0 transition duration-300 bg-red-100 border rounded-md "
-                                            role="alert">
-                                            <div class="flex items-center gap-3">
-                                                <div class="flex-shrink-0">
-                                                    <i class="i-tabler-circle-x text-red-600"></i>
-                                                </div>
-                                                <div class="flex-grow">
-                                                    <div class="text-sm text-red-800 font-medium">
-                                                        {{ $message }}
-                                                    </div>
-                                                </div>
-                                                <button data-hs-remove-element="#dismiss-alert_3" type="button"
-                                                    id="dismiss-test"
-                                                    class="ms-auto h-8 w-8 rounded-full bg-gray-200 flex justify-center items-center">
-                                                    <i class="i-tabler-x text-xl text-red-600"></i>
-                                                </button>
-                                            </div>
-                                        </div>
-                                    @enderror
+                                   
                                     <input name="Answers[]" type="text" id="example-palaceholder" class="form-input"
                                         placeholder="">
                                 </div>
@@ -226,28 +183,6 @@
                                                 class=" form-radio text-primary" id="customRadio1">)
                                         </div>
                                     </div>
-                                    @error("WrongAnswer3")
-                                        <div id="dismiss-alert_4"
-                                            class="hs-removing:translate-x-5 hs-removing:opacity-0 transition duration-300 bg-red-100 border rounded-md "
-                                            role="alert">
-                                            <div class="flex items-center gap-3">
-                                                <div class="flex-shrink-0">
-                                                    <i class="i-tabler-circle-x text-red-600"></i>
-                                                </div>
-                                                <div class="flex-grow">
-                                                    <div class="text-sm text-red-800 font-medium">
-                                                        {{ $message }}
-                                                    </div>
-                                                </div>
-                                                <button data-hs-remove-element="#dismiss-alert_4" type="button"
-                                                    id="dismiss-test"
-                                                    class="ms-auto h-8 w-8 rounded-full bg-gray-200 flex justify-center items-center">
-                                                    <i class="i-tabler-x text-xl text-red-600"></i>
-                                                </button>
-                                            </div>
-                                        </div>
-
-                                    @enderror
                                     <input name="Answers[]" type="text" id="example-palaceholder" class="form-input"
                                         placeholder="">
                                 </div>
