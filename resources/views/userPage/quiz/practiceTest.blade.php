@@ -180,7 +180,7 @@
 
                     </div>
                 </div>
-                
+
             </div>
         </div>
     </div>
@@ -246,12 +246,10 @@
                             option.text = examset.ExamSetName
                             examSetSelect.appendChild(option)
                         })
-                        random.value = "random"
-                        random.text = "Đề ngẫu nhiên"
-                        examSetSelect.appendChild(random)
-                    } else {
-                        examSetSelect.innerHTML = `<option>Không có đề thi nào</option>`
                     }
+                    random.value = "random"
+                    random.text = "Đề ngẫu nhiên"
+                    examSetSelect.appendChild(random)
                 })
                 .catch(error => {
                     examSetSelect.innerHTML = '<option disabled>Lỗi khi tải đề thi</option>';
@@ -283,12 +281,12 @@
                             tbody.innerHTML = ``
                             data.dataCategory.forEach(function (item, index) {
                                 tbody.innerHTML += `
-                                                    <tr>
-                                                        <td>${index + 1}</td>
-                                                        <td>${item.name}</td>
-                                                        <td>${item.quantity}</td>
-                                                    </tr>
-                                                `
+                                                        <tr>
+                                                            <td>${index + 1}</td>
+                                                            <td>${item.name}</td>
+                                                            <td>${item.quantity}</td>
+                                                        </tr>
+                                                    `
                             })
                             licenseName.innerText = `Cấu trúc đề thi Hạng ${data.dataLicense.name}`
                             duration.innerText = data.dataLicense.duration

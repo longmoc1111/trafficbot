@@ -80,6 +80,7 @@ class QuizzController extends Controller
         $examsetID = $request->input("examSetID");
         $licenseID = $request->input("licenseType");
         $QuestionsRandom = [];
+        $isCriticalQuestion = "";
         $amount = [];
         if ($examsetID == "random") {
 
