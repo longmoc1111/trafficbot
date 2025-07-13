@@ -115,7 +115,7 @@
         </div>
 
 
-        <div class="grid xl:grid-cols-12 md:grid-cols-12 gap-6 mb-6">
+        <div class="grid xl:grid-cols-12  gap-6 mb-6">
 
             <div class="card overflow-hidden">
                 <div class="card-header flex justify-between items-center">

@@ -141,7 +141,8 @@ class ExamSetController extends Controller
     public function showExamSet(string $id)
     {
         $ExamSetID = ExamSet::find($id);
-        return view("admin.examSetManagement.showExamSet", compact("ExamSetID"));
+        $questions = $ExamSetID->question_ExamSet()->paginate(10);
+        return view("admin.examSetManagement.showExamSet", compact("ExamSetID","questions"));
     }
 
 

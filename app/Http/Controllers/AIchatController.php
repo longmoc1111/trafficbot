@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Exception;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\Request;
 use Http;
 use Laravel\Pail\ValueObjects\Origin\Console;
@@ -28,62 +29,95 @@ class AIchatController extends Controller
         \Log::info("url", $dataURL);
         try {
             \Log::info('sendMessage:', $request->all());
-            $content = '';
+            $contents = '';
             $textFromWeb = '';
             //duyệt url để lấy name và file
-            foreach ($Urls as $url) {
-                if ($url->Content == null) {
-                    $urlToGet = $url->LinkURL;
-                    $selector = $url->SelectorURL;
-                    if (!filter_var($urlToGet, FILTER_VALIDATE_URL)) {
-                        continue;
-                    }
-
-                    $response = Http::get("https://node-crawler-gw8b.onrender.com/scrape", [
-                        'url' => $urlToGet,
-                        'selector' => $selector,
-                    ]);
-
-                    if ($response->successful()) {
-                        $content = $response->json('content');
-                        \Log::info(" nội dung từ $urlToGet");
-                        $textFromWeb .= trim($content) . "\n\n";
-                        \Log::info("nội dung của văn bản" . $textFromWeb);
-                    } else {
-                        \Log::warning("Lỗi crawl $urlToGet", [
-                            'response' => $response->body()
-                        ]);
-                    }
-                    if (empty($textFromWeb)) {
-                        return response()->json([
-                            'error' => 'Không thể lấy nội dung từ các URL đã cung cấp.'
-                        ], 500);
-                    }
-                    $ChatDocument = Chatbot::find($url->ChatbotID);
-                    $ChatDocument->update([
-                        "Content" => $textFromWeb,
-                    ]);
-                } else {
-                    $content = $url->Content;
-                }
-            }
-            foreach ($Pdfs as $pdf) {
-                $pdfName = $pdf->DocumentName;
-                $pdfcontent = $this->Pdfcontent($pdf->File);
-                if ($pdfcontent) {
-                    $pdfContent .= "**{$pdfName}**:\n" . trim($pdfcontent["data"]) . "\n\n";
-                    \Log::info("Dương dan file:". $pdfContent);
-                } else {
-                    \Log::warning("Không tồn tại file PDF:", ["file" => $pdfName]);
-                }
-
-            }
-            //Giới hạn độ dài
-            $textFromWeb = \Str::limit($textFromWeb, 15000);
-
-            // Chuẩn bị prompt
+            $textFromWeb = $this->GetContentFromURL($Urls);
+            $pdfContent = $this->Pdfcontent($Pdfs);
             $userMessage = $request->input('message', 'Giải thích nội dung.');
-            $prompt = <<<PROMPT
+            // Chuẩn bị prompt
+            $prompt = $this->buildPrompt($userMessage, $textFromWeb, $pdfContent);
+            foreach (Session::get("chat_history", []) as $item) {
+                $chatHistory[] = [
+                    "role" => "user",
+                    "parts" => [["text" => $item["user"]]]
+                ];
+                $chatHistory[] = [
+                    "role" => "model",
+                    "parts" => [["text" => $item["model"]]]
+                ];
+            }
+            //chuan bị noi dung
+            $contents = $this->buildContent($chatHistory, $prompt);
+            //Gọi Gemini API
+            // $apiKey = env('GEMINI_API_KEY');
+            // $url = "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent";
+
+            $geminiResponse = $this->callGeminiApi($contents);
+
+            $reply = $this->processResponse($geminiResponse);
+
+            $history = $this->UpdateChatHistory($userMessage, $reply);
+            \Log::info("Full chat history", $history);
+            return response()->json(['reply' => $reply]);
+        } catch (\Throwable $e) {
+            \Log::error('sendMessage Exception', [
+                'message' => $e->getMessage(),
+                'trace' => $e->getTraceAsString(),
+            ]);
+            return response()->json([
+                'error' => 'Lỗi nội bộ server.',
+                'message' => $e->getMessage(),
+            ], 500);
+        }
+    }
+
+
+    private function GetContentFromURL(Collection $Urls): string
+    {
+        $textFormWeb = "";
+        foreach ($Urls as $url) {
+            if ($url->Content === null) {
+                $urlToget = $url->LinkURL;
+                $selector = $url->SelectorURL;
+
+                if (!filter_var($urlToget, FILTER_VALIDATE_URL)) {
+                    continue;
+                }
+                $response = Http::get("https://node-crawler-gw8b.onrender.com/scrape", [
+                    "url" => $urlToget,
+                    "selector" => $selector
+                ]);
+                if ($response->successful()) {
+                    $content = $response->json("content");
+                    $textFormWeb .= trim($content) . "\n\n";
+
+                    ChatBot::find($url->ChatbotID)?->update([
+                        "content" => $content
+                    ]);
+                }
+            } else {
+                $textFormWeb .= $url->Content;
+            }
+        }
+        return $textFormWeb;
+    }
+
+    private function getContentPDF(Collection $pdfs): string
+    {
+        $contentPDF = "";
+        foreach ($pdfs as $pdf) {
+            $content = $this->Pdfcontent($pdf->File);
+            if ($content) {
+                $contentPDF .= trim($content["data"]) . "\n\n";
+            }
+        }
+        return $contentPDF;
+    }
+    // Chuẩn bị prompt
+    private function buildPrompt($userMessage, $textFromWeb, $pdfContent): string
+    {
+        return <<<PROMPT
             Bạn là trafficbot một trợ lý ảo thân thiện, được tích hợp trên website cung cấp thông tin về **Luật Giao thông Đường bộ Việt Nam**.
 
             **Nhiệm vụ của bạn**:
@@ -143,102 +177,25 @@ class AIchatController extends Controller
             
             **Nguồn thông tin từ PDF**
             $pdfContent
-
-            **Nguồn nội dung bổ sung (nếu có):**
-            $content
-
             ---
 
              **Câu hỏi của người dùng**: "$userMessage"
 
             ---
 
-            ✍️ Hãy trả lời như một chuyên gia luật giao thông, **trực tiếp – dễ hiểu – đúng trọng tâm**:
+             Hãy trả lời như một chuyên gia luật giao thông, **trực tiếp – dễ hiểu – đúng trọng tâm**:
             PROMPT;
 
-             foreach(Session::get("chat_history", []) as $item){
-                $chatHistory[] = [
-                    "role" => "user",
-                    "parts" => [["text" => $item["user"]]]
-                ];
-                $chatHistory[] = [
-                    "role" => "model",
-                    "parts" => [["text" => $item["model"]]]
-                ];
-            }
-
-            //chuan bị noi dung
-
-            $contents = array_merge($chatHistory,[
-                [
-                    "role" => "user",
-                    "parts" => [
-                        ["text" => $prompt],
-                    ]
-                ]
-            ]);
-
-
-            //Gọi Gemini API
-            $apiKey = env('GEMINI_API_KEY');
-            $url = "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent";
-
-            $geminiResponse = Http::withHeaders([
-                'Content-Type' => 'application/json',
-                'X-goog-api-key' => $apiKey,
-            ])->post($url, [
-                        'contents' => $contents,
-                    ]);
-
-            if (!$geminiResponse->successful()) {
-                \Log::error('Gemini API error', [
-                    'status' => $geminiResponse->status(),
-                    'body' => $geminiResponse->body(),
-                ]);
-                return response()->json([
-                    'error' => 'Lỗi khi gọi Gemini API.',
-                    'body' => $geminiResponse->body(),
-                ], 500);
-            }
-
-            //Trả kết quả về
-            $data = $geminiResponse->json();
-            $reply = data_get($data, 'candidates.0.content.parts.0.text', 'Không có phản hồi.');
-
-            $history = Session::get('chat_history', []);
-            $history[] = [
-                'user' => $userMessage,
-                'model' => $reply,
-            ];
-           
-            // Giới hạn tối đa 50 đoạn hội thoại
-            if (count($history) > 50) {
-                $history = array_slice($history, -50);
-            }
-
-            session()->put('chat_history', $history);
-            \Log::info("Full chat history", $history);
-            return response()->json(['reply' => $reply]);
-        } catch (\Throwable $e) {
-            \Log::error('sendMessage Exception', [
-                'message' => $e->getMessage(),
-                'trace' => $e->getTraceAsString(),
-            ]);
-            return response()->json([
-                'error' => 'Lỗi nội bộ server.',
-                'message' => $e->getMessage(),
-            ], 500);
-        }
     }
     private function Pdfcontent($fileName)
     {
         \Log::info("tên file: " . $fileName);
-        if (!Storage::disk("public")->exists("filePDF/".$fileName)) {
+        if (!Storage::disk("public")->exists("filePDF/" . $fileName)) {
             \Log::warning("File PDF không tồn tại");
             return null;
         }
         try {
-            $filePath = storage_path("app/public/filePDF/".$fileName);
+            $filePath = storage_path("app/public/filePDF/" . $fileName);
             $parser = new Parser();
             $pdf = $parser->parseFile($filePath);
             $content = $pdf->getText();
@@ -249,5 +206,55 @@ class AIchatController extends Controller
             \Log::error("lỗi khi đọc PDF", ["message" => $e->getMessage()]);
             return null;
         }
+    }
+
+    function buildContent($chatHistory, $prompt)
+    {
+        return array_merge($chatHistory, [
+            [
+                "role" => "user",
+                "parts" => [
+                    ["text" => $prompt]
+                ]
+            ]
+        ]);
+    }
+    function callGeminiApi($content)
+    {
+        $apiKey = env("GEMINI_API_KEY");
+        $url = "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent";
+        return Http::withHeaders([
+            "Content-Type" => "application/json",
+            "X-goog-api-key" => $apiKey,
+        ])->post($url, ["contents" => $content]);
+    }
+
+    function processResponse($geminiResponse)
+    {
+        if (!$geminiResponse->successful()) {
+            \Log::error('Gemini API error', [
+                'status' => $geminiResponse->status(),
+                'body' => $geminiResponse->body(),
+            ]);
+            return response()->json([
+                "error" => "Lỗi khi gọi Gemini API",
+                "body" => $geminiResponse->body()
+            ], 500);
+        }
+        $data = $geminiResponse->json();
+        return data_get($data, 'candidates.0.content.parts.0.text', 'Không có phản hồi.');
+    }
+    function UpdateChatHistory($userMessage, $reply)
+    {
+        $history = Session::get("chat_history", []);
+        $history[] = [
+            "user" => $userMessage,
+            "model" => $reply
+        ];
+        if (count($history) > 50) {
+            $history = array_slice($history, -50);
+        }
+        Session::put("chat_history", $history);
+        return $history;
     }
 }

@@ -275,6 +275,7 @@
                     fetch(`/practice-info/${licenseID}"`)
                         .then(response => response.json())
                         .then(data => {
+                            licenseName.innerText = `Cấu trúc đề thi Hạng ${data.dataLicense.name}`
                             if (data.dataCategory == 0) {
                                 tbody.innerHTML = `<tr><td colspan = "3">Không có dữ liệu</td></tr>`
                             }
@@ -288,7 +289,6 @@
                                                         </tr>
                                                     `
                             })
-                            licenseName.innerText = `Cấu trúc đề thi Hạng ${data.dataLicense.name}`
                             duration.innerText = data.dataLicense.duration
                             passcount.innerText = `${data.dataLicense.passcount}/${data.dataLicense.quantity} Câu`
                         })

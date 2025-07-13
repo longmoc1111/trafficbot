@@ -265,63 +265,74 @@
                     </div>
                 @endforeach
             @endif
-            <!-- end modal delete -->
-            @if(!empty($signages))
-                @foreach ($signages as $signage)
-                    <div id="show-{{ $signage->SignageID }}"
-                        class="hs-overlay w-full h-full fixed top-0 left-0 z-70 transition-all duration-500 overflow-y-auto hidden pointer-events-none flex items-center justify-center">
-                        <div
-                            class="translate-y-10 hs-overlay-open:translate-y-0 hs-overlay-open:opacity-100 opacity-0 ease-in-out transition-all duration-500 sm:max-w-2xl sm:w-full my-8 sm:mx-auto flex flex-col bg-white shadow-sm rounded">
-                            <div class="flex flex-col border border-default-200 shadow-sm rounded-lg  pointer-events-auto">
-                                <div class="flex justify-between items-center py-3 px-4 border-b border-default-200">
-                                    <h3 class="text-lg font-medium text-default-900" style="text-align: center;">
-                                        Chi tiết biển báo
-                                    </h3>
-                                    <button type="button" class="text-default-600 cursor-pointer"
-                                        data-hs-overlay="#show-{{ $signage->SignageID }}">
-                                        <i class="i-tabler-x text-lg"></i>
-                                    </button>
+            <!-- end modal show -->
+           @if(!empty($signages))
+    @foreach ($signages as $signage)
+        <div id="show-{{ $signage->SignageID }}" class="hs-overlay hidden fixed inset-0 z-[99999] overflow-x-hidden overflow-y-auto">
+            <!-- Modal Container -->
+            <div class="hs-overlay-open:opacity-100 hs-overlay-open:scale-100 opacity-0 scale-95 ease-out transition-all duration-300 sm:max-w-2xl sm:w-full m-3 sm:mx-auto min-h-[calc(100%-3.5rem)] flex items-center">
+                <div class="modal-content w-full bg-white border shadow-xl rounded-xl overflow-hidden">
+
+                    <!-- Header -->
+                    <div class="bg-gradient-to-r bg-primary p-6">
+                        <div class="flex justify-between items-center">
+                            <div class="flex items-center space-x-3">
+                                <div class="w-10 h-10 bg-white/20 rounded-lg flex items-center justify-center">
+                                    <i class="i-solar-road-sign-bold-duotone text-white text-xl"></i>
                                 </div>
-                                <div class="flex border rounded-lg shadow-sm overflow-hidden bg-white max-w-full">
-                                    <!-- Phần ảnh bên trái -->
-                                    <div class="flex-shrink-0 " style="border-right: 3px solid #6b72801A">
-                                        <img src="{{ asset("storage/uploads/imageSignage/$signage->SignageImage") }} " alt="Image"
-                                            class="w-40 h-40 object-contain p-2">
-                                    </div>
-
-                                    <!-- Phần text bên phải -->
-                                    <div class="flex flex-col r p-4 flex-grow">
-                                        <h3 class="text-lg font-bold text-gray-800 mb-2">
-                                            {{ $signage->SignageName }}
-                                        </h3>
-                                        @if(!empty($signage->signage_SignageType->SignagesTypeName))
-                                            <p class="text-gray-600 mb-1">
-                                                <strong>Loại biển báo :</strong> {{ $signage->signage_SignageType->SignagesTypeName }}
-                                            </p>
-                                        @else
-                                            <p class="text-gray-600 mb-1">
-                                                <strong>Loại biển báo :</strong> Không
-                                            </p>
-                                        @endif
-
-                                        <p class="text-gray-600">
-                                            <strong>Giải thích:</strong> {{ $signage->SignagesExplanation }}
-                                        </p>
-                                    </div>
+                                <div>
+                                    <h3 class="font-bold text-white text-lg">Chi tiết biển báo</h3>
+                                    <p class="text-white/80 text-sm">Thông tin đầy đủ về biển báo</p>
                                 </div>
+                            </div>
+                            <button type="button" 
+                                    class="w-8 h-8 flex items-center justify-center rounded-lg bg-white/20 text-white hover:bg-white/30 transition-colors" 
+                                    data-hs-overlay="#show-{{ $signage->SignageID }}">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                                </svg>
+                            </button>
+                        </div>
+                    </div>
 
-                                <div class="flex justify-end items-center gap-x-2 py-3 px-4 border-t border-default-200">
-                                    <button type="button"
-                                        class="py-2 px-5 inline-flex items-center justify-center font-medium tracking-wide border align-middle duration-500 text-sm text-center bg-primary/5 hover:bg-primary border-primary/10 hover:border-primary text-primary hover:text-white rounded-md"
-                                        data-hs-overlay="#show-{{ $signage->SignageID }}">
-                                        Đóng
-                                    </button>
+                    <!-- Body --> 
+                    <div class="modal-scroll max-h-[60vh] overflow-y-auto p-6 space-y-6">
+                        <!-- Image and Info -->
+                        <div class="flex flex-col sm:flex-row items-start sm:items-center gap-6">
+                            <!-- Image -->
+                            <div class="flex-shrink-0 border rounded-lg p-2 bg-gray-50 shadow">
+                                <img src="{{ asset("storage/uploads/imageSignage/$signage->SignageImage") }}" 
+                                     alt="Biển báo" 
+                                     class="w-40 h-40 object-contain">
+                            </div>
+
+                            <!-- Info -->
+                            <div class="flex flex-col space-y-2">
+                                <h4 class="text-xl font-bold text-gray-900">{{ $signage->SignageName }}</h4>
+                                
+                                <div class="text-gray-700 text-sm">
+                                    <p><strong>Loại biển báo:</strong> {{ $signage->signage_SignageType->SignagesTypeName ?? 'Không' }}</p>
+                                    <p><strong>Giải thích:</strong> {{ $signage->SignagesExplanation }}</p>
                                 </div>
                             </div>
                         </div>
                     </div>
-                @endforeach
-            @endif
+
+                    <!-- Footer -->
+                    <div class="border-t bg-gray-50 p-4 flex justify-end gap-3">
+                        <button type="button" 
+                                class="px-4 py-2 text-sm font-medium border border-gray-300 rounded-lg bg-white text-gray-700 hover:bg-gray-50 transition-colors" 
+                                data-hs-overlay="#show-{{ $signage->SignageID }}">
+                            Đóng
+                        </button>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    @endforeach
+@endif
+
             <!-- end modal -->
 
 

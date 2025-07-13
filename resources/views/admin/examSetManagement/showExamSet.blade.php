@@ -63,7 +63,7 @@
                                         </tr>
                                     </thead>
                                     <tbody class="divide-y divide-gray-200">
-                                        @foreach ($ExamSetID->question_ExamSet as $question)
+                                        @foreach ($questions as $question)
                                             <tr>
                                                 <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-default-800"
                                                         style="white-space: normal; word-wrap: break-word; max-width: 300px;">
@@ -72,7 +72,11 @@
 
                                                  <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-default-800"
                                                         style="white-space: normal; word-wrap: break-word; max-width: 250px;">
-                                                    {{ $question->categoryQuestion_Question->CategoryName }}
+                                                    @if(empty( $question->categoryQuestion_Question->CategoryName))
+                                                        Chưa thuộc loại câu hỏi nào
+                                                    @else
+                                                        {{ $question->categoryQuestion_Question->CategoryName }}
+                                                    @endif
                                                 </td>
                                               
                                                @php
@@ -121,6 +125,72 @@
                         </div>
                     </div>
                 </div>
+                 <div class="flex items-center justify-between border-t border-gray-200 bg-white px-4 py-3 sm:px-6">
+                        <!-- Showing -->
+                        <div>
+                            <p class="text-sm text-gray-700">
+                                <span class="font-medium">{{ $questions->firstItem() }}</span>
+                                ->
+                                <span class="font-medium">{{ $questions->lastItem() }}</span>
+                                of
+                                <span class="font-medium">{{$questions->total()}}</span>
+                            </p>
+                        </div>
+
+                        <!-- Pagination -->
+                        <div class="flex flex-wrap items-center gap-1">
+                            <!-- trước -->
+                            @if($questions->onFirstPage())
+                                <span class="px-3 py-1 text-gray-400 bg-gray-100 rounded border border-gray-300">Trước</span>
+                            @else
+                                <a href="{{ $questions->previousPageUrl() }}"
+                                    class="px-3 py-1 text-gray-700 bg-white rounded border border-gray-300 hover:bg-gray-50">Trước</a>
+                            @endif
+
+                            @php
+                                $start = max($questions->currentPage() - 2, 1);
+                                $end = min($questions->currentPage() + 2, $questions->lastPage());
+                            @endphp
+
+                            <!-- trang đầu tiên -->
+                            @if($start > 1)
+                                <a href="{{ $questions->url(1) }}"
+                                    class="px-3 py-1 text-gray-700 bg-white rounded border border-gray-300 hover:bg-gray-50">1</a>
+                                @if($start > 2)
+                                    <span class="px-2 text-gray-500">...</span>
+                                @endif
+                            @endif
+
+                            <!-- link các trang -->
+                            @for($page = $start; $page <= $end; $page++)
+                                @if($page == $questions->currentPage())
+                                    <span
+                                        class="px-3 py-1 bg-primary/25 text-primary rounded border border-indigo-600">{{ $page }}</span>
+                                @else
+                                    <a href="{{ $questions->url($page) }}"
+                                        class="px-3 py-1 text-gray-700 bg-white rounded border border-gray-300 hover:bg-gray-50">{{ $page}}</a>
+                                @endif
+                            @endfor
+
+                            <!-- page cuối -->
+                            @if($end < $questions->lastPage())
+                                @if($end < $questions->lastPage() - 1)
+                                    <span class="px-2 text-gray-500">...</span>
+                                @endif
+                                <a href="{{ $Questions->url($questions->lastPage()) }}"
+                                    class="px-3 py-1 text-gray-700 bg-white rounded border border-gray-300 hover:bg-gray-50">{{ $questions->lastPage() }}</a>
+                            @endif
+
+                            <!-- trang tiếp -->
+                            @if($questions->hasMorePages())
+                                <a href="{{ $questions->nextPageUrl() }}"
+                                    class="px-3 py-1 text-gray-700 bg-white rounded border border-gray-300 hover:bg-gray-50">Sau</a>
+                            @else
+                                <span class="px-3 py-1 text-gray-400 bg-gray-100 rounded border border-gray-300">Sau</span>
+                            @endif
+
+                        </div>
+                    </div>
             </div> <!-- end card -->
             <!-- modal delete -->
             @if(isset($ExamSetID))

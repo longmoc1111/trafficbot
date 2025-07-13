@@ -157,101 +157,112 @@
 
         #modalResults .modal-content {
             border-radius: 16px;
-            background: #ffffff;
-            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.15);
-            border: none;
-            max-width: 500px;
-            margin: auto;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
         }
 
-        #modalResults h3 {
-            font-weight: 700;
-            font-size: 1.75rem;
-            color: #0d6efd;
+        #modalResults .modal-header {
+            background: linear-gradient(135deg, #007bff 0%, #0056b3 100%);
+            padding: 2rem 1.5rem;
         }
 
-        #modalResults p.r3 {
+        #modalResults .modal-header i {
+            color: #fff;
+            opacity: 0.9;
+        }
+
+        #modalResults .modal-title {
+            color: #fff;
+            font-size: 1.5rem;
+        }
+
+        #modalResults .card {
+            transition: transform 0.2s ease;
+            border-radius: 12px;
+        }
+
+        #modalResults .card:hover {
+            transform: translateY(-2px);
+        }
+
+        #modalResults .badge {
             font-size: 1rem;
-            margin-bottom: 0.5rem;
-            color: #333;
+            padding: 0.5rem 0.75rem;
+            border-radius: 20px;
         }
 
-        #modalResults .btn-close {
-            font-size: 1.25rem;
-            background: none;
-            border: none;
-            color: #999;
-            transition: 0.2s;
+        #modalResults #result-card {
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            border: 2px solid #dee2e6;
         }
 
-        #modalResults .btn-close:hover {
-            color: #000;
-            transform: scale(1.2);
+        #modalResults #result-card.success {
+            background: linear-gradient(135deg, #d4edda 0%, #c3e6cb 100%);
+            border-color: #28a745;
         }
 
-        #modalResults .btn-primary {
-            border-radius: 30px;
-            padding: 10px 24px;
-            font-weight: 500;
-            font-size: 1rem;
-            transition: 0.3s ease;
+        #modalResults #result-card.danger {
+            background: linear-gradient(135deg, #f8d7da 0%, #f5c6cb 100%);
+            border-color: #dc3545;
         }
 
-        #modalResults .btn-primary:hover {
-            background-color: #0b5ed7;
+        #modalResults .btn {
+            border-radius: 25px;
+            padding: 0.75rem 1.5rem;
+            font-weight: 600;
+            transition: all 0.3s ease;
         }
 
-        #modalResults hr {
-            border-top: 2px solid #e9ecef;
-            margin: 1rem 0;
+        #modalResults .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
         }
 
         #endtestModal .modal-content {
             border-radius: 16px;
-            background-color: #ffffff;
-            box-shadow: 0 10px 35px rgba(0, 0, 0, 0.15);
-            border: none;
-            text-align: center;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
         }
 
-        #endtestModal h3 {
-            font-size: 1.75rem;
-            font-weight: 700;
-            color: #dc3545;
-            /* đỏ nhấn mạnh */
-            margin-bottom: 1rem;
+        #endtestModal .modal-header {
+            background: linear-gradient(135deg, #ffc107 0%, #ffb300 100%);
+            padding: 2rem 1.5rem;
         }
 
-        #endtestModal p {
-            font-size: 1.1rem;
-            margin-bottom: 1.5rem;
-            color: #333;
+        #endtestModal .modal-header i {
+            color: #212529;
+            opacity: 0.8;
+        }
+
+        #endtestModal .modal-title {
+            color: #212529;
+            font-size: 1.5rem;
+        }
+
+        #endtestModal .alert {
+            border-radius: 12px;
+            background: linear-gradient(135deg, #fff3cd 0%, #ffeaa7 100%);
         }
 
         #endtestModal .btn {
-            padding: 10px 24px;
-            font-size: 1rem;
-            border-radius: 30px;
-            transition: 0.3s ease;
-            min-width: 120px;
+            border-radius: 25px;
+            padding: 0.75rem 1.5rem;
+            font-weight: 600;
+            transition: all 0.3s ease;
         }
 
-        #endtestModal .btn-danger {
-            background-color: #dc3545;
-            border: none;
+        #endtestModal .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
         }
 
         #endtestModal .btn-danger:hover {
-            background-color: #bb2d3b;
+            background-color: #c82333;
         }
 
-        #endtestModal .btn-primary {
-            background-color: #0d6efd;
-            border: none;
-        }
-
-        #endtestModal .btn-primary:hover {
-            background-color: #0b5ed7;
+        #endtestModal .btn-outline-secondary:hover {
+            background-color: #6c757d;
+            color: #fff;
         }
 
 
@@ -420,50 +431,101 @@
 
 
 
-        <!-- modal thong báo kết quả -->
-        <!-- modal ket quả -->
-        <div class="modal fade" id="modalResults" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <!-- Modal Kết Quả Thi -->
+        <div class="modal fade" id="modalResults" tabindex="-1" aria-labelledby="modalResultsLabel" aria-hidden="true">
             <div class="modal-dialog modal-dialog-centered">
-                <div class="modal-content py-md-5 px-md-4 p-sm-3 p-4 position-relative">
-
-                    <!-- Nút X góc trên bên phải -->
-                    <button type="button" class="btn-close position-absolute top-0 end-0 m-3" data-bs-dismiss="modal"
-                        aria-label="Close"> <i class="bi bi-x fs-4"></i></button>
-
-                    <h3 class="text-center mb-3 text-primary"><strong>Kết quả thi</strong></h3>
-                    <hr>
-                    <p id="modal-correct" class="r3 text-success"></p>
-                    <p id="modal-notCorrect" class="r3 text-danger"></p>
-                    <p id="modal-iscritical" class="r3 text-warning"></p>
-                    <hr>
-                    <div class="text-center mb-3 d-flex justify-content-center">
-                        <a href="{{ route('userpage.home') }}" class="btn btn-primary w-30 mx-2 b1">Trang chủ</a>
-                        <button type="button" onclick="location.reload();" class="btn btn-primary w-30 mx-2 b1">Thi
-                            lại</button>
+                <div class="modal-content border-0 shadow-lg">
+                    <div class="modal-header bg-primary text-white border-0 position-relative">
+                        <div class="w-100 text-center">
+                            <i class="fas fa-trophy fs-1 mb-2"></i>
+                            <h4 class="modal-title fw-bold mb-0" id="modalResultsLabel">Kết quả thi</h4>
+                        </div>
+                        <button type="button" class="btn-close btn-close-white position-absolute top-0 end-0 m-3" 
+                                data-bs-dismiss="modal" aria-label="Close">
+                        </button>
+                    </div>
+                    
+                    <div class="modal-body p-4">
+                        <div class="text-center mb-4">
+                            <div class="row g-3">
+                                <div class="col-12">
+                                    <div class="card border-0 bg-light">
+                                        <div class="card-body py-3">
+                                            <div id="modal-correct" class="d-flex align-items-center justify-content-between">
+                                                <span class="fw-semibold"><i class="fas fa-check-circle text-success me-2"></i>Câu đúng:</span>
+                                                <span class="badge bg-success fs-6" id="correct-count">0</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-12">
+                                    <div class="card border-0 bg-light">
+                                        <div class="card-body py-3">
+                                            <div id="modal-notCorrect" class="d-flex align-items-center justify-content-between">
+                                                <span class="fw-semibold"><i class="fas fa-times-circle text-danger me-2"></i>Câu sai:</span>
+                                                <span class="badge bg-danger fs-6" id="wrong-count">0</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-12">
+                                    <div class="card border-0" id="result-card">
+                                        <div class="card-body py-3">
+                                            <div id="modal-iscritical" class="text-center">
+                                                <i class="fas fa-award fs-2 mb-2"></i>
+                                                <h5 class="mb-0" id="final-result">Đang tính toán...</h5>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="modal-footer border-0 justify-content-center pb-4">
+                        <a href="{{ route('userpage.home') }}" class="btn btn-outline-primary me-2">
+                            <i class="fas fa-home me-2"></i>Trang chủ
+                        </a>
+                        <button type="button" onclick="location.reload();" class="btn btn-primary">
+                            <i class="fas fa-redo me-2"></i>Thi lại
+                        </button>
                     </div>
                 </div>
             </div>
         </div>
-    </div>
-    <!-- endmodal -->
 
-    <!-- modal ket thuc thi -->
-
-    <div class="modal fade" id="endtestModal" tabindex="-1" aria-labelledby="formNewLabel" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered" role="document">
-            <div class="modal-content py-md-5 px-md-4 p-sm-3 p-4">
-                <h3 class="text-center">Xác nhận</h3>
-                <p class="text-center">Bạn muốn kết thúc bài thi không ?</p>
-                <div class="text-center mb-3 d-flex justify-content-center">
-                    <button data-liecenid="{{ $license->LicenseTypeID }}" id="submit-btn"
-                        class="btn btn-danger w-30 mx-2 ">kết thúc</button>
-                    <button data-bs-dismiss="modal" aria-label="Close" class="btn btn-primary w-30 mx-2">tiếp tục
-                        thi</button>
+        <!-- Modal Xác Nhận Kết Thúc -->
+        <div class="modal fade" id="endtestModal" tabindex="-1" aria-labelledby="endtestModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content border-0 shadow-lg">
+                    <div class="modal-header bg-warning text-dark border-0">
+                        <div class="w-100 text-center">
+                            <i class="fas fa-exclamation-triangle fs-1 mb-2"></i>
+                            <h4 class="modal-title fw-bold mb-0" id="endtestModalLabel">Xác nhận kết thúc</h4>
+                        </div>
+                    </div>
+                    
+                    <div class="modal-body p-4 text-center">
+                        <div class="mb-4">
+                            <p class="fs-5 mb-3 text-muted">Bạn có chắc chắn muốn kết thúc bài thi không?</p>
+                            <div class="alert alert-warning border-0 d-flex align-items-center">
+                                <i class="fas fa-info-circle me-2"></i>
+                                <small>Bài thi sẽ được chấm điểm ngay lập tức sau khi kết thúc</small>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="modal-footer border-0 justify-content-center pb-4">
+                        <button data-bs-dismiss="modal" aria-label="Close" class="btn btn-outline-secondary me-2">
+                            <i class="fas fa-arrow-left me-2"></i>Tiếp tục thi
+                        </button>
+                        <button data-liecenid="{{ $license->LicenseTypeID }}" id="submit-btn" class="btn btn-danger">
+                            <i class="fas fa-stop me-2"></i>Kết thúc bài thi
+                        </button>
+                    </div>
                 </div>
             </div>
         </div>
-        <!-- end modal -->
-    </div>
 
     </div>
     <div class="container-lg mt-4 mb-5" style="box-shadow: 0 0 45px rgba(0, 0, 0, .06)">
@@ -529,12 +591,11 @@
                             option.text = examset.ExamSetName
                             examSetSelect.appendChild(option)
                         })
-                        random.value = "random"
+                       
+                    } 
+                     random.value = "random"
                         random.text = "Đề ngẫu nhiên"
                         examSetSelect.appendChild(random)
-                    } else {
-                        examSetSelect.innerHTML = `<option>Không có đề thi nào</option>`
-                    }
                 })
                 .catch(error => {
                     // console.error('Error fetching exam sets:', error);
@@ -864,9 +925,10 @@
         }
         //hiển thị kết quả modal
         function displayResultModal(data) {
-            const iscriticalElemet = document.getElementById("modal-iscritical");
-            const correctElemnt = document.getElementById("modal-correct");
-            const notcorrectElement = document.getElementById("modal-notCorrect");
+            const correctElemnt = document.getElementById("correct-count");
+            const wrongCountElement = document.getElementById("wrong-count");
+            const finalResultElement = document.getElementById("final-result");
+            const resultCard = document.getElementById("result-card");
 
             const correctCount = data.correctCount;
             const sumQuestion = data.result[0]?.sumQuestion ?? 0;
@@ -876,18 +938,20 @@
             const quantity = document.getElementById("quantity-passcount").dataset.quantity;
             const passCount = document.getElementById("quantity-passcount").dataset.passcount;
 
-            correctElemnt.innerHTML = `<p><strong>Số câu đúng:</strong> ${correctCount}</p>`;
-            notcorrectElement.innerHTML = `<p><strong>Số câu sai:</strong> ${notcorrect}</p>`;
+            // Cập nhật số liệu
+            correctElemnt.textContent = correctCount;
+            wrongCountElement.textContent = notcorrect;
 
+            // Xác định kết quả và styling
             if (iscritical) {
-                iscriticalElemet.innerHTML = `
-                                                                        <p><strong>Kết quả:</strong> Không đạt - sai câu điểm liệt</p>`;
+                finalResultElement.innerHTML = `<i class="fas fa-times-circle text-danger me-2"></i>Không đạt - Sai câu điểm liệt`;
+                resultCard.className = "card border-0 danger";
             } else if (correctCount < passCount) {
-                iscriticalElemet.innerHTML = `
-                                                                        <p><strong>Kết quả:</strong> Không đạt - yêu cầu tối thiểu đúng ${passCount}/${quantity} câu</p>`;
+                finalResultElement.innerHTML = `<i class="fas fa-times-circle text-danger me-2"></i>Không đạt<br><small class="text-muted">Yêu cầu tối thiểu ${passCount}/${quantity} câu</small>`;
+                resultCard.className = "card border-0 danger";
             } else {
-                iscriticalElemet.innerHTML = `
-                                                                        <p><strong>Kết quả:</strong> Đạt</p>`;
+                finalResultElement.innerHTML = `<i class="fas fa-check-circle text-success me-2"></i>Chúc mừng! Bạn đã đạt`;
+                resultCard.className = "card border-0 success";
             }
         }
 

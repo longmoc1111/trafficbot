@@ -46,10 +46,10 @@
                                                 Thời gian thi
                                             </th>
                                             <th scope="col" class="px-6 py-3 text-start text-sm text-default-500">
-                                                Yêu cầu đúng
+                                               Số lượng câu hỏi 
                                             </th>
                                             <th scope="col" class="px-6 py-3 text-start text-sm text-default-500">
-                                                Số lượng câu hỏi
+                                                Yêu cầu đúng
                                             </th>
                                             <th scope="col" class="px-6 py-3 text-end text-sm text-default-500">
                                                 Action</th>

@@ -73,7 +73,14 @@ class QuestionCategoryController extends Controller
     public function deleteCategory($ID)
     {
         $category = QuestionCategory::find($ID);
+        $questions = $category->question_QuestionCategory()->get();
         if ($category) {
+            foreach($questions as $question){
+                $question->update([
+                    "CategoryID" => null,
+                ]);
+            }
+            $category->questionCategory_LicenseType()->detach();
             $category->delete();
             return redirect()->route("admintrafficbot.question.category")->with("delete_success", "Xóa loại câu hỏi thành công!");
         } else {

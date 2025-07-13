@@ -10,12 +10,12 @@
             <h4 class="text-default-900 text-lg font-medium mb-2">Phân loại biển báo</h4>
 
             <!-- <div class="md:flex hidden items-center gap-3 text-sm font-semibold">
-                    <a href="#" class="text-sm font-medium text-default-700">OpenDash</a>
-                    <i class="material-symbols-rounded text-xl flex-shrink-0 text-default-500">chevron_right</i>
-                    <a href="#" class="text-sm font-medium text-default-700">Tables</a>
-                    <i class="material-symbols-rounded text-xl flex-shrink-0 text-default-500">chevron_right</i>
-                    <a href="#" class="text-sm font-medium text-default-700" aria-current="page">Basic Tables</a>
-                </div> -->
+                                    <a href="#" class="text-sm font-medium text-default-700">OpenDash</a>
+                                    <i class="material-symbols-rounded text-xl flex-shrink-0 text-default-500">chevron_right</i>
+                                    <a href="#" class="text-sm font-medium text-default-700">Tables</a>
+                                    <i class="material-symbols-rounded text-xl flex-shrink-0 text-default-500">chevron_right</i>
+                                    <a href="#" class="text-sm font-medium text-default-700" aria-current="page">Basic Tables</a>
+                                </div> -->
         </div>
         <!-- Page Title End -->
 
@@ -123,7 +123,7 @@
                                                     </div>
                                                     <div class="hs-tooltip">
 
-                                                        <a href="{{ route("admintrafficbot.listsignages") }}" type="button" 
+                                                        <a href="{{ route("admintrafficbot.listsignages") }}" type="button"
                                                             class="text-blue-500 hover:text-blue-700 hs-tooltip-toggle"
                                                             data-fc-placement="top">
                                                             <span class="material-symbols-rounded text-2xl">
@@ -218,208 +218,165 @@
                 </div>
             </div> <!-- end card -->
 
-            <!-- modal tạo câu loại biển báo -->
-            <form action="{{ route("admintrafficbot.signagestype.store") }}" method="post">
-                @csrf
-                <div id="modal-create"
-                    class="hs-overlay w-full h-full fixed top-0 left-0 z-70 transition-all duration-500 overflow-y-auto hidden pointer-events-none flex items-center justify-center">
-                    <div
-                        class="translate-y-10 hs-overlay-open:translate-y-0 hs-overlay-open:opacity-100 opacity-0 ease-in-out transition-all duration-500 sm:max-w-lg sm:w-full my-8 sm:mx-auto flex flex-col bg-white shadow-sm rounded">
-                        <div class="flex flex-col border border-default-200 shadow-sm rounded-lg  pointer-events-auto">
-                            <div class="flex justify-between items-center py-3 px-4 border-b border-default-200">
-                                <h3 class="text-lg font-medium text-default-900 ">
-                                    Tạo mới loại biển báo mới
-                                </h3>
-                                <button type="button" class="text-default-600 cursor-pointer"
-                                    data-hs-overlay="#modal-create">
-                                    <i class="i-tabler-x text-lg"></i>
-                                </button>
-                            </div>
-                            <div class="p-4 overflow-y-auto">
-                                <div class="mb-3">
-                                    <label for="LicenseTypeName" class="text-gray-700 text-sm font-semibold mb-2 block">
-                                        Tên loại biển báo
-                                    </label>
-                                    @error('LicenseTypeName')
-                                        <div id="dismiss-alert" role="alert">
-                                            <div class="flex items-center">
-                                                <div class="flex-shrink-0">
-                                                    <i class="i-tabler-circle-x text-xl text-red-600"></i>
-                                                </div>
-                                                <div class="flex-grow">
-                                                    <div
-                                                        class="flex items-center bg-red-100 text-red-700 text-sm px-4 rounded mb-2">
-                                                        {{ $message }}
-                                                        <button data-hs-remove-element="#dismiss-alert" type="button"
-                                                            id="dismiss-test"
-                                                            class="ms-auto h-6 w-6 rounded-full bg-gray-200 flex justify-center items-center">
-                                                            <i class="i-tabler-x text-red-600"></i>
-                                                        </button>
-                                                    </div>
-                                                </div>
+            <!-- modal tạo loại biển báo -->
 
-                                            </div>
-                                        </div>
-                                    @enderror
+            <div id="modal-create" class="hs-overlay hidden fixed inset-0 z-[99999] overflow-x-hidden overflow-y-auto">
+                <div
+                    class="hs-overlay-open:opacity-100 hs-overlay-open:scale-100 opacity-0 scale-95 ease-out transition-all duration-300 sm:max-w-lg sm:w-full m-3 sm:mx-auto min-h-[calc(100%-3.5rem)] flex items-center">
+                    <div class="modal-content w-full bg-white border shadow-xl rounded-xl overflow-hidden">
 
-                                    <input type="text" id="LicenseTypeName" name="SignagesTypeName"
-                                        class="form-input w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500
-                                                                    {{ $errors->has('LicenseTypeName') ? 'border-red-500 focus:ring-red-500' : 'border-gray-300' }}"
-                                        value="{{ old('LicenseTypeName') }}">
+                        <!-- Header -->
+                        <div class="bg-gradient-to-r bg-primary p-6">
+                            <div class="flex justify-between items-center">
+                                <div class="flex items-center space-x-3">
+                                    <!-- <div class="w-10 h-10 bg-white/20 rounded-lg flex items-center justify-center">
+                                                                <i class="i-solar-add-circle-bold text-white text-xl"></i>
+                                                            </div> -->
+                                    <div>
+                                        <h3 class="font-bold text-white text-lg">Thêm Dữ Liệu</h3>
+                                        <p class="text-white/80 text-sm">Điền thông tin vào các trường bên dưới</p>
+                                    </div>
                                 </div>
-
-                                <div class="mb-3">
-                                    <label for="example-email"
-                                        class="text-default-800 text-sm font-medium inline-block mb-2">Mô
-                                        Mô tả loại biển báo</label>
-                                    @error("LicenseTypeDescription")
-                                        @error("LicenseTypeDescription")
-                                            <div id="dismiss-alert_2" role="alert">
-                                                <div class="flex items-center">
-                                                    <div class="flex-shrink-0">
-                                                        <i class="i-tabler-circle-x text-red-600"></i>
-                                                    </div>
-                                                    <div class="flex-grow">
-                                                        <div
-                                                            class="flex items-center bg-red-100 text-red-700 text-sm px-4 rounded mb-2">
-                                                            {{ $message }}
-                                                            <button data-hs-remove-element="#dismiss-alert_2" type="button"
-                                                                id="dismiss-test"
-                                                                class="ms-auto h-6 w-6 rounded-full bg-gray-200 flex justify-center items-center">
-                                                                <i class="i-tabler-x text-red-600"></i>
-                                                            </button>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        @enderror
-
-                                    @enderror
-                                    <textarea type="text" id="example-email" name="SignagesTypeDescription"
-                                        class="form-input"></textarea>
-                                </div>
-
-                            </div>
-                            <div class="flex justify-end items-center gap-x-2 py-3 px-4 border-t border-default-200">
                                 <button type="button"
-                                    class="py-2 px-5 inline-flex items-center justify-center font-medium tracking-wide border align-middle duration-500 text-sm text-center bg-primary/5 hover:bg-primary border-primary/10 hover:border-primary text-primary hover:text-white rounded-md"
+                                    class="w-8 h-8 flex items-center justify-center rounded-lg bg-white/20 text-white hover:bg-white/30 transition-colors"
                                     data-hs-overlay="#modal-create">
-                                    <i class="i-tabler-x me-1"></i>
-                                    Thoát
+                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            d="M6 18L18 6M6 6l12 12"></path>
+                                    </svg>
                                 </button>
-                                <button type="submit"
-                                    class="py-2 px-5 inline-flex items-center justify-center font-medium tracking-wide border align-middle duration-500 text-sm text-center bg-primary hover:bg-primary-700 border-primary hover:border-primary-700 text-white rounded-md">
-                                    Tạo
-                                </button>
-
                             </div>
                         </div>
+
+                        <!-- Body -->
+                        <form action="{{ route("admintrafficbot.signagestype.store") }}" method="post"
+                            class="p-6 space-y-5">
+                            @csrf
+
+                            <!-- Tên -->
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-1" for="name">
+                                    Tên loại biển báo</label>
+                                @error('SignagesTypeName', 'create')
+                                    <div id="create_errpr" class="flex items-center bg-red-100 text-red-700 text-sm px-4 mb-2">
+                                        {{ $message }}
+                                    </div>
+                                @enderror
+                                <input type="text" id="SignagesTypeName" name="SignagesTypeName" required
+                                    class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring focus:ring-blue-200">
+                            </div>
+
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-1" for="name">
+                                    Mô tả loại biển báo</label>
+                                @error('SignagesTypeDescription', 'create')
+                                    <div id="create_errpr" class="flex items-center bg-red-100 text-red-700 text-sm px-4 mb-2">
+                                        {{ $message }}
+                                    </div>
+                                @enderror
+                                <textarea type="text" id="SignagesTypeDescription" name="SignagesTypeDescription" required
+                                    class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring focus:ring-blue-200"></textarea>
+                            </div>
+
+                            <!-- Footer -->
+                            <div class="border-t pt-4 flex justify-end gap-3">
+                                <button type="button"
+                                    class="px-4 py-2 text-sm font-medium border border-gray-300 rounded-lg bg-white text-gray-700 hover:bg-gray-50 transition-colors"
+                                    data-hs-overlay="#modal-create">
+                                    Hủy
+                                </button>
+                                <button type="submit"
+                                    class="px-4 py-2 text-sm font-semibold rounded-lg bg-blue-600 text-white hover:bg-blue-700 transition-colors">
+                                    Lưu
+                                </button>
+                            </div>
+                        </form>
                     </div>
                 </div>
-            </form>
+            </div>
+
             <!-- end modal-->
 
             <!-- modal edit -->
+
             @foreach ($signagesType as $signage)
-                <form action="{{ route("admintrafficbot.signagestype.update", ["ID" => $signage->SignageTypeID]) }}"
-                    method="post">
-                    @csrf
-                    <div id="edit-{{ $signage->SignageTypeID }}"
-                        class="hs-overlay w-full h-full fixed top-0 left-0 z-70 transition-all duration-500 overflow-y-auto hidden pointer-events-none flex items-center justify-center">
-                        <div
-                            class="translate-y-10 hs-overlay-open:translate-y-0 hs-overlay-open:opacity-100 opacity-0 ease-in-out transition-all duration-500 sm:max-w-lg sm:w-full my-8 sm:mx-auto flex flex-col bg-white shadow-sm rounded">
-                            <div class="flex flex-col border border-default-200 shadow-sm rounded-lg  pointer-events-auto">
-                                <div class="flex justify-between items-center py-3 px-4 border-b border-default-200">
-                                    <h3 class="text-lg font-medium text-default-900 ">
-                                        Chỉnh sửa loại biển báo
-                                    </h3>
-                                    <button type="button" class="text-default-600 cursor-pointer"
-                                        data-hs-overlay="#edit-{{ $signage->SignageTypeID }}">
-                                        <i class="i-tabler-x text-lg"></i>
-                                    </button>
-                                </div>
-                                <div class="p-4 overflow-y-auto">
-                                    <div class="mb-3">
-                                        <label for="LicenseTypeName" class="text-gray-700 text-sm font-semibold mb-2 block">
-                                            Tên biển báo
-                                        </label>
-                                        @error('LicenseTypeName')
-                                            <div id="dismiss-alert" role="alert">
-                                                <div class="flex items-center">
-                                                    <div class="flex-shrink-0">
-                                                        <i class="i-tabler-circle-x text-xl text-red-600"></i>
-                                                    </div>
-                                                    <div class="flex-grow">
-                                                        <div
-                                                            class="flex items-center bg-red-100 text-red-700 text-sm px-4 rounded mb-2">
-                                                            {{ $message }}
-                                                            <button data-hs-remove-element="#dismiss-alert" type="button"
-                                                                id="dismiss-test"
-                                                                class="ms-auto h-6 w-6 rounded-full bg-gray-200 flex justify-center items-center">
-                                                                <i class="i-tabler-x text-red-600"></i>
-                                                            </button>
-                                                        </div>
-                                                    </div>
+                <div id="edit-{{ $signage->SignageTypeID }}"
+                    class="hs-overlay hidden fixed inset-0 z-[99999] overflow-x-hidden overflow-y-auto">
+                    <div
+                        class="hs-overlay-open:opacity-100 hs-overlay-open:scale-100 opacity-0 scale-95 ease-out transition-all duration-300 sm:max-w-lg sm:w-full m-3 sm:mx-auto min-h-[calc(100%-3.5rem)] flex items-center">
+                        <div class="modal-content w-full bg-white border shadow-xl rounded-xl overflow-hidden">
 
-                                                </div>
-                                            </div>
-                                        @enderror
-
-                                        <input type="text" id="LicenseTypeName" name="SignagesTypeName"
-                                            value="{{ $signage->SignagesTypeName }}"
-                                            class="form-input w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                            <!-- Header -->
+                            <div class="bg-gradient-to-r bg-primary p-6">
+                                <div class="flex justify-between items-center">
+                                    <div class="flex items-center space-x-3">
+                                        <!-- <div class="w-10 h-10 bg-white/20 rounded-lg flex items-center justify-center">
+                                                                    <i class="i-solar-add-circle-bold text-white text-xl"></i>
+                                                                </div> -->
+                                        <div>
+                                            <h3 class="font-bold text-white text-lg">Chỉnh sửa dữ liệu</h3>
+                                            <p class="text-white/80 text-sm">Điền thông tin vào các trường bên dưới</p>
+                                        </div>
                                     </div>
-
-                                    <div class="mb-3">
-                                        <label for="example-email"
-                                            class="text-default-800 text-sm font-medium inline-block mb-2">Mô
-                                            Mô tả loại biển báo</label>
-                                        @error("LicenseTypeDescription")
-                                            @error("LicenseTypeDescription")
-                                                <div id="dismiss-alert_2" role="alert">
-                                                    <div class="flex items-center">
-                                                        <div class="flex-shrink-0">
-                                                            <i class="i-tabler-circle-x text-red-600"></i>
-                                                        </div>
-                                                        <div class="flex-grow">
-                                                            <div
-                                                                class="flex items-center bg-red-100 text-red-700 text-sm px-4 rounded mb-2">
-                                                                {{ $message }}
-                                                                <button data-hs-remove-element="#dismiss-alert_2" type="button"
-                                                                    id="dismiss-test"
-                                                                    class="ms-auto h-6 w-6 rounded-full bg-gray-200 flex justify-center items-center">
-                                                                    <i class="i-tabler-x text-red-600"></i>
-                                                                </button>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            @enderror
-
-                                        @enderror
-                                        <textarea type="text" id="example-email" name="SignagesTypeDescription"
-                                            class="form-input">{{ $signage->SignagesTypeDescription }}</textarea>
-                                    </div>
-
-                                </div>
-                                <div class="flex justify-end items-center gap-x-2 py-3 px-4 border-t border-default-200">
                                     <button type="button"
-                                        class="py-2 px-5 inline-flex items-center justify-center font-medium tracking-wide border align-middle duration-500 text-sm text-center bg-primary/5 hover:bg-primary border-primary/10 hover:border-primary text-primary hover:text-white rounded-md"
+                                        class="w-8 h-8 flex items-center justify-center rounded-lg bg-white/20 text-white hover:bg-white/30 transition-colors"
                                         data-hs-overlay="#edit-{{ $signage->SignageTypeID }}">
-                                        <i class="i-tabler-x me-1"></i>
-                                        Thoát
+                                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                d="M6 18L18 6M6 6l12 12"></path>
+                                        </svg>
                                     </button>
-                                    <button type="submit"
-                                        class="py-2 px-5 inline-flex items-center justify-center font-medium tracking-wide border align-middle duration-500 text-sm text-center bg-primary hover:bg-primary-700 border-primary hover:border-primary-700 text-white rounded-md">
-                                        Cập nhật
-                                    </button>
-
                                 </div>
                             </div>
+
+                            <!-- Body -->
+                            <form action="{{ route("admintrafficbot.signagestype.update", ["ID" => $signage->SignageTypeID]) }}"
+                                method="POST" class="p-6 space-y-5">
+                                @csrf
+                                <!-- Tên -->
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 mb-1" for="name">
+                                        Tên loại biển báo</label>
+                                    @error('SignagesTypeName', 'edit')
+                                        <div id="create_errpr" class="flex items-center bg-red-100 text-red-700 text-sm px-4 mb-2">
+                                            {{ $message }}
+                                        </div>
+                                    @enderror
+                                    <input type="text" id="LicenseTypeName" name="SignagesTypeName"
+                                        value="{{ $signage->SignagesTypeName }}" required
+                                        class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring focus:ring-blue-200">
+                                </div>
+
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 mb-1" for="name">
+                                        Mô tả loại biển báo</label>
+                                    @error('SignagesTypeDescription', 'edit')
+                                        <div id="create_errpr" class="flex items-center bg-red-100 text-red-700 text-sm px-4 mb-2">
+                                            {{ $message }}
+                                        </div>
+                                    @enderror
+                                    <textarea type="text" id="SignagesTypeDescription" name="SignagesTypeDescription" required
+                                        class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring focus:ring-blue-200">{{ $signage->SignagesTypeDescription }}</textarea>
+                                </div>
+
+                                <!-- Footer -->
+                                <div class="border-t pt-4 flex justify-end gap-3">
+                                    <button type="button"
+                                        class="px-4 py-2 text-sm font-medium border border-gray-300 rounded-lg bg-white text-gray-700 hover:bg-gray-50 transition-colors"
+                                        data-hs-overlay="#edit-{{ $signage->SignageTypeID }}">
+                                        Hủy
+                                    </button>
+                                    <button type="submit"
+                                        class="px-4 py-2 text-sm font-semibold rounded-lg bg-blue-600 text-white hover:bg-blue-700 transition-colors">
+                                        cập nhât
+                                    </button>
+                                </div>
+                            </form>
                         </div>
                     </div>
-                </form>
+                </div>
             @endforeach
+
             <!-- end modal-->
 
 
@@ -469,53 +426,88 @@
                 <!-- end modal -->
             @endforeach
 
+
+
+
+
+     
+
+
             <!-- modal show -->
-            @foreach ($signagesType as $signage)
-                <!-- modal chỉnh sửa câu loại biển báo -->
+                   @foreach ($signagesType as $signage)
                 <div id="show-{{ $signage->SignageTypeID }}"
-                    class="hs-overlay w-full h-full fixed top-0 left-0 z-70 transition-all duration-500 overflow-y-auto hidden pointer-events-none flex items-center justify-center">
+                    class="hs-overlay hidden fixed inset-0 z-[99999] overflow-x-hidden overflow-y-auto">
                     <div
-                        class="translate-y-10 hs-overlay-open:translate-y-0 hs-overlay-open:opacity-100 opacity-0 ease-in-out transition-all duration-500 sm:max-w-lg sm:w-full my-8 sm:mx-auto flex flex-col bg-white shadow-sm rounded">
-                        <div class="flex flex-col border border-default-200 shadow-sm rounded-lg  pointer-events-auto">
-                            <div class="flex justify-between items-center py-3 px-4 border-b border-default-200">
-                                <h3 class="text-lg font-medium text-default-900 ">
-                                    Chi tiết loại biển báo
-                                </h3>
-                                <button type="button" class="text-default-600 cursor-pointer"
-                                    data-hs-overlay="#show-{{ $signage->SignageTypeID }}">
-                                    <i class="i-tabler-x text-lg"></i>
-                                </button>
+                        class="hs-overlay-open:opacity-100 hs-overlay-open:scale-100 opacity-0 scale-95 ease-out transition-all duration-300 sm:max-w-lg sm:w-full m-3 sm:mx-auto min-h-[calc(100%-3.5rem)] flex items-center">
+                        <div class="modal-content w-full bg-white border shadow-xl rounded-xl overflow-hidden">
+
+                            <!-- Header -->
+                            <div class="bg-gradient-to-r bg-primary p-6">
+                                <div class="flex justify-between items-center">
+                                    <div class="flex items-center space-x-3">
+                                        <!-- <div class="w-10 h-10 bg-white/20 rounded-lg flex items-center justify-center">
+                                                                    <i class="i-solar-add-circle-bold text-white text-xl"></i>
+                                                                </div> -->
+                                        <div>
+                                            <h3 class="font-bold text-white text-lg">Chi tiết dữ liệu</h3>
+                                            <p class="text-white/80 text-sm">Thông tin chi tiết về loại biển báo</p>
+                                        </div>
+                                    </div>
+                                    <button type="button"
+                                        class="w-8 h-8 flex items-center justify-center rounded-lg bg-white/20 text-white hover:bg-white/30 transition-colors"
+                                        data-hs-overlay="#show-{{ $signage->SignageTypeID }}">
+                                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                d="M6 18L18 6M6 6l12 12"></path>
+                                        </svg>
+                                    </button>
+                                </div>
                             </div>
-                            <div class="p-4 overflow-y-auto">
-                                <div class="mb-3">
-                                    <label for="LicenseTypeName" class="text-gray-700 text-sm font-semibold mb-2 block">
-                                        Tên biển báo
-                                    </label>
+
+                            <!-- Body -->
+                            <div class="p-6 space-y-5">
+                                
+                                <!-- Tên -->
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 mb-1" for="name">
+                                        Tên loại biển báo</label>
+                                    @error('SignagesTypeName', 'edit')
+                                        <div id="err_SignagesTypeName"
+                                            class="flex items-center bg-red-100 text-red-700 text-sm px-4 mb-2">
+                                            {{ $message }}
+                                        </div>
+                                    @enderror
                                     <input readonly type="text" id="LicenseTypeName" name="SignagesTypeName"
-                                        value="{{ $signage->SignagesTypeName }}"
-                                        class="form-input w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                                        value="{{ $signage->SignagesTypeName }}" required
+                                        class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring focus:ring-blue-200">
                                 </div>
 
-                                <div class="mb-3">
-                                    <label for="example-email" class="text-default-800 text-sm font-medium inline-block mb-2">Mô
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 mb-1" for="name">
                                         Mô tả loại biển báo</label>
-                                    <textarea readonly type="text" id="example-email" name="SignagesTypeDescription"
-                                        class="form-input">{{ $signage->SignagesTypeDescription }}</textarea>
+                                    @error('SignagesTypeDescription', 'edit')
+                                        <div id="err_SignagesTypeDescription"
+                                            class="flex items-center bg-red-100 text-red-700 text-sm px-4 mb-2">
+                                            {{ $message }}
+                                        </div>
+                                    @enderror
+                                    <textarea readonly type="text" id="SignagesTypeDescription" name="SignagesTypeDescription"
+                                        required
+                                        class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring focus:ring-blue-200">{{ $signage->SignagesTypeDescription }}</textarea>
                                 </div>
 
-                            </div>
-                            <div class="flex justify-end items-center gap-x-2 py-3 px-4 border-t border-default-200">
-                                <button type="button"
-                                    class="py-2 px-5 inline-flex items-center justify-center font-medium tracking-wide border align-middle duration-500 text-sm text-center bg-primary/5 hover:bg-primary border-primary/10 hover:border-primary text-primary hover:text-white rounded-md"
-                                    data-hs-overlay="#show-{{ $signage->SignageTypeID }}">
-                                    <i class="i-tabler-x me-1"></i>
-                                    Thoát
-                                </button>
+                                <!-- Footer -->
+                                <div class="border-t pt-4 flex justify-end gap-3">
+                                    <button type="button"
+                                        class="px-4 py-2 text-sm font-semibold rounded-lg bg-blue-600 text-white hover:bg-blue-700 transition-colors"
+                                        data-hs-overlay="#show-{{ $signage->SignageTypeID }}">
+                                        Đóng
+                                    </button>
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
-
             @endforeach
             <!-- end modal-->
 

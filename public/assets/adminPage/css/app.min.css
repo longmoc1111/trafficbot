@@ -5274,8 +5274,8 @@ main {
 @media (min-width:640px) {
     main {
         max-width: 640px;
-        padding-right: 2rem;
-        padding-left: 2rem
+        /* padding-right: 2rem;
+        padding-left: 2rem */
     }
 }
 
@@ -5294,7 +5294,7 @@ main {
     }
 
     main {
-        max-width: 768px
+        max-width: 900px
     }
 }
 
@@ -6854,8 +6854,8 @@ main {
 @media (min-width:1280px) {
     main {
         max-width: 1280px;
-        padding-right: 5rem;
-        padding-left: 5rem
+        /* padding-right: 5rem;
+        padding-left: 5rem */
     }
 
     .xl\:col-span-2 {
@@ -6874,8 +6874,8 @@ main {
 @media (min-width:1536px) {
     main {
         max-width: 1536px;
-        padding-right: 4rem;
-        padding-left: 4rem
+        /* padding-right: 4rem;
+        padding-left: 4rem */
     }
 
     .\32xl\:grid-cols-2 {

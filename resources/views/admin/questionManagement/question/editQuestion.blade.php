@@ -7,7 +7,7 @@
             @csrf
             @method("PUT")
             <input type="text" name = "redirect-back" hidden value = "{{ url()->current() }}">
-             
+
 
             <div class="flex flex-col gap-6">
                 <div class="card border rounded shadow">
@@ -58,7 +58,7 @@
                         </div>
 
                     @endif
-                    
+
 
                     <div class="p-6">
                         <div class="grid lg:grid-cols-2 gap-6">
@@ -67,9 +67,15 @@
                                     <label for="simpleinput" class="text-default-800 text-sm font-medium inline-block mb-2">
                                         loại câu hỏi</label>
                                     <select name="CategoryID" class="form-select" id="example-select">
-                                        @foreach ($questionCategory as $category)
-                                            <option value="{{ $category->CategoryID }}" {{ $category->CategoryID == $question->categoryQuestion_Question->CategoryID ? "selected" : '' }}>{{ $category->CategoryName }}</option>
-                                        @endforeach
+                                        @if(empty($question->categoryQuestion_Question->CategoryID))
+                                            <option  value="">Chưa thuộc loại câu hỏi nào</option>
+                                        @endif
+                                            @foreach ($questionCategory as $category)
+                                                <option value="{{ $category->CategoryID }}" {{ !empty($question->categoryQuestion_Question->CategoryID) && $category->CategoryID == $question->categoryQuestion_Question->CategoryID ? "selected" : '' }}>
+                                                    {{ $category->CategoryName }}</option>
+                                            @endforeach
+                                        
+
                                     </select>
                                 </div>
 
@@ -100,7 +106,7 @@
                                         value="{{ $question->QuestionName }}">
                                 </div>
 
- 
+
                                 @if(!empty($arrAnswers[0]) && $arrAnswers[0]["AnswerLabel"] == "A")
                                     <div class="mb-3">
                                         <div class="flex items-center gap-4 mb-2">
@@ -203,7 +209,7 @@
                                             </div>
                                         </div>
 
-                                        
+
                                         <input name="Answers[]" type="text" id="example-palaceholder" class="form-input"
                                             value="{{ $arrAnswers[2]["AnswerName"] }}">
                                             <input  name="AnswerIDs[]" type="hidden" id="example-palaceholder" class="form-input"
@@ -302,9 +308,9 @@
                                         class="form-input" placeholder="">{{ $question->QuestionExplain }}</textarea>
                                 </div>
 
-                          
 
-                              
+
+
                                 <div class="mb-3">
                                     <label for="description_image"
                                         class="text-default-800 text-sm font-medium inline-block mb-2">Ảnh mô tả(đối với câu
@@ -355,7 +361,7 @@
                                                     <label class="inline-flex items-center text-sm text-gray-600">
                                                         <span style="margin-right: 10px;">Áp dụng</span>
                                                         <input type="checkbox" name="licenseTypes[]"
-                                                            value="{{ $license->LicenseTypeID }}" {{ in_array($license->LicenseTypeID, $appliedLicenseIDs)? "checked" : ""  }}
+                                                            value="{{ $license->LicenseTypeID }}" {{ in_array($license->LicenseTypeID, $appliedLicenseIDs) ? "checked" : ""  }}
                                                             class="form-checkbox text-blue-600 rounded-sm">
 
                                                     </label>

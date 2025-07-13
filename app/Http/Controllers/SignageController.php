@@ -5,6 +5,7 @@ use App\Models\Signage;
 use File;
 use Illuminate\Http\Request;
 use App\Models\SignageType;
+use Validator;
 use function Laravel\Prompts\search;
 
 class SignageController extends Controller
@@ -36,7 +37,7 @@ class SignageController extends Controller
     // }
     public function storeSignageTypes(Request $request)
     {
-        $validate = $request->validate(
+        $validator = Validator::make($request->all(), 
             [
                 "SignagesTypeName" => "required",
                 "SignagesTypeDescription" => "required"
@@ -46,7 +47,10 @@ class SignageController extends Controller
                 "SignagesTypeDescription.required" => "không được để trông!",
             ]
         );
-        $signages = SignageType::create($validate);
+        if($validator->fails()){
+            return back()->withErrors($validator,"create")->withInput();
+        }
+        $signages = SignageType::create($validator->validated());
         if ($signages) {
             return redirect()->route("admintrafficbot.listsignagetypes")->with("create_success", "Thêm mới loại biển báo thành công!");
         } else {
@@ -177,7 +181,7 @@ class SignageController extends Controller
 
     public function updateSignages($ID, Request $request)
     {
-        // dd($request->all());
+    
 
         $validate = $request->validate(
             [
@@ -203,8 +207,10 @@ class SignageController extends Controller
             $fileNameWithoutExt = pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME);
             $fileNameExt = $file->getClientOriginalExtension();
             $newFileName = $fileNameWithoutExt . "_" . time() . "." . $fileNameExt;
-            $file->move(storage_path("app/public/uploads/imageSignage"),"$newFileName");
+     
+            $file->move(storage_path("app/public/uploads/imageSignage"),$newFileName);
             $validate["SignageImage"] = $newFileName;
+
         }
         $signage = Signage::find($ID);
         if ($signage) {

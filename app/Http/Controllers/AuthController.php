@@ -35,12 +35,12 @@ class AuthController extends Controller
         //     return back();
         // }
           if (!$check) {
-            return redirect()->route("login")->with("err_login", "Email chưa được đăng ký !");
+            return redirect()->back()->with("err_login", "Email chưa được đăng ký !");
         }
         if ($check->status != "active") {
-            return redirect()->route("login")->with("err_login", "Tài khoản chưa được kích hoạt !");
+            return redirect()->route("login")->with("err_login" , "Tài khoản chưa được kích hoạt !");
         }
-      
+    
         $credentials = $request->only("email", "password");
         if (Auth::attempt($credentials)) {
             $user = Auth::user();
@@ -130,11 +130,16 @@ class AuthController extends Controller
 
 
 
+
+
+
+
+
     //quản lý tài khoản 
 
     public function listAccount()
     {
-        $accounts = User::get();
+        $accounts = User::orderBy("created_at", "ASC")->paginate(10);
         $roles = Role::get();
         return view("admin.accountManagement.listAccount", compact("accounts", "roles"));
     }
@@ -255,6 +260,20 @@ class AuthController extends Controller
         }
 
     }
+    
+    public function deleteAccount($ID)
+    {
+        $user = User::find($ID);
+        if ($user) {
+            $user->delete();
+            return redirect()->route("admintrafficbot.listaccount")->with("delete_success", "Xóa tài khoản thành công!");
+        } else {
+            return redirect()->route("admintrafficbot.listaccount")->with("delete_fails", "Xóa không thành công, vui lòng thử lại sau!");
+
+        }
+    }
+    //end quản lý tài khoản
+
     function changePassword($ID, Request $request){
         $validator = Validator::make($request->all(),[
             "currentPassword"=>"required",
@@ -286,21 +305,6 @@ class AuthController extends Controller
         }
 
     }
-
-
-    public function deleteAccount($ID)
-    {
-        $user = User::find($ID);
-        if ($user) {
-            $user->delete();
-            return redirect()->route("admintrafficbot.listaccount")->with("delete_success", "Xóa tài khoản thành công!");
-        } else {
-            return redirect()->route("admintrafficbot.listaccount")->with("delete_fails", "Xóa không thành công, vui lòng thử lại sau!");
-
-        }
-    }
-    //end quản lý tài khoản
-
 
 
 
