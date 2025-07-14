@@ -310,7 +310,7 @@
                             <div class="flex justify-between items-center">
                                 <div class="flex items-center space-x-3">
                                     <div class="w-10 h-10 bg-white/20 rounded-lg flex items-center justify-center">
-                                        <i class="i-solar-user-bold-duotone text-white text-xl"></i>
+                                        <i class="ti ti-id text-white text-xl"></i>
                                     </div>
                                     <div>
                                         <h3 class="font-bold text-white text-lg">Thông tin cá nhân</h3>
@@ -356,7 +356,7 @@
                                 <div class="bg-blue-50 border border-blue-100 rounded-lg p-4">
                                     <div class="flex items-center">
                                         <div class="w-10 h-10 bg-blue-500 rounded-lg flex items-center justify-center mr-3">
-                                            <i class="i-solar-user-bold text-white"></i>
+                                            <i class="ti ti-user text-white"></i>
                                         </div>
                                         <div>
                                             <p class="text-blue-600 font-medium text-sm">Họ và tên</p>
@@ -369,7 +369,7 @@
                                 <div class="bg-green-50 border border-green-100 rounded-lg p-4">
                                     <div class="flex items-center">
                                         <div class="w-10 h-10 bg-green-500 rounded-lg flex items-center justify-center mr-3">
-                                            <i class="i-solar-letter-bold text-white"></i>
+                                            <i class="ti ti-mail text-white"></i>
                                         </div>
                                         <div class="min-w-0 flex-1">
                                             <p class="text-green-600 font-medium text-sm">Email</p>
@@ -382,7 +382,7 @@
                                 <div class="bg-purple-50 border border-purple-100 rounded-lg p-4">
                                     <div class="flex items-center">
                                         <div class="w-10 h-10 bg-purple-500 rounded-lg flex items-center justify-center mr-3">
-                                            <i class="i-solar-crown-bold text-white"></i>
+                                            <i class="ti ti-shield text-white"></i>
                                         </div>
                                         <div>
                                             <p class="text-purple-600 font-medium text-sm">Vai trò</p>
@@ -390,24 +390,6 @@
                                                 {{ Auth::user()->role_User->roleName ?? 'Người dùng' }}
                                             </span>
                                         </div>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <!-- Statistics -->
-                            <div class="bg-gray-50 rounded-lg p-4">
-                                <h4 class="font-semibold text-gray-900 mb-3 flex items-center">
-                                    <i class="i-solar-chart-square-bold text-orange-500 mr-2"></i>
-                                    Thống kê hoạt động
-                                </h4>
-                                <div class="grid grid-cols-2 gap-4">
-                                    <div class="text-center p-3 bg-orange-100 rounded-lg">
-                                        <div class="text-2xl font-bold text-orange-600">12</div>
-                                        <div class="text-xs text-orange-600">Bài thi đã làm</div>
-                                    </div>
-                                    <div class="text-center p-3 bg-teal-100 rounded-lg">
-                                        <div class="text-2xl font-bold text-teal-600">8.5</div>
-                                        <div class="text-xs text-teal-600">Điểm trung bình</div>
                                     </div>
                                 </div>
                             </div>

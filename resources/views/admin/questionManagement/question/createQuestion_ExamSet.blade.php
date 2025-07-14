@@ -1,137 +1,103 @@
 @extends("admin.adminPageLayout.layout")
 @section("main")
 
-    <main>
-        <form action="{{ route("admintrafficbot.examset_question.store", $examSet->ExamSetID) }}" method="POST"
-            enctype="multipart/form-data">
-            @csrf
+   <main>
+    <form action="{{ route("admintrafficbot.examset_question.store", $examSet->ExamSetID) }}" method="POST" enctype="multipart/form-data">
+        @csrf
+        <input type="hidden" name="redirect-back" value="{{ url()->current() }}">
 
-            <input type="text" name = "redirect-back" hidden value = "{{ url()->current() }}">
-            <!-- Page Title Start -->
-           
-            <!-- Page Title End -->
-            <div class="flex flex-col">
-                <div class="card border rounded shadow w-full">
-                    <div class="flex items-center justify-between px-6 py-4 border-b">
-                        <h4 class="text-lg font-semibold">
-                            Tạo ngẫu nhiên
-                            {{ $examSet->ExamSetName }}
-                            ({{ $examSet->licenseType_ExamSet->pluck("LicenseTypeName")->first() }})
-                            <input hidden name="licenseTypeID" type="text" value={{  $examSet->licenseType_ExamSet->pluck("LicenseTypeID")->first() }}>
-                        </h4>
-                        <button type="submit"
-                            class="btn border-success text-success hover:bg-success hover:text-white">Tạo</button>
-                    </div>
-                  
-                    @error("quantity_error") 
-                        <div id="dismiss-alert_1"
-                            class="hs-removing:translate-x-5 hs-removing:opacity-0 transition duration-300 bg-red-100 border rounded-md "
-                            role="alert">
-                            <div class="flex items-center gap-3">
-                                <div class="flex-shrink-0">
-                                    <i class="i-tabler-circle-x text-red-600"></i>
-                                </div>
-                                <div class="flex-grow">
-                                    <div class="text-sm text-red-800 font-medium">
-                                        {{ $message }}
-                                    </div>
-                                </div>
-                                <button data-hs-remove-element="#dismiss-alert_1" type="button" id="dismiss-test"
-                                    class="ms-auto h-8 w-8 rounded-full bg-gray-200 flex justify-center items-center">
-                                    <i class="i-tabler-x text-xl text-red-600"></i>
-                                </button>
-                            </div>
+        <div class="bg-white border shadow-xl rounded-xl overflow-hidden">
+            <!-- Header -->
+            <div class="bg-gradient-to-r bg-primary p-6 border-b">
+                <div class="flex justify-between items-center">
+                    <div class="flex items-center space-x-3">
+                        <div class="w-10 h-10 bg-white/20 rounded-lg flex items-center justify-center">
+                            <i class="ti ti-list-details text-white text-xl"></i>
                         </div>
-
-                    @enderror
-                      @error("question_created") 
-                        <div id="dismiss-alert_1"
-                            class="hs-removing:translate-x-5 hs-removing:opacity-0 transition duration-300 bg-red-100 border rounded-md "
-                            role="alert">
-                            <div class="flex items-center gap-3">
-                                <div class="flex-shrink-0">
-                                    <i class="i-tabler-circle-x text-red-600"></i>
-                                </div>
-                                <div class="flex-grow">
-                                    <div class="text-sm text-red-800 font-medium">
-                                        {{ $message }}
-                                    </div>
-                                </div>
-                                <button data-hs-remove-element="#dismiss-alert_1" type="button" id="dismiss-test"
-                                    class="ms-auto h-8 w-8 rounded-full bg-gray-200 flex justify-center items-center">
-                                    <i class="i-tabler-x text-xl text-red-600"></i>
-                                </button>
-                            </div>
-                        </div>
-
-                    @enderror  
-                    @error( "iscritical_null") 
-                        <div id="dismiss-alert_1"
-                            class="hs-removing:translate-x-5 hs-removing:opacity-0 transition duration-300 bg-red-100 border rounded-md "
-                            role="alert">
-                            <div class="flex items-center gap-3">
-                                <div class="flex-shrink-0">
-                                    <i class="i-tabler-circle-x text-red-600"></i>
-                                </div>
-                                <div class="flex-grow">
-                                    <div class="text-sm text-red-800 font-medium">
-                                        {{ $message }}
-                                    </div>
-                                </div>
-                                <button data-hs-remove-element="#dismiss-alert_1" type="button" id="dismiss-test"
-                                    class="ms-auto h-8 w-8 rounded-full bg-gray-200 flex justify-center items-center">
-                                    <i class="i-tabler-x text-xl text-red-600"></i>
-                                </button>
-                            </div>
-                        </div>
-
-                    @enderror
-                    <div class="p-6">
-                        <!-- Bỏ grid-col-2 để không chia cột -->
-                        <div class="w-full">
-                            <div class="mb-4 w-full">
-                                <label class="text-default-800 text-sm font-medium mb-2 inline-block">
-                                    Chọn loại câu hỏi và số lượng cần random
-                                </label>
-
-                                @foreach ($questionCategory as $category)
-                                @php
-                                    $categoryID = $category->CategoryID;
-                                    $quantity = $categoryQuantity[$categoryID] ?? null;
-                                @endphp
-                                    <div class="flex items-center mb-2 w-full gap-2">
-                                        <!-- Checkbox -->
-                                        <div class="w-1/12 flex justify-center category-checkbox">
-                                            <input type="checkbox" name="selected_categories[]"
-                                                id="checkbox-{{ $categoryID }}" value="{{ $categoryID}}"
-                                                class="form-checkbox text-blue-600 w-5 h-5"
-                                                {{ $quantity !== null ? "checked" : "" }}>
-                                        </div>
-
-                                        <!-- Label -->
-                                        <label for="checkbox-{{ $categoryID}}"
-                                            class="w-7/12 text-sm font-medium text-gray-800">
-                                            {{ $category->CategoryName }}
-                                        </label>
-
-                                        <!-- Input số lượng -->
-                                        <div class="w-4/12">
-                                            <input type="number" name="amounts[{{ $categoryID}}]" min="0"
-                                                placeholder="Số lượng" value = {{ $quantity ?? 'null' }}
-                                                class="category-input form-input w-full border border-gray-300 rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition duration-200">
-                                        </div>
-                                    </div>
-                                @endforeach
-                            </div>
+                        <div>
+                            <h3 class="font-bold text-white text-lg">
+                                Tạo ngẫu nhiên: {{ $examSet->ExamSetName }}
+                            </h3>
+                            <p class="text-white/80 text-sm">
+                                Hạng {{ $examSet->licenseType_ExamSet->pluck("LicenseTypeName")->first() }}
+                            </p>
                         </div>
                     </div>
+
+                    <button type="submit"
+                        class="px-4 py-2 text-sm font-semibold rounded-lg bg-white/20 text-white hover:bg-white/30 transition-colors">
+                        Tạo
+                    </button>
+                </div>
+                <input type="hidden" name="licenseTypeID" value="{{ $examSet->licenseType_ExamSet->pluck("LicenseTypeID")->first() }}">
+            </div>
+
+            <!-- Body -->
+            <div class="p-6 space-y-6">
+                {{-- Hiển thị lỗi --}}
+                @foreach (['quantity_error', 'question_created', 'iscritical_null'] as $errorKey)
+                    @error($errorKey)
+                        <div class="bg-red-100 border border-red-300 text-sm text-red-700 rounded-md px-4 py-3 flex justify-between items-center">
+                            <div class="flex items-center gap-2">
+                                <i class="i-tabler-circle-x text-lg text-red-600"></i>
+                                <span>{{ $message }}</span>
+                            </div>
+                            <button type="button" class="h-6 w-6 rounded-full bg-white hover:bg-red-200 flex items-center justify-center"
+                                onclick="this.parentElement.remove()">
+                                <i class="i-tabler-x text-red-600 text-base"></i>
+                            </button>
+                        </div>
+                    @enderror
+                @endforeach
+
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-3">
+                        Chọn loại câu hỏi và số lượng cần random
+                    </label>
+
+                    @foreach ($questionCategory as $category)
+                        @php
+                            $categoryID = $category->CategoryID;
+                            $quantity = $categoryQuantity[$categoryID] ?? null;
+                        @endphp
+
+                        <div class="grid grid-cols-12 items-center gap-3 mb-3">
+                            <!-- Checkbox -->
+                            <div class="col-span-1 flex justify-center">
+                                <input type="checkbox" name="selected_categories[]"
+                                    id="checkbox-{{ $categoryID }}" value="{{ $categoryID }}"
+                                    class="form-checkbox text-blue-600 w-5 h-5"
+                                    {{ $quantity !== null ? "checked" : "" }}>
+                            </div>
+
+                            <!-- Tên loại -->
+                            <label for="checkbox-{{ $categoryID }}"
+                                class="col-span-7 text-sm text-gray-800 font-medium">
+                                {{ $category->CategoryName }}
+                            </label>
+
+                            <!-- Input số lượng -->
+                            <div class="col-span-4">
+                                <input type="number" name="amounts[{{ $categoryID }}]" min="0"
+                                    placeholder="Số lượng" value="{{ $quantity ?? '' }}"
+                                    class="form-input w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-400 text-sm">
+                            </div>
+                        </div>
+                    @endforeach
                 </div>
             </div>
 
-        </form>
+            <!-- Footer -->
+            <div class="border-t bg-gray-50 p-4 flex justify-end gap-3">
+                <button type="reset"
+                    class="px-4 py-2 text-sm font-medium border border-gray-300 rounded-lg bg-white text-gray-700 hover:bg-gray-50 transition-colors">
+                    Đặt lại
+                </button>
+            </div>
+        </div>
+    </form>
+</main>
 
-
-    </main>
 
 @endsection
 

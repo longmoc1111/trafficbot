@@ -2,297 +2,320 @@
 @section("main")
 
     <main>
-
-        <!-- Page Title Start -->
-        <div class="flex items-center md:justify-between flex-wrap gap-2 mb-6">
-            <h4 class="text-default-900 text-lg font-medium mb-2">Quản lý dữ liệu chatbot</h4>
-
-            <!-- <div class="md:flex hidden items-center gap-3 text-sm font-semibold">
-                                                                                                <a href="#" class="text-sm font-medium text-default-700">OpenDash</a>
-                                                                                                <i class="material-symbols-rounded text-xl flex-shrink-0 text-default-500">chevron_right</i>
-                                                                                                <a href="#" class="text-sm font-medium text-default-700">Tables</a>
-                                                                                                <i class="material-symbols-rounded text-xl flex-shrink-0 text-default-500">chevron_right</i>
-                                                                                                <a href="#" class="text-sm font-medium text-default-700" aria-current="page">Basic Tables</a>
-                                                                                            </div> -->
+        <!-- Tiêu đề -->
+        <div class="flex items-center justify-between flex-wrap gap-2 mb-6">
+            <h4 class="text-default-900 text-xl font-semibold">💬 Quản lý dữ liệu chatbot</h4>
         </div>
-        <!-- Page Title End -->
 
-        <div class=" gap-6 mt-8">
-            <div class="card overflow-hidden">
-                <div class="card-header flex justify-end">
-                    <div class="flex gap-2">
-                        <div>
-                            <select name="" class="form-select" id="example-select">
-                                <option value="chưa có giấy phép">update later</option>
-                            </select>
-                        </div>
+        <!-- Bảng dữ liệu -->
+        <div class="card overflow-hidden border rounded-lg bg-white shadow">
+            <div class="card-header flex justify-between items-center gap-2 px-4 py-3">
+                <select name="" class="form-select w-48 text-sm">
+                    <option value="chưa có giấy phép">update later</option>
+                </select>
 
-                        <button id="open_modal_create" data-hs-overlay="#modal-create" data-fc-placement="bottom"
-                            class="btn bg-primary/25 text-primary hover:bg-primary hover:text-white">
-                            Tạo
-                        </button>
+                <button id="open_modal_create" data-hs-overlay="#modal-create" data-fc-placement="bottom"
+                    class="btn bg-blue-600 text-white hover:bg-blue-700 px-4 py-2 rounded-md shadow text-sm">
+                    <i class="i-solar-plus-bold mr-1"></i> Thêm dữ liệu mới
+                </button>
+            </div>
 
-                    </div>
-                    <!-- <a href="{{ route("admintrafficbot.question.create") }}"
-                                                                                                                                                            class="btn bg-primary/25 text-primary hover:bg-primary hover:text-white">
-                                                                                                                                                            Thêm câu hỏi
-                                                                                                                                                        </a> -->
+            <div class="overflow-x-auto">
+                <table class="min-w-full divide-y divide-gray-200 text-sm text-gray-800">
+                    <thead class="bg-gray-50 text-sm font-semibold text-gray-600">
+                        <tr>
+                            
+                            <th class="px-6 py-3 text-left">Tên file</th>
+                            <th class="px-6 py-3 text-left">Loại dữ liệu</th>
+                            <th class="px-6 py-3 text-left">Mô tả</th>
+                            <th class="px-6 py-3 text-right">Thao tác</th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-gray-100">
+                        @foreach($dataList as $data)
+                            <tr>
+                                <td class="px-6 py-4 break-words max-w-sm">
+                                    {{ $data->DocumentName }}
+                                </td>
+                                <td class="px-6 py-4 break-words max-w-sm">
+                                    {{ $data->category_Chatbot->CategoryName }}
+                                </td>
+                                <td class="px-6 py-4 break-words max-w-sm">
+                                    {{ $data->DocumentDesciption }}
+                                </td>
+                                <td class="px-6 py-4 text-right">
+                                    <div class="flex justify-end gap-2">
+                                        <!-- Xem -->
+                                        <a href="#" class="text-blue-500 hover:text-blue-700"
+                                            data-hs-overlay="#show-detail-{{ $data->ChatbotID }}">
+                                            <span class="material-symbols-rounded text-2xl">arrow_right_alt</span>
+                                        </a>
 
+                                        <!-- Sửa -->
+                                        <a href="#" class="text-yellow-500 hover:text-yellow-700"
+                                            onclick="event.preventDefault()"
+                                            data-hs-overlay="#modal-edit_{{ $data->ChatbotID }}">
+                                            <span class="material-symbols-rounded text-2xl">edit</span>
+                                        </a>
+
+                                        <!-- Xóa -->
+                                        <button type="button" class="text-red-500 hover:text-red-700"
+                                            data-hs-overlay="#modal_delete_{{ $data->ChatbotID }}">
+                                            <span class="material-symbols-rounded text-2xl">delete_forever</span>
+                                        </button>
+                                    </div>
+                                </td>
+                            </tr>
+                        @endforeach
+                    </tbody>
+                </table>
+            </div>
+               <div class="border-t px-6 py-4 bg-gray-50 flex items-center justify-between text-sm text-gray-700">
+                <p>
+                    Hiển thị <span class="font-semibold">{{ $dataList->firstItem() }}</span> →
+                    <span class="font-semibold">{{ $dataList->lastItem() }}</span> /
+                    <span class="font-semibold">{{ $dataList->total() }}</span>
+                </p>
+
+                <div class="flex gap-1">
+                    @if($dataList->onFirstPage())
+                        <span class="px-3 py-1 bg-gray-100 text-gray-400 rounded border">Trước</span>
+                    @else
+                        <a href="{{ $dataList->previousPageUrl() }}"
+                            class="px-3 py-1 bg-white text-gray-700 rounded border hover:bg-gray-50">Trước</a>
+                    @endif
+
+                    @php
+                        $start = max($dataList->currentPage() - 2, 1);
+                        $end = min($dataList->currentPage() + 2, $dataList->lastPage());
+                    @endphp
+
+                    @if ($start > 1)
+                        <a href="{{ $dataList->url(1) }}"
+                            class="px-3 py-1 bg-white text-gray-700 rounded border hover:bg-gray-50">1</a>
+                        @if ($start > 2)
+                            <span class="px-2 text-gray-400">...</span>
+                        @endif
+                    @endif
+
+                    @for ($i = $start; $i <= $end; $i++)
+                        @if ($i == $dataList->currentPage())
+                            <span class="px-3 py-1 bg-blue-600 text-white rounded border">{{ $i }}</span>
+                        @else
+                            <a href="{{ $dataList->url($i) }}"
+                                class="px-3 py-1 bg-white text-gray-700 rounded border hover:bg-gray-50">{{ $i }}</a>
+                        @endif
+                    @endfor
+
+                    @if ($end < $dataList->lastPage())
+                        @if ($end < $dataList->lastPage() - 1)
+                            <span class="px-2 text-gray-400">...</span>
+                        @endif
+                        <a href="{{ $dataList->url($dataList->lastPage()) }}"
+                            class="px-3 py-1 bg-white text-gray-700 rounded border hover:bg-gray-50">{{ $dataList->lastPage() }}</a>
+                    @endif
+
+                    @if($dataList->hasMorePages())
+                        <a href="{{ $dataList->nextPageUrl() }}"
+                            class="px-3 py-1 bg-white text-gray-700 rounded border hover:bg-gray-50">Sau</a>
+                    @else
+                        <span class="px-3 py-1 bg-gray-100 text-gray-400 rounded border">Sau</span>
+                    @endif
                 </div>
-                <div>
-                    <div class="overflow-x-auto">
-                        <div class="min-w-full inline-block align-middle">
-                            <div class="overflow-hidden">
-                                <table class="min-w-full divide-y divide-gray-200">
-                                    <thead>
-                                        <tr>
-                                            <th scope="col" class="px-6 py-3 text-start text-sm text-default-500">
-                                                Tên file</th>
-                                            <th scope="col" class="px-6 py-3 text-start text-sm text-default-500">
-                                                Loại dữ liệu
-                                            </th>
-                                            <th scope="col" class="px-6 py-3 text-start text-sm text-default-500">
-                                                Mô tả
-                                            </th>
-                                            <th scope="col" class="px-6 py-3 text-end text-sm text-default-500">
-                                                Action</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody class="divide-y divide-gray-200">
-                                        @if(!empty($dataList))
-                                            @foreach($dataList as $data)
-                                                <tr>
-                                                    <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-default-800"
-                                                    style="white-space: normal; word-wrap: break-word; max-width: 300px;">
-                                                        {{ $data->DocumentName }}
-                                                    </td>
-                                                     <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-default-800"
-                                                    style="white-space: normal; word-wrap: break-word; max-width: 300px;">
-                                                        {{ $data->category_Chatbot->CategoryName}}
+            </div>
+        </div>
+    </main>
 
-                                                    </td>
-                                                    <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-default-800"
-                                                    style="white-space: normal; word-wrap: break-word; max-width: 300px;">
-                                                        {{ $data->DocumentDesciption}}
-
-                                                    </td>
-                                        
-
-                                                    <td
-                                                        class="px-6 py-4 whitespace-nowrap text-end text-sm font-medium flex justify-end gap-x-2">
-                                                        <div class="hs-tooltip">
-                                                            <button type="button"
-                                                                class="text-red-500 hover:text-red-800 hs-tooltip-toggle"
-                                                                data-hs-overlay="#modal_delete_{{ $data->ChatbotID }}"
-                                                                data-fc-placement="bottom">
-                                                                <span class="material-symbols-rounded text-2xl">
-                                                                    delete_forever
-                                                                </span>
-                                                            </button>
-                                                            <span
-                                                                class="hs-tooltip-content hs-tooltip-shown:opacity-100 hs-tooltip-shown:visible opacity-0 transition-opacity inline-block absolute invisible z-10 py-1 px-2 bg-gray-900 text-xs font-medium text-white rounded shadow-sm"
-                                                                role="tooltip">
-                                                                Xóa vĩnh viễn
-                                                            </span>
-                                                        </div>
-                                                        <div class="hs-tooltip">
-                                                            <a id="open_modal_edit" href="" type="button"
-                                                                onclick="event.preventDefault()"
-                                                                class="text-info hover:text-info hs-tooltip-toggle"
-                                                                data-fc-placement="top"
-                                                                data-hs-overlay="#modal-edit_{{ $data->ChatbotID }}">
-                                                                <span class="material-symbols-rounded text-2xl">
-                                                                    edit
-                                                                </span>
-                                                            </a>
-                                                            <span
-                                                                class="hs-tooltip-content hs-tooltip-shown:opacity-100 hs-tooltip-shown:visible opacity-0 transition-opacity inline-block absolute invisible z-10 py-1 px-2 bg-gray-900 text-xs font-medium text-white rounded shadow-sm"
-                                                                role="tooltip">
-                                                                chỉnh sửa
-                                                            </span>
-                                                        </div>
-                                                        <div class="hs-tooltip">
-                                                            <a href="#" type="button"
-                                                                class="text-blue-500 hover:text-blue-700 hs-tooltip-toggle"
-                                                                data-fc-placement="top">
-                                                                <span class="material-symbols-rounded text-2xl">
-                                                                    arrow_right_alt
-                                                                </span>
-                                                            </a>
-                                                            <span
-                                                                class="hs-tooltip-content hs-tooltip-shown:opacity-100 hs-tooltip-shown:visible opacity-0 transition-opacity inline-block absolute invisible z-10 py-1 px-2 bg-gray-900 text-xs font-medium text-white rounded shadow-sm"
-                                                                role="tooltip">
-                                                                xem chi tiết
-                                                            </span>
-                                                        </div>
-                                                    </td>
-                                                </tr>
-                                            @endforeach
-                                        @endif
-                                    </tbody>
-                                </table>
+    <!-- modal create -->
+ <form action="{{ route('admintrafficbot.chatbot.store') }}" method="post" enctype="multipart/form-data">
+    @csrf
+    <div id="modal-create" class="hs-overlay w-full h-full fixed inset-0 z-[99999] overflow-x-hidden overflow-y-auto hidden">
+        <div class="hs-overlay-open:opacity-100 hs-overlay-open:scale-100 opacity-0 scale-95 ease-out transition-all duration-300 sm:max-w-lg sm:w-full m-3 sm:mx-auto min-h-[calc(100%-3.5rem)] flex items-center">
+            <div class="modal-content w-full bg-white border shadow-xl rounded-xl overflow-hidden">
+                <!-- Header -->
+                <div class="bg-gradient-to-r bg-primary p-6">
+                    <div class="flex justify-between items-center">
+                        <div class="flex items-center space-x-3">
+                            <div class="w-10 h-10 bg-white/20 rounded-lg flex items-center justify-center">
+                                <i class="ti ti-folder-plus text-white text-xl"></i>
+                            </div>
+                            <div>
+                                <h3 class="font-bold text-white text-lg">Thêm dữ liệu</h3>
+                                <p class="text-white/80 text-sm">Chọn và nhập dữ liệu phù hợp bên dưới</p>
                             </div>
                         </div>
+                        <button type="button" class="w-8 h-8 flex items-center justify-center rounded-lg bg-white/20 text-white hover:bg-white/30 transition-colors" data-hs-overlay="#modal-create">
+                            <i class="ti ti-x text-base"></i>
+                        </button>
                     </div>
                 </div>
 
-            </div> <!-- end card -->
+                <!-- Body -->
+                <div class="modal-scroll max-h-[60vh] overflow-y-auto p-6 space-y-6">
+                    <!-- Chọn loại dữ liệu -->
+                    <div>
+                        <label for="DataType" class="block text-sm font-medium text-gray-700 mb-1">Chọn loại dữ liệu</label>
+                        <select id="DataType" name="DataType" class="form-select w-full" onchange="toggleDataTypeFields()">
+                            @if($optionFile->CategoryID == null && $optionURL->CategoryID == null)
+                                <option value="">chưa tồn tại</option>
+                            @else
+                                <option value="{{ $optionFile->CategoryID }}" {{ old('DataType') == $optionFile->CategoryID ? 'selected' : '' }}>{{ $optionFile->CategoryName }}</option>
+                                <option value="{{ $optionURL->CategoryID }}" {{ old('DataType') == $optionURL->CategoryID ? 'selected' : '' }}>{{ $optionURL->CategoryName }}</option>
+                            @endif
+                        </select>
+                    </div>
 
-            <!-- modal create -->
-            <form action="{{ route("admintrafficbot.chatbot.store") }}" method="post" enctype="multipart/form-data">
+                    <!-- Dữ liệu File -->
+                    <div id="file-fields">
+                        <div class = "mb-3">
+                            <label for="DocumentName" class="block text-sm font-medium text-gray-700 mb-1">Tên file</label>
+                            @error('DocumentName', 'create_file')
+                                <p id="DocumentName_errorr" class="text-sm text-red-600 bg-red-50 rounded-md px-2 py-1">{{ $message }}</p>
+                            @enderror
+                            <input type="text" id="DocumentName" name="DocumentName" class="form-input w-full" onfocus="document.getElementById('DocumentName_errorr')?.classList.add('hidden')">
+                        </div>
+                        <div class = "mb-3">
+                            <label for="DocumentDesciption" class="block text-sm font-medium text-gray-700 mb-1">Mô tả file</label>
+                            @error('DocumentDesciption', 'create_file')
+                                <p id="DocumentDesciption_errorr" class="text-sm text-red-600 bg-red-50 rounded-md px-2 py-1">{{ $message }}</p>
+                            @enderror
+                            <textarea id="DocumentDesciption" name="DocumentDesciption" class="form-input w-full" onfocus="document.getElementById('DocumentDesciption_errorr')?.classList.add('hidden')"></textarea>
+                        </div>
+                        <div class = "mb-3">
+                            <label for="file" class="block text-sm font-medium text-gray-700 mb-1">File PDF (Tối đa 8MB)</label>
+                            @error('File', 'create_file')
+                                <p id="File_errorr" class="text-sm text-red-600 bg-red-50 rounded-md px-2 py-1">{{ $message }}</p>
+                            @enderror
+                            <input type="file" name="File" id="file" accept="application/pdf" class="form-input w-full" onfocus="document.getElementById('File_errorr')?.classList.add('hidden')">
+                        </div>
+                    </div>
+
+                    <!-- Dữ liệu URL -->
+                    <div id="url-fields" class="hidden">
+                        <div class = "mb-3">
+                            <label for="URLName" class="block text-sm font-medium text-gray-700 mb-1">Tên đường dẫn</label>
+                            @error('URLName', 'create_url')
+                                <p id="URLName_errorr" class="text-sm text-red-600 bg-red-50 rounded-md px-2 py-1">{{ $message }}</p>
+                            @enderror
+                            <input type="text" id="URLName" name="URLName" class="form-input w-full" onfocus="document.getElementById('URLName_errorr')?.classList.add('hidden')">
+                        </div>
+                        <div class = "mb-3">
+                            <label for="LinkURL" class="block text-sm font-medium text-gray-700 mb-1">Nhập URL</label>
+                            @error('LinkURL', 'create_url')
+                                <p id="LinkURL_errorr" class="text-sm text-red-600 bg-red-50 rounded-md px-2 py-1">{{ $message }}</p>
+                            @enderror
+                            <input type="url" id="LinkURL" name="LinkURL" class="form-input w-full" onfocus="document.getElementById('LinkURL_errorr')?.classList.add('hidden')">
+                        </div>
+                        <div class = "mb-3">
+                            <label for="selectorURL" class="block text-sm font-medium text-gray-700 mb-1">Vị trí cần lấy dữ liệu (class hoặc ID)</label>
+                            @error('selectorURL', 'create_url')
+                                <p id="selectorURL_errorr" class="text-sm text-red-600 bg-red-50 rounded-md px-2 py-1">{{ $message }}</p>
+                            @enderror
+                            <input type="text" id="selectorURL" name="selectorURL" class="form-input w-full" onfocus="document.getElementById('selectorURL_errorr')?.classList.add('hidden')">
+                        </div>
+                        <div class = "mb-3">
+                            <label for="DescriptionURL" class="block text-sm font-medium text-gray-700 mb-1">Mô tả đường dẫn</label>
+                            @error('DescriptionURL', 'create_url')
+                                <p id="DescriptionURL_errorr" class="text-sm text-red-600 bg-red-50 rounded-md px-2 py-1">{{ $message }}</p>
+                            @enderror
+                            <textarea id="DescriptionURL" name="DescriptionURL" class="form-input w-full" onfocus="document.getElementById('DescriptionURL_errorr')?.classList.add('hidden')"></textarea>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Footer -->
+                <div class="border-t p-4 flex justify-end gap-3">
+                    <button type="button" class="px-4 py-2 text-sm font-medium border border-gray-300 rounded-lg bg-white text-gray-700 hover:bg-gray-50 transition-colors" data-hs-overlay="#modal-create">
+                        Đóng
+                    </button>
+                    <button type="submit" class="px-4 py-2 text-sm font-semibold rounded-lg bg-blue-600 text-white hover:bg-blue-700 transition-colors">
+                        Tạo
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+
+
+    <!-- end modal-->
+
+    <!-- modal edit -->
+    @if(!empty($dataList))
+        @foreach($dataList as $data)
+            <form action="{{ route("admintrafficbot.chatbot.update", ["ID" => $data->ChatbotID]) }}" method="post"
+                enctype="multipart/form-data">
                 @csrf
-                <div id="modal-create"
+                <div id="modal-edit_{{ $data->ChatbotID }}"
                     class="hs-overlay w-full h-full fixed top-0 left-0 z-70 transition-all duration-500 overflow-y-auto hidden pointer-events-none flex items-center justify-center">
                     <div
                         class="translate-y-10 hs-overlay-open:translate-y-0 hs-overlay-open:opacity-100 opacity-0 ease-in-out transition-all duration-500 sm:max-w-lg sm:w-full my-8 sm:mx-auto flex flex-col bg-white shadow-sm rounded">
                         <div class="flex flex-col border border-default-200 shadow-sm rounded-lg  pointer-events-auto">
                             <div class="flex justify-between items-center py-3 px-4 border-b border-default-200">
                                 <h3 class="text-lg font-medium text-default-900 ">
-                                    Thêm dữ liệu
+                                    Chỉnh sửa file
                                 </h3>
                                 <button type="button" class="text-default-600 cursor-pointer"
-                                    data-hs-overlay="#modal-create">
+                                    data-hs-overlay="#modal-edit_{{ $data->ChatbotID }}">
                                     <i class="i-tabler-x text-lg"></i>
                                 </button>
                             </div>
-                            <div class="p-3">
-                                <label for="DataType" class="text-gray-700 text-sm font-semibold mb-2 block">
-                                    Chọn loại dữ liệu
-                                </label>
-                                <select id="DataType" name="DataType" class="form-select" onchange="toggleDataTypeFields()">
-                                    @if($optionFile->CategoryID == null && $optionURL->CategoryID == null)
-                                        <option value="">chưa tồn tại</option>
-                                    @else
-                                        <option value="{{ $optionFile->CategoryID }}" {{ old('DataType') == $optionFile->CategoryID ? 'selected' : '' }}>
-                                            {{ $optionFile->CategoryName }}
-                                        </option>
-                                        <option value="{{ $optionURL->CategoryID }}" {{ old('DataType') == $optionURL->CategoryID ? 'selected' : '' }}>
-                                            {{ $optionURL->CategoryName }}
-                                        </option>
-                                    @endif
-                                </select>
-                            </div>
-                            <!-- lựa chon thêm file -->
-                            <div id="file-fields" class="p-4">
+                            <div class="p-4 overflow-y-auto">
                                 <div class="mb-3">
-                                    <label for="DocumentName" class="text-gray-700 text-sm font-semibold mb-2 block">
+                                    <label for="FileName" class="text-gray-700 text-sm font-semibold mb-2 block">
                                         Tên file
                                     </label>
-                                    @error('DocumentName', "create_file")
-                                        <div id="DocumentName_errorr"
-                                            class="flex items-center bg-red-100 text-red-700 text-sm px-4 mb-2">
+                                    @error('FileName', "update")
+                                        <div id="FileName_errorr" class="flex items-center bg-red-100 text-red-700 text-sm px-4 mb-2">
                                             {{ $message }}
                                         </div>
                                     @enderror
-                                    <input type="text" id="DocumentName" name="DocumentName" value=""
+
+                                    <input type="text" id="FileName" name="DocumentName" value="{{ $data->FileName }}"
                                         class="form-input w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                                        onfocus="document.getElementById('DocumentName_errorr')?.classList.add('hidden')">
+                                        onfocus="document.getElementById('FileName_errorr')?.classList.add('hidden')">
                                 </div>
 
                                 <div class="mb-3">
-                                    <label for="DocumentDesciption"
-                                        class="text-default-800 text-sm font-medium inline-block mb-2">
-                                        Mô tả file
-                                    </label>
-                                    @error('DocumentDesciption', "create_file")
-                                        <div id="DocumentDesciption_errorr"
+                                    <label for="example-email" class="text-default-800 text-sm font-medium inline-block mb-2">
+                                        Mô tả file</label>
+                                    @error('FileDesciption', "update")
+                                        <div id="FileDesciption_errorr"
                                             class="flex items-center bg-red-100 text-red-700 text-sm px-4 mb-2">
                                             {{ $message }}
                                         </div>
                                     @enderror
-                                    <textarea id="DocumentDesciption" name="DocumentDesciption" class="form-input"
-                                        onfocus="document.getElementById('DocumentDesciption_errorr')?.classList.add('hidden')"></textarea>
+                                    <textarea type="text" id="FileDesciption" name="FileDesciption" class="form-input"
+                                        onfocus="document.getElementById('FileDesciption_errorr')?.classList.add('hidden')">{{ $data->FileDesciption }}</textarea>
                                 </div>
-
-                                <div class="mb-3" class="p-4">
-                                    <label for="File" class="text-default-800 text-sm font-semibold mb-2 block">File PDF(Tối
-                                        đa 2MB)</label>
-                                    @error('File', "create_file")
-                                        <div id="File_errorr"
-                                            class="flex items-center bg-red-100 text-red-700 text-sm px-4 mb-2">
+                                <div class="mb-3">
+                                    <label for="File_errorr"
+                                        class="text-default-800 text-sm font-semibold mb-2 block">File(PDF)</label>
+                                    @error('File', "update")
+                                        <div id="File_errorr" class="flex items-center bg-red-100 text-red-700 text-sm px-4 mb-2">
                                             {{ $message }}
                                         </div>
                                     @enderror
-                                    <input type="file" name="File" id="file" accept="application/pdf" class="form-input"
-                                        value="" onfocus="document.getElementById('File_errorr')?.classList.add('hidden')">
+                                    <input type="text" name="oldFile" id="" hidden value="{{ $data->File }}">
+                                    <input type="file" name="File" id="File" accept="application/pdf" class="form-input" value=""
+                                        onfocus="document.getElementById('File_errorr')?.classList.add('hidden')">
                                     <div class="justify-center flex">
                                         <img id="preview-file_create" src="" alt="Image"
                                             class="hidden w-32 h-32 object-contain p-2">
                                     </div>
+
                                 </div>
+
                             </div>
-                            <!-- end phần lựa chọn thêm file -->
-
-                            <!-- lựa chọn url -->
-                            <div id="url-fields" class="hidden p-3">
-                                <div class="mb-3">
-                                    <label for="URLName" class="text-gray-700 text-sm font-semibold mb-2 block">
-                                        Tên đường dẫn
-                                    </label>
-                                    @error('URLName', "create_url")
-                                        <div id="URLName_errorr"
-                                            class="flex items-center bg-red-100 text-red-700 text-sm px-4 mb-2">
-                                            {{ $message }}
-                                        </div>
-                                    @enderror
-                                    <input type="text" id="URLName" name="URLName" value=""
-                                        class="form-input w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                                        onfocus="document.getElementById('URLName_errorr')?.classList.add('hidden')">
-                                </div>
-                                <div class="mb-3">
-                                    <label for="LinkURL" class="text-gray-700 text-sm font-semibold mb-2 block">Nhập
-                                        URL</label>
-                                    @error('LinkURL', "create_url")
-                                        <div id="LinkURL_errorr"
-                                            class="flex items-center bg-red-100 text-red-700 text-sm px-4 mb-2">
-                                            {{ $message }}
-                                        </div>
-                                    @enderror
-                                    <input type="url" id="LinkURL" name="LinkURL"
-                                        class="form-input w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                                        onfocus="document.getElementById('LinkURL_errorr')?.classList.add('hidden')">
-                                </div>
-                                <div class="mb-3">
-                                    <label for="selectorURL" class="text-gray-700 text-sm font-semibold mb-2 block">Vị trí
-                                        cần lấy dữ liệu(class hoặc ID)</label>
-                                    @error('selectorURL', "create_url")
-                                        <div id="selectorURL_errorr"
-                                            class="flex items-center bg-red-100 text-red-700 text-sm px-4 mb-2">
-                                            {{ $message }}
-                                        </div>
-                                    @enderror
-                                    <input type="text" id="selectorURL" name="selectorURL"
-                                        class="form-input w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                                        onfocus="document.getElementById('selectorURL_errorr')?.classList.add('hidden')">
-                                </div>
-                                <div class="mb-3">
-                                    <label for="DescriptionURL"
-                                        class="text-default-800 text-sm font-medium inline-block mb-2">
-                                        Mô tả đường dẫn
-                                    </label>
-                                    @error('DescriptionURL', "create_url")
-                                        <div id="DocumentDesciption_errorr"
-                                            class="flex items-center bg-red-100 text-red-700 text-sm px-4 mb-2">
-                                            {{ $message }}
-                                        </div>
-                                    @enderror
-                                    <textarea id="DescriptionURL" name="DescriptionURL" class="form-input"
-                                        onfocus="document.getElementById('DescriptionURL_errorr')?.classList.add('hidden')"></textarea>
-                                </div>
-                            </div>
-                            <!-- end phần lựa chọn url -->
-
-
                             <div class="flex justify-end items-center gap-x-2 py-3 px-4 border-t border-default-200">
                                 <button type="button"
                                     class="py-2 px-5 inline-flex items-center justify-center font-medium tracking-wide border align-middle duration-500 text-sm text-center bg-primary/5 hover:bg-primary border-primary/10 hover:border-primary text-primary hover:text-white rounded-md"
-                                    data-hs-overlay="#modal-create">
-
+                                    data-hs-overlay="#modal-edit_{{ $data->ChatbotID }}">
                                     Đóng
                                 </button>
                                 <button type="submit"
                                     class="py-2 px-5 inline-flex items-center justify-center font-medium tracking-wide border align-middle duration-500 text-sm text-center bg-primary hover:bg-primary-700 border-primary hover:border-primary-700 text-white rounded-md">
-                                    Tạo
+                                    Cập nhật
                                 </button>
 
                             </div>
@@ -300,147 +323,78 @@
                     </div>
                 </div>
             </form>
+        @endforeach
+    @endif
+    <!-- end modal-->
 
-            <!-- end modal-->
 
-            <!-- modal edit -->
-            @if(!empty($dataList))
-                @foreach($dataList as $data)
-                    <form action="{{ route("admintrafficbot.chatbot.update", ["ID" => $data->ChatbotID]) }}" method="post"
-                        enctype="multipart/form-data">
-                        @csrf
-                        <div id="modal-edit_{{ $data->ChatbotID }}"
-                            class="hs-overlay w-full h-full fixed top-0 left-0 z-70 transition-all duration-500 overflow-y-auto hidden pointer-events-none flex items-center justify-center">
-                            <div
-                                class="translate-y-10 hs-overlay-open:translate-y-0 hs-overlay-open:opacity-100 opacity-0 ease-in-out transition-all duration-500 sm:max-w-lg sm:w-full my-8 sm:mx-auto flex flex-col bg-white shadow-sm rounded">
-                                <div class="flex flex-col border border-default-200 shadow-sm rounded-lg  pointer-events-auto">
-                                    <div class="flex justify-between items-center py-3 px-4 border-b border-default-200">
-                                        <h3 class="text-lg font-medium text-default-900 ">
-                                            Chỉnh sửa file
-                                        </h3>
-                                        <button type="button" class="text-default-600 cursor-pointer"
-                                            data-hs-overlay="#modal-edit_{{ $data->ChatbotID }}">
-                                            <i class="i-tabler-x text-lg"></i>
-                                        </button>
+
+
+
+
+    <!-- modal delete -->
+    @if(!empty($dataList))
+        @foreach($dataList as $data)
+            <div id="modal_delete_{{ $data->ChatbotID }}"
+                class="hs-overlay hidden fixed inset-0 z-[99999] overflow-x-hidden overflow-y-auto">
+                <div
+                    class="hs-overlay-open:opacity-100 hs-overlay-open:scale-100 opacity-0 scale-95 ease-out transition-all duration-300 sm:max-w-lg sm:w-full m-3 sm:mx-auto min-h-[calc(100%-3.5rem)] flex items-center">
+                    <div class="modal-content w-full bg-white border shadow-xl rounded-xl overflow-hidden">
+
+                        <!-- Header -->
+                        <div class="bg-gradient-to-r bg-red-600 p-6">
+                            <div class="flex justify-between items-center">
+                                <div class="flex items-center space-x-3">
+                                    <div class="w-10 h-10 bg-white/20 rounded-lg flex items-center justify-center">
+                                        <i class="ti ti-alert-triangle   text-white text-xl"></i>
                                     </div>
-                                    <div class="p-4 overflow-y-auto">
-                                        <div class="mb-3">
-                                            <label for="FileName" class="text-gray-700 text-sm font-semibold mb-2 block">
-                                                Tên file
-                                            </label>
-                                            @error('FileName', "update")
-                                                <div id="FileName_errorr"
-                                                    class="flex items-center bg-red-100 text-red-700 text-sm px-4 mb-2">
-                                                    {{ $message }}
-                                                </div>
-                                            @enderror
-
-                                            <input type="text" id="FileName" name="DocumentName" value="{{ $data->FileName }}"
-                                                class="form-input w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                                                onfocus="document.getElementById('FileName_errorr')?.classList.add('hidden')">
-                                        </div>
-
-                                        <div class="mb-3">
-                                            <label for="example-email"
-                                                class="text-default-800 text-sm font-medium inline-block mb-2">
-                                                Mô tả file</label>
-                                            @error('FileDesciption', "update")
-                                                <div id="FileDesciption_errorr"
-                                                    class="flex items-center bg-red-100 text-red-700 text-sm px-4 mb-2">
-                                                    {{ $message }}
-                                                </div>
-                                            @enderror
-                                            <textarea type="text" id="FileDesciption" name="FileDesciption" class="form-input"
-                                                onfocus="document.getElementById('FileDesciption_errorr')?.classList.add('hidden')">{{ $data->FileDesciption }}</textarea>
-                                        </div>
-                                        <div class="mb-3">
-                                            <label for="File_errorr"
-                                                class="text-default-800 text-sm font-semibold mb-2 block">File(PDF)</label>
-                                            @error('File', "update")
-                                                <div id="File_errorr"
-                                                    class="flex items-center bg-red-100 text-red-700 text-sm px-4 mb-2">
-                                                    {{ $message }}
-                                                </div>
-                                            @enderror
-                                            <input type="text" name="oldFile" id="" hidden value="{{ $data->File }}">
-                                            <input type="file" name="File" id="File" accept="application/pdf" class="form-input"
-                                                value="" onfocus="document.getElementById('File_errorr')?.classList.add('hidden')">
-                                            <div class="justify-center flex">
-                                                <img id="preview-file_create" src="" alt="Image"
-                                                    class="hidden w-32 h-32 object-contain p-2">
-                                            </div>
-
-                                        </div>
-
-                                    </div>
-                                    <div class="flex justify-end items-center gap-x-2 py-3 px-4 border-t border-default-200">
-                                        <button type="button"
-                                            class="py-2 px-5 inline-flex items-center justify-center font-medium tracking-wide border align-middle duration-500 text-sm text-center bg-primary/5 hover:bg-primary border-primary/10 hover:border-primary text-primary hover:text-white rounded-md"
-                                            data-hs-overlay="#modal-edit_{{ $data->ChatbotID }}">
-                                            Đóng
-                                        </button>
-                                        <button type="submit"
-                                            class="py-2 px-5 inline-flex items-center justify-center font-medium tracking-wide border align-middle duration-500 text-sm text-center bg-primary hover:bg-primary-700 border-primary hover:border-primary-700 text-white rounded-md">
-                                            Cập nhật
-                                        </button>
-
+                                    <div>
+                                        <h3 class="font-bold text-white text-lg">Xác nhận xóa</h3>
+                                        <p class="text-white/80 text-sm">Bạn có chắc muốn xóa dữ liệu này?</p>
                                     </div>
                                 </div>
+                                <button type="button"
+                                    class="w-8 h-8 flex items-center justify-center rounded-lg bg-white/20 text-white hover:bg-white/30 transition-colors"
+                                    data-hs-overlay="#modal_delete_{{ $data->ChatbotID }}">
+                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            d="M6 18L18 6M6 6l12 12"></path>
+                                    </svg>
+                                </button>
                             </div>
                         </div>
-                    </form>
-                @endforeach
-            @endif
-            <!-- end modal-->
 
-            <!-- modal delete -->
-            @if(!empty($dataList))
-                @foreach($dataList as $data)
-                    <div id="modal_delete_{{ $data->ChatbotID }}"
-                        class="hs-overlay w-full h-full fixed top-0 left-0 z-70 transition-all duration-500 overflow-y-auto hidden pointer-events-none">
-                        <div
-                            class="translate-y-10 hs-overlay-open:translate-y-0 hs-overlay-open:opacity-100 opacity-0 ease-in-out transition-all duration-500 sm:max-w-lg sm:w-full my-8 sm:mx-auto flex flex-col bg-white shadow-sm rounded">
-                            <div class="flex flex-col border border-default-200 shadow-sm rounded-lg  pointer-events-auto">
-                                <div class="flex justify-between items-center py-3 px-4 border-b border-default-200">
-                                    <h3 class="text-lg font-medium text-default-900">
-                                        xóa dữ liệu
-                                    </h3>
-                                    <button type="button" class="text-default-600 cursor-pointer"
-                                        data-hs-overlay="#modal_delete_{{ $data->ChatbotID }}">
-                                        <i class="i-tabler-x text-lg"></i>
-                                    </button>
-                                </div>
-                                <div class="p-4 overflow-y-auto">
-                                    <p class="mt-1 text-default-600">
-                                        bạn có chắc muốn xóa dữ liệu này đề này ?
-                                    </p>
-                                </div>
-                                <div class="flex justify-end items-center gap-x-2 py-3 px-4 border-t border-default-200">
-                                    <button type="button"
-                                        class="py-2 px-5 inline-flex items-center justify-center font-medium tracking-wide border align-middle duration-500 text-sm text-center bg-primary/5 hover:bg-primary border-primary/10 hover:border-primary text-primary hover:text-white rounded-md"
-                                        data-hs-overlay="#modal_delete_{{ $data->ChatbotID }}">
-
-                                        Đóng
-                                    </button>
-                                    <form action="{{ route("admintrafficbot.chatbot.delete", ["ID" => $data->ChatbotID]) }}"
-                                        method="post">
-                                        @csrf
-                                        @method("DELETE")
-                                        <button type="submit"
-                                            class="py-2 px-5 inline-flex items-center justify-center font-medium tracking-wide border align-middle duration-500 text-sm text-center bg-primary hover:bg-primary-700 border-primary hover:border-primary-700 text-white rounded-md">
-                                            Xác nhận
-                                        </button>
-                                    </form>
-                                </div>
-                            </div>
+                        <!-- Body -->
+                        <div class="p-6 space-y-4 text-center">
+                            <p class="text-gray-700 text-sm">Bạn có chắc chắn muốn xóa dữ liệu này
+                                này không? Hành động này không thể hoàn tác.
+                            </p>
                         </div>
+
+                        <!-- Footer -->
+                        <div class="border-t bg-gray-50 p-4 flex justify-end gap-3">
+                            <button type="button"
+                                class="px-4 py-2 text-sm font-medium border border-gray-300 rounded-lg bg-white text-gray-700 hover:bg-gray-50 transition-colors"
+                                data-hs-overlay="#modal_delete_{{ $data->ChatbotID }}">
+                                Hủy
+                            </button>
+
+                            <form action="{{ route("admintrafficbot.chatbot.delete", ["ID" => $data->ChatbotID]) }}" method="post">
+                                @csrf
+                                @method("DELETE")
+                                <button type="submit"
+                                    class="px-4 py-2 text-sm font-semibold rounded-lg bg-red-600 text-white hover:bg-red-700 transition-colors">
+                                    Xóa
+                                </button>
+                            </form>
+                        </div>
+
                     </div>
-                @endforeach
-            @endif
-            <!-- end modal -->
-        </div>
-
-    </main>
+                </div>
+            </div>
+        @endforeach
+    @endif
+    <!-- end modal -->
 
 @endsection
 

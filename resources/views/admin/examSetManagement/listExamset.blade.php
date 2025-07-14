@@ -1,215 +1,134 @@
 @extends("admin.adminPageLayout.layout")
 @section("main")
 
-    <main>
+   <main>
+    <!-- Tiêu đề trang -->
+    <div class="flex items-center justify-between flex-wrap gap-2 mb-6">
+        <h4 class="text-default-900 text-xl font-semibold">📋 Danh sách bộ đề</h4>
 
-        <!-- Page Title Start -->
-        <div class="flex items-center md:justify-between flex-wrap gap-2 mb-6">
-            <h4 class="text-default-900 text-lg font-medium mb-2">Danh sách bộ đề</h4>
+        @if(!empty($LicenseType->LicenseTypeID))
+            <a href="{{ route("admintrafficbot.examset.create", ["ID" => $LicenseType->LicenseTypeID]) }}"
+                class="btn bg-blue-600 text-white hover:bg-blue-700 text-sm px-4 py-2 rounded-md shadow">
+                <i class="i-solar-plus-bold mr-1"></i> Thêm bộ đề
+            </a>
+        @else
+            <a href="#" class="btn bg-blue-600 text-white hover:bg-blue-700 text-sm px-4 py-2 rounded-md shadow">
+                <i class="i-solar-plus-bold mr-1"></i> Thêm bộ đề
+            </a>
+        @endif
+    </div>
+
+    <!-- Bộ lọc -->
+    <div class="card p-4 mb-6 shadow border rounded-lg bg-white">
+        @if(!empty($selectLicenseTypes))
+            <form action="{{ route("admintrafficbot.examset")}}" method="get" class="w-full md:w-1/2">
+                <select name="choose_License" onchange="this.form.submit()"
+                    class="form-select w-full rounded-lg border-gray-300 shadow-sm focus:ring-2 focus:ring-blue-400">
+                    @foreach ($selectLicenseTypes as $license)
+                        <option value="{{ $license->LicenseTypeID }}"
+                            {{ isset($LicenseType) && $license->LicenseTypeName == $LicenseType->LicenseTypeName ? "selected" : "" }}>
+                            Hạng {{ $license->LicenseTypeName }}
+                        </option>
+                    @endforeach
+                </select>
+            </form>
+        @else
+            <select name="" class="form-select w-full md:w-1/2" disabled>
+                <option value="">Chưa có giấy phép</option>
+            </select>
+        @endif
+    </div>
+
+    <!-- Bảng danh sách bộ đề -->
+    <div class="card p-0 overflow-hidden shadow border rounded-lg bg-white">
+        <div class="overflow-x-auto">
+            <table class="min-w-full divide-y divide-gray-200">
+                <thead class="bg-gray-50 text-left text-sm font-semibold text-gray-600">
+                    <tr>
+                        <th class="px-6 py-3">Tên bộ đề</th>
+                        <th class="px-6 py-3">Sử dụng cho</th>
+                        <th class="px-6 py-3">Số lượng câu hỏi</th>
+                        <th class="px-6 py-3 text-end">Thao tác</th>
+                    </tr>
+                </thead>
+                <tbody class="divide-y divide-gray-100 text-sm text-gray-700">
+                    @foreach ($examSet as $exam)
+                        <tr>
+                            <td class="px-6 py-4 whitespace-normal max-w-[300px]">
+                                {{ $exam->ExamSetName }}
+                            </td>
+                            <td class="px-6 py-4">
+                                hạng {{ $exam->licenseType_examset->pluck("LicenseTypeName")->join(", ") }}
+                            </td>
+                            <td class="px-6 py-4">
+                                {{ count($exam->question_Examset) }}/{{ $exam->licenseType_Examset->pluck("LicenseTypeQuantity")->first() }}
+                            </td>
+                            <td class="px-6 py-4 text-end">
+                                <div class="flex justify-end gap-2">
+                                    <!-- Xem -->
+                                    <a href="{{ route('admintrafficbot.examset.show', $exam->ExamSetID) }}"
+                                        class="text-blue-600 hover:text-blue-800" title="Xem chi tiết">
+                                        <span class="material-symbols-rounded text-2xl">arrow_right_alt</span>
+                                    </a>
+
+                                    <!-- Sửa -->
+                                    <a href="{{ route('admintrafficbot.examset.edit', $exam->ExamSetID) }}"
+                                        class="text-yellow-500 hover:text-yellow-700" title="Chỉnh sửa">
+                                        <span class="material-symbols-rounded text-2xl">edit</span>
+                                    </a>
+
+                                    <!-- Xóa -->
+                                    <button type="button" class="text-red-500 hover:text-red-700"
+                                        data-hs-overlay="#modal-{{ $exam->ExamSetID }}" title="Xóa vĩnh viễn">
+                                        <span class="material-symbols-rounded text-2xl">delete_forever</span>
+                                    </button>
+                                </div>
+                            </td>
+                        </tr>
+                    @endforeach
+                </tbody>
+            </table>
         </div>
-        <!-- Page Title End -->
 
-        <div class=" gap-6 mt-8">
-            <div class="card overflow-hidden">
-                <div class="card-header flex justify-end">
-                    <div class="flex gap-2">
-                        <div>
-                            @if(!empty($selectLicenseTypes))
-                                <form action="{{ route("admintrafficbot.examset")}}" method="get">
-                                    <select name="choose_License" class="form-select" id="example-select"
-                                        onchange="this.form.submit()">
-                                        @foreach ($selectLicenseTypes as $license)
-                                            <option value="{{$license->LicenseTypeID}}" {{isset($LicenseType) && $license->LicenseTypeName == $LicenseType->LicenseTypeName ? "selected" : "" }}>
-                                                {{ $license->LicenseTypeName }}
-                                            </option>
-                                        @endforeach
-                                    </select>
-                                </form>
+        <!-- Phân trang -->
+        <div class="border-t bg-gray-50 px-6 py-4 flex items-center justify-between text-sm">
+            <p class="text-gray-600">
+                Hiển thị <span class="font-semibold">{{ $examSet->firstItem() }}</span> →
+                <span class="font-semibold">{{ $examSet->lastItem() }}</span>
+                / <span class="font-semibold">{{ $examSet->total() }}</span>
+            </p>
+            <div class="flex items-center space-x-1">
+                {{-- Trước --}}
+                @if($examSet->onFirstPage())
+                    <span class="px-3 py-1 text-gray-400 bg-gray-100 rounded border">Trước</span>
+                @else
+                    <a href="{{ $examSet->previousPageUrl() }}"
+                        class="px-3 py-1 bg-white text-gray-700 hover:bg-gray-100 rounded border">Trước</a>
+                @endif
 
-                            @else
-                                <select name="" class="form-select" id="example-select">
-                                    <option value="chưa có giấy phép">chưa có giấy phép</option>
-                                </select>
-                            @endif
-                        </div>
-                        @if(empty($LicenseType->LicenseTypeID))
-                            <a href="" class="btn bg-primary/25 text-primary hover:bg-primary hover:text-white">
-                                Thêm bộ đề
-                            </a>
-                        @else
-                            <a href="{{ route("admintrafficbot.examset.create", ["ID" => $LicenseType->LicenseTypeID]) }}"
-                                class="btn bg-primary/25 text-primary hover:bg-primary hover:text-white">
-                                Thêm bộ đề
-                            </a>
-                        @endif
+                {{-- Trang --}}
+                @for($page = max(1, $examSet->currentPage() - 2); $page <= min($examSet->lastPage(), $examSet->currentPage() + 2); $page++)
+                    @if($page == $examSet->currentPage())
+                        <span class="px-3 py-1 bg-blue-600 text-white rounded border">{{ $page }}</span>
+                    @else
+                        <a href="{{ $examSet->url($page) }}"
+                            class="px-3 py-1 bg-white text-gray-700 hover:bg-gray-100 rounded border">{{ $page }}</a>
+                    @endif
+                @endfor
 
-                    </div>
-                    <!-- <a href="{{ route("admintrafficbot.question.create") }}"
-                                                                            class="btn bg-primary/25 text-primary hover:bg-primary hover:text-white">
-                                                                            Thêm câu hỏi
-                                                                        </a> -->
+                {{-- Sau --}}
+                @if($examSet->hasMorePages())
+                    <a href="{{ $examSet->nextPageUrl() }}"
+                        class="px-3 py-1 bg-white text-gray-700 hover:bg-gray-100 rounded border">Sau</a>
+                @else
+                    <span class="px-3 py-1 text-gray-400 bg-gray-100 rounded border">Sau</span>
+                @endif
+            </div>
+        </div>
+    </div>
+</main>
 
-                </div>
-                <div>
-                    <div class="overflow-x-auto">
-                        <div class="min-w-full inline-block align-middle">
-                            <div class="overflow-hidden">
-                                <table class="min-w-full divide-y divide-gray-200">
-                                    <thead>
-                                        <tr>
-                                            <th scope="col" class="px-6 py-3 text-start text-sm text-default-500">
-                                                Tên bộ đề</th>
-                                            <th scope="col" class="px-6 py-3 text-start text-sm text-default-500">
-                                                sử dụng đối với
-                                            </th>
-                                            <th scope="col" class="px-6 py-3 text-start text-sm text-default-500">
-                                                số lượng câu hỏi
-                                            </th>
-                                            <th scope="col" class="px-6 py-3 text-end text-sm text-default-500">
-                                                Action</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody class="divide-y divide-gray-200">
-                                        @if(isset($examSet))
-                                            @foreach ($examSet as $exam)
-                                                <tr>
-                                                    <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-default-800">
-                                                        {{ $exam->ExamSetName }}
-                                                    </td>
-                                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-default-800">
-                                                        {{ $exam->licenseType_examset->pluck("LicenseTypeName")->join(", ") }}
-                                                    </td>
-                                    
-                                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-default-800">
-                                                        {{ count($exam->question_Examset) }}/ {{ $exam->licenseType_Examset->pluck("LicenseTypeQuantity")->first() }}
-                                                    </td>
-                                                    <td
-                                                        class="px-6 py-4 whitespace-nowrap text-end text-sm font-medium flex justify-end gap-x-2">
-                                                        <div class="hs-tooltip">
-                                                            <button type="button"
-                                                                class="text-red-500 hover:text-red-800 hs-tooltip-toggle"
-                                                                data-hs-overlay="#modal-{{ $exam->ExamSetID }}"
-                                                                data-fc-placement="bottom">
-                                                                <span class="material-symbols-rounded text-2xl">
-                                                                    delete_forever
-                                                                </span>
-                                                            </button>
-                                                            <span
-                                                                class="hs-tooltip-content hs-tooltip-shown:opacity-100 hs-tooltip-shown:visible opacity-0 transition-opacity inline-block absolute invisible z-10 py-1 px-2 bg-gray-900 text-xs font-medium text-white rounded shadow-sm"
-                                                                role="tooltip">
-                                                                Xóa vĩnh viễn
-                                                            </span>
-                                                        </div>
-                                                        <div class="hs-tooltip">
-                                                            <a href="{{ route("admintrafficbot.examset.edit", $exam->ExamSetID) }}"
-                                                                type="button" class="text-info hover:text-info hs-tooltip-toggle"
-                                                                data-fc-placement="top">
-                                                                <span class="material-symbols-rounded text-2xl">
-                                                                    edit
-                                                                </span>
-                                                            </a>
-                                                            <span
-                                                                class="hs-tooltip-content hs-tooltip-shown:opacity-100 hs-tooltip-shown:visible opacity-0 transition-opacity inline-block absolute invisible z-10 py-1 px-2 bg-gray-900 text-xs font-medium text-white rounded shadow-sm"
-                                                                role="tooltip">
-                                                                chỉnh sửa
-                                                            </span>
-                                                        </div>
-                                                        <div class="hs-tooltip">
-                                                            <a href="{{ route("admintrafficbot.examset.show", $exam->ExamSetID) }}"
-                                                                type="button"
-                                                                class="text-blue-500 hover:text-blue-700 hs-tooltip-toggle"
-                                                                data-fc-placement="top">
-                                                                <span class="material-symbols-rounded text-2xl">
-                                                                    arrow_right_alt
-                                                                </span>
-                                                            </a>
-                                                            <span
-                                                                class="hs-tooltip-content hs-tooltip-shown:opacity-100 hs-tooltip-shown:visible opacity-0 transition-opacity inline-block absolute invisible z-10 py-1 px-2 bg-gray-900 text-xs font-medium text-white rounded shadow-sm"
-                                                                role="tooltip">
-                                                                xem chi tiết
-                                                            </span>
-                                                        </div>
-                                                    </td>
-                                                </tr>
-                                            @endforeach
-                                        @endif
-
-                                    </tbody>
-                                </table>
-                            </div>
-                        </div>
-                    </div>
-                         <div class="flex items-center justify-between border-t border-gray-200 bg-white px-4 py-3 sm:px-6">
-                        <!-- Showing -->
-                        <div>
-                            <p class="text-sm text-gray-700">
-                                <span class="font-medium">{{ $examSet->firstItem() }}</span>
-                                ->
-                                <span class="font-medium">{{ $examSet->lastItem() }}</span>
-                                of
-                                <span class="font-medium">{{$examSet->total()}}</span>
-                            </p>
-                        </div>
-
-                        <!-- Pagination -->
-                        <div class="flex flex-wrap items-center gap-1">
-                            <!-- trước -->
-                            @if($examSet->onFirstPage())
-                                <span class="px-3 py-1 text-gray-400 bg-gray-100 rounded border border-gray-300">Trước</span>
-                            @else
-                                <a href="{{ $examSet->previousPageUrl() }}"
-                                    class="px-3 py-1 text-gray-700 bg-white rounded border border-gray-300 hover:bg-gray-50">Trước</a>
-                            @endif
-
-                            @php
-                            $start = max($examSet->currentPage() - 2, 1);
-                            $end = min($examSet->currentPage() + 2, $examSet->lastPage());
-                            @endphp
-
-                            <!-- trang đầu tiên -->
-                            @if($start > 1)
-                                <a href="{{ $examSet->url(1) }}"
-                                    class="px-3 py-1 text-gray-700 bg-white rounded border border-gray-300 hover:bg-gray-50">1</a>
-                                @if($start > 2)
-                                    <span class="px-2 text-gray-500">...</span>
-                                @endif
-                            @endif
-
-                            <!-- link các trang -->
-                            @for($page = $start; $page <= $end; $page++)
-                                @if($page == $examSet->currentPage())
-                                    <span
-                                        class="px-3 py-1 bg-primary/25 text-primary rounded border border-indigo-600">{{ $page }}</span>
-                                @else
-                                    <a href="{{ $examSet->url($page) }}"
-                                        class="px-3 py-1 text-gray-700 bg-white rounded border border-gray-300 hover:bg-gray-50">{{ $page}}</a>
-                                @endif
-                            @endfor
-
-                            <!-- page cuối -->
-                            @if($end < $examSet->lastPage())
-                                @if($end < $examSet->lastPage() - 1)
-                                    <span class="px-2 text-gray-500">...</span>
-                                @endif
-                                <a href="{{ $examSet->url($examSet->lastPage()) }}"
-                                    class="px-3 py-1 text-gray-700 bg-white rounded border border-gray-300 hover:bg-gray-50">{{ $examSet->lastPage() }}</a>
-                            @endif
-
-                            <!-- trang tiếp -->
-                            @if($examSet->hasMorePages())
-                                <a href="{{ $examSet->nextPageUrl() }}"
-                                    class="px-3 py-1 text-gray-700 bg-white rounded border border-gray-300 hover:bg-gray-50">Sau</a>
-                            @else
-                                <span class="px-3 py-1 text-gray-400 bg-gray-100 rounded border border-gray-300">Sau</span>
-                            @endif
-
-                        </div>
-                    </div>
-                </div>
-                
-            </div> <!-- end card -->
-
-            <!-- modal -->
+ <!-- modal -->
             @if(isset($examSet))
                 @foreach ($examSet as $exam)
                     <div id="modal-{{ $exam->ExamSetID }}"
@@ -254,10 +173,6 @@
                 @endforeach
             @endif
             <!-- end modal -->
-        </div>
-
-    </main>
-
 @endsection
 
 @section("footer")

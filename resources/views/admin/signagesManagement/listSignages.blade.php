@@ -3,217 +3,155 @@
 @section("main")
 
     
-    <main>
+  <main>
+    <!-- Tiêu đề -->
+    <div class="flex items-center justify-between flex-wrap gap-2 mb-6">
+        <h4 class="text-default-900 text-xl font-semibold">🚦 Danh sách biển báo</h4>
+        <button class="btn bg-blue-600 text-white hover:bg-blue-700 px-4 py-2 rounded-md shadow text-sm"
+                data-hs-overlay="#create_signage">
+            <i class="i-solar-plus-bold mr-1"></i> Thêm biển báo
+        </button>
+    </div>
 
-        <!-- Page Title Start -->
-        <div class="flex items-center md:justify-between flex-wrap gap-2 mb-6">
-            <h4 class="text-default-900 text-lg font-medium mb-2">Danh sách biển báo</h4>
+    <!-- Thanh công cụ: Tìm kiếm + Lọc loại -->
+    <div class="card p-4 mb-6 bg-white border shadow rounded-lg flex flex-col md:flex-row justify-between gap-3">
+        <!-- Form tìm kiếm -->
+        <form action="{{ route('admintrafficbot.signage.sarch') }}" method="get" class="relative w-full md:w-1/2">
+            <input type="search" name="search" placeholder="Tìm theo tên biển báo..."
+                class="form-input pl-10 pr-4 py-2 rounded-lg w-full border-gray-300 focus:ring-2 focus:ring-blue-500 shadow-sm">
+            <div class="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500">
+                <i class="i-ph-magnifying-glass"></i>
+            </div>
+        </form>
+
+        <!-- Form lọc loại biển báo -->
+        <form action="{{ route('admintrafficbot.listsignages') }}" method="get" class="w-full md:w-1/3">
+            <select name="option" onchange="this.form.submit()"
+                class="form-select w-full py-2 px-4 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500">
+                @foreach ($signageTypes as $type)
+                    <option value="{{ $type->SignageTypeID }}"
+                        {{ !empty($option) && $option == $type->SignageTypeID ? 'selected' : '' }}>
+                        {{ $type->SignagesTypeName }}
+                    </option>
+                @endforeach
+            </select>
+        </form>
+    </div>
+
+    <!-- Danh sách biển báo -->
+    <div class="card overflow-hidden bg-white border shadow rounded-lg">
+        <div class="overflow-x-auto">
+            <table class="min-w-full divide-y divide-gray-200 text-sm text-gray-800">
+                <thead class="bg-gray-50 text-sm font-semibold text-gray-600">
+                    <tr>
+                        <th class="px-6 py-3 text-left">Tên biển báo</th>
+                        <th class="px-6 py-3 text-left">Loại</th>
+                        <th class="px-6 py-3 text-left">Ảnh mô tả</th>
+                        <th class="px-6 py-3 text-right">Thao tác</th>
+                    </tr>
+                </thead>
+                <tbody class="divide-y divide-gray-100">
+                    @foreach ($signages as $signage)
+                        <tr>
+                            <td class="px-6 py-4 whitespace-normal break-words max-w-xs">
+                                {{ trim($signage->SignageName) }}
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap">
+                                {{ $signage->signage_SignageType->SignagesTypeName ?? 'Không' }}
+                            </td>
+                            <td class="px-6 py-4">
+                                @if($signage->SignageImage)
+                                    <img src="{{ asset('storage/uploads/imageSignage/' . $signage->SignageImage) }}"
+                                         alt="Ảnh biển báo"
+                                         class="w-24 h-24 object-contain border rounded shadow">
+                                @else
+                                    <span class="text-gray-400 italic">Không có ảnh</span>
+                                @endif
+                            </td>
+                            <td class="px-6 py-4 text-right whitespace-nowrap">
+                                <div class="flex justify-end gap-2">
+                                    <!-- Xem -->
+                                    <a href="#" class="text-blue-500 hover:text-blue-700"
+                                        data-hs-overlay="#show-{{ $signage->SignageID }}">
+                                        <span class="material-symbols-rounded text-xl">visibility</span>
+                                    </a>
+
+                                    <!-- Sửa -->
+                                    <a href="#" class="text-yellow-500 hover:text-yellow-700"
+                                        data-hs-overlay="#edit_{{ $signage->SignageID }}">
+                                        <span class="material-symbols-rounded text-xl">edit</span>
+                                    </a>
+
+                                    <!-- Xóa -->
+                                    <button type="button" class="text-red-500 hover:text-red-700"
+                                        data-hs-overlay="#delete_{{ $signage->SignageID }}">
+                                        <span class="material-symbols-rounded text-xl">delete_forever</span>
+                                    </button>
+                                </div>
+                            </td>
+                        </tr>
+                    @endforeach
+                </tbody>
+            </table>
         </div>
-        <!-- Page Title End -->
 
-        <div class=" gap-6 mt-8">
-            <div class="card overflow-hidden">
-                <div class="card overflow-hidden">
-                    <div class="card-header flex justify-between items-center">
-                        <div class="md:flex hidden items-center relative">
-                            <div class="absolute inset-y-0 start-0 flex items-center ps-3 pointer-events-none">
-                                <i class="i-ph-magnifying-glass text-base"></i>
-                            </div>
-                            <form action="{{ route("admintrafficbot.signage.sarch") }}">
-                                <input type="search" name="search"
-                                    class="form-input px-10 rounded-lg bg-gray-500/10 border-transparent focus:border-transparent w-80"
-                                    placeholder="Search...">
-                            </form>
+        <!-- Phân trang -->
+        <div class="border-t px-6 py-4 bg-gray-50 flex items-center justify-between text-sm text-gray-700">
+            <p>
+                Hiển thị <span class="font-semibold">{{ $signages->firstItem() }}</span> →
+                <span class="font-semibold">{{ $signages->lastItem() }}</span> /
+                <span class="font-semibold">{{ $signages->total() }}</span> 
+            </p>
 
-                        </div>
-                        <div class="flex items-center gap-3">
-                            <form action="{{route("admintrafficbot.listsignages")}}">
-                                <select name="option" class="form-select" id="example-select" onchange="this.form.submit()">
-                                    @foreach ($signageTypes as $type)
-                                        <option value="{{ $type->SignageTypeID }}" {{!empty($option) && $option == $type->SignageTypeID ? "selected" : "" }}>{{ $type->SignagesTypeName }}
-                                        </option>
-                                    @endforeach
-                                </select>
-                            </form>
+            <div class="flex gap-1">
+                @if($signages->onFirstPage())
+                    <span class="px-3 py-1 bg-gray-100 text-gray-400 rounded border">Trước</span>
+                @else
+                    <a href="{{ $signages->previousPageUrl() }}"
+                        class="px-3 py-1 bg-white text-gray-700 rounded border hover:bg-gray-50">Trước</a>
+                @endif
 
+                @php
+                    $start = max($signages->currentPage() - 2, 1);
+                    $end = min($signages->currentPage() + 2, $signages->lastPage());
+                @endphp
 
-                            <button id="open_modal_create"
-                                class="btn bg-primary/25 text-primary hover:bg-primary hover:text-white"
-                                data-fc-placement="top" data-hs-overlay="#create_signage">
-                                Thêm biển báo
-                            </button>
-                        </div>
-                    </div>
-                </div>
-                <div>
-                    <div class=" overflow-x-auto">
-                        <div class="min-w-full inline-block align-middle">
-                            <div class="overflow-hidden">
-                                <table class="min-w-full divide-y divide-gray-200">
-                                    <thead>
-                                        <tr>
-                                            <th scope="col" class="px-6 py-3 text-start text-sm text-default-500">
-                                                Tên biển báo</th>
-                                            <th scope="col" class="px-6 py-3 text-start text-sm text-default-500">
-                                                Loại biển báo
-                                            </th>
-                                            <th scope="col" class="px-6 py-3 text-start text-sm text-default-500">
-                                                Ảnh mô tả
-                                            </th>
-                                            <th scope="col" class="px-6 py-3 text-end text-sm text-default-500">
-                                                Action</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody class="divide-y divide-gray-200">
-                                        @if(!empty($signages))
-                                            @foreach ($signages as $signage)
-                                                <tr>
-                                                    <td class="px-6 py-4 whitespace-normal text-sm text-default-800"
-                                                        style="max-width: 200px; word-wrap: break-word;">
-                                                        {{ trim($signage->SignageName) }}
-                                                    </td>
-                                                    @if(!empty($signage->signage_SignageType->SignagesTypeName))
-                                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-default-800">
-                                                            {{ $signage->signage_SignageType->SignagesTypeName }}
-                                                        </td>
-                                                    @else
-                                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-default-800">
-                                                            Không
-                                                        </td>
-                                                    @endif
-                                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-default-800">
-                                                        <img style="max-width: 100px;" class=""
-                                                            src="{{ asset("storage/uploads/imageSignage/$signage->SignageImage")}}"
-                                                            alt="">
-                                                    </td>
-                                                    <td
-                                                        class="px-6 py-4 whitespace-nowrap text-end text-sm font-medium flex justify-end gap-x-2">
-                                                        <div class="hs-tooltip">
-                                                            <button type="button"
-                                                                class="text-red-500 hover:text-red-800 hs-tooltip-toggle"
-                                                                data-hs-overlay="#delete_{{ $signage->SignageID }}"
-                                                                data-fc-placement="bottom">
-                                                                <span class="material-symbols-rounded text-2xl">
-                                                                    delete_forever
-                                                                </span>
-                                                            </button>
-                                                            <span
-                                                                class="hs-tooltip-content hs-tooltip-shown:opacity-100 hs-tooltip-shown:visible opacity-0 transition-opacity inline-block absolute invisible z-10 py-1 px-2 bg-gray-900 text-xs font-medium text-white rounded shadow-sm"
-                                                                role="tooltip">
-                                                                Xóa vĩnh viễn
-                                                            </span>
-                                                        </div>
-                                                        <div class="hs-tooltip">
-                                                            <a id ="open_modal_edit" href="#" type="button"
-                                                                class="text-info hover:text-info hs-tooltip-toggle"
-                                                                data-fc-placement="top"
-                                                                data-hs-overlay="#edit_{{ $signage->SignageID }}">
-                                                                <span class="material-symbols-rounded text-2xl">
-                                                                    edit
-                                                                </span>
-                                                            </a>
-                                                            <span
-                                                                class="hs-tooltip-content hs-tooltip-shown:opacity-100 hs-tooltip-shown:visible opacity-0 transition-opacity inline-block absolute invisible z-10 py-1 px-2 bg-gray-900 text-xs font-medium text-white rounded shadow-sm"
-                                                                role="tooltip">
-                                                                chỉnh sửa
-                                                            </span>
-                                                        </div>
-                                                        <div class="hs-tooltip">
-                                                            <a href="" type="button" onclick="event.preventDefault()"
-                                                                class="text-blue-500 hover:text-blue-700 hs-tooltip-toggle"
-                                                                data-fc-placement="top"
-                                                                data-hs-overlay="#show-{{ $signage->SignageID }}">
-                                                                <span class="material-symbols-rounded text-2xl">
-                                                                    visibility
-                                                                </span>
-                                                            </a>
-                                                            <span
-                                                                class="hs-tooltip-content hs-tooltip-shown:opacity-100 hs-tooltip-shown:visible opacity-0 transition-opacity inline-block absolute invisible z-10 py-1 px-2 bg-gray-900 text-xs font-medium text-white rounded shadow-sm"
-                                                                role="tooltip">
-                                                                xem chi tiết
-                                                            </span>
-                                                        </div>
-                                                    </td>
-                                                </tr>
-                                            @endforeach
-                                        @endif
-                                    </tbody>
-                                </table>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="flex items-center justify-between border-t border-gray-200 bg-white px-4 py-3 sm:px-6">
-                    <!-- Showing -->
-                    <div>
-                        <p class="text-sm text-gray-700">
-                            <span class="font-medium">{{ $signages->firstItem() }}</span>
-                            ->
-                            <span class="font-medium">{{ $signages->lastItem() }}</span>
-                            of
-                            <span class="font-medium">{{ $signages->total() }}</span>
-                        </p>
-                    </div>
+                @if ($start > 1)
+                    <a href="{{ $signages->url(1) }}"
+                        class="px-3 py-1 bg-white text-gray-700 rounded border hover:bg-gray-50">1</a>
+                    @if ($start > 2)
+                        <span class="px-2 text-gray-400">...</span>
+                    @endif
+                @endif
 
-                    <!-- Pagination -->
-                    <div class="flex flex-wrap items-center gap-1">
-                        {{-- Previous Page --}}
-                        @if ($signages->onFirstPage())
-                            <span class="px-3 py-1 text-gray-400 bg-gray-100 rounded border border-gray-300">Trước</span>
-                        @else
-                            <a href="{{ $signages->previousPageUrl() }}"
-                                class="px-3 py-1 text-gray-700 bg-white rounded border border-gray-300 hover:bg-gray-50">Trước</a>
-                        @endif
+                @for ($i = $start; $i <= $end; $i++)
+                    @if ($i == $signages->currentPage())
+                        <span class="px-3 py-1 bg-blue-600 text-white rounded border">{{ $i }}</span>
+                    @else
+                        <a href="{{ $signages->url($i) }}"
+                            class="px-3 py-1 bg-white text-gray-700 rounded border hover:bg-gray-50">{{ $i }}</a>
+                    @endif
+                @endfor
 
-                        {{-- Page Numbers --}}
-                        @php
-                            $start = max($signages->currentPage() - 2, 1);
-                            $end = min($signages->currentPage() + 2, $signages->lastPage());
-                        @endphp
+                @if ($end < $signages->lastPage())
+                    @if ($end < $signages->lastPage() - 1)
+                        <span class="px-2 text-gray-400">...</span>
+                    @endif
+                    <a href="{{ $signages->url($signages->lastPage()) }}"
+                        class="px-3 py-1 bg-white text-gray-700 rounded border hover:bg-gray-50">{{ $signages->lastPage() }}</a>
+                @endif
 
-                        {{-- First Page Link --}}
-                        @if ($start > 1)
-                            <a href="{{ $signages->url(1) }}"
-                                class="px-3 py-1 text-gray-700 bg-white rounded border border-gray-300 hover:bg-gray-50">1</a>
-                            @if ($start > 2)
-                                <span class="px-2 text-gray-500">...</span>
-                            @endif
-                        @endif
+                @if($signages->hasMorePages())
+                    <a href="{{ $signages->nextPageUrl() }}"
+                        class="px-3 py-1 bg-white text-gray-700 rounded border hover:bg-gray-50">Sau</a>
+                @else
+                    <span class="px-3 py-1 bg-gray-100 text-gray-400 rounded border">Sau</span>
+                @endif
+            </div>
+        </div>
+    </div>
 
-                        {{-- Page Links --}}
-                        @for ($page = $start; $page <= $end; $page++)
-                            @if ($page == $signages->currentPage())
-                                <span
-                                    class="px-3 py-1 bg-primary/25 text-primary rounded border border-indigo-600">{{ $page }}</span>
-                            @else
-                                <a href="{{ $signages->url($page) }}"
-                                    class="px-3 py-1 text-gray-700 bg-white rounded border border-gray-300 hover:bg-gray-50">{{ $page }}</a>
-                            @endif
-                        @endfor
-
-                        {{-- Last Page Link --}}
-                        @if ($end < $signages->lastPage())
-                            @if ($end < $signages->lastPage() - 1)
-                                <span class="px-2 text-gray-500">...</span>
-                            @endif
-                            <a href="{{ $signages->url($signages->lastPage()) }}"
-                                class="px-3 py-1 text-gray-700 bg-white rounded border border-gray-300 hover:bg-gray-50">{{ $signages->lastPage() }}</a>
-                        @endif
-
-                        {{-- Next Page --}}
-                        @if ($signages->hasMorePages())
-                            <a href="{{ $signages->nextPageUrl() }}"
-                                class="px-3 py-1 text-gray-700 bg-white rounded border border-gray-300 hover:bg-gray-50">Sau</a>
-                        @else
-                            <span class="px-3 py-1 text-gray-400 bg-gray-100 rounded border border-gray-300">Sau</span>
-                        @endif
-                    </div>
-                </div>
-
-
-            </div> <!-- end card -->
-
-            <!-- modal xóa -->
+         <!-- modal xóa -->
            @if(!empty($signages))
             @foreach ($signages as $signage)
                 <div id="delete_{{ $signage->SignageID }}"
@@ -617,13 +555,12 @@
                 </div>
             </div>
 
+</main>
+
+    
+       
 
 
-        </div>
-
-
-
-    </main>
 
 @endsection
 

@@ -12,7 +12,7 @@ class LicenseTypeController extends Controller
 {
     public function listLicenseType()
     {
-        $ListLicenseType = LicenseType::with("questionCategory_LicenseType")->get();
+        $ListLicenseType = LicenseType::with("questionCategory_LicenseType")->paginate(10);
         return view("admin.licenseManagement.listLicenseType", compact("ListLicenseType"));
     }
     public function createLicenseType()

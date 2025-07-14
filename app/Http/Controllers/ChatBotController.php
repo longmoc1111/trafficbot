@@ -13,7 +13,7 @@ class ChatBotController extends Controller
 {
     public function dataList()
     {
-        $dataList = ChatBot::all();
+        $dataList = ChatBot::orderBy("created_at","ASC")->paginate(10);
         $categories = ChatCategory::all();
         $optionFile = ChatCategory::where("CategoryName", "PDF")->first();
         $optionURL = ChatCategory::where("CategoryName", "URL")->first();

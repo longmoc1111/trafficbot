@@ -60,15 +60,15 @@
                                 @endphp
                                 <td class="px-6 py-4">
                                     @if($hasCritical)
-                                        <span class="inline-block px-2 py-1 bg-red-100 text-red-600 rounded text-xs">Có</span>
+                                        <span class="px-2 py-1 bg-green-100 text-green-700 text-xs rounded">Có</span>
                                     @else
                                         <span
-                                            class="inline-block px-2 py-1 bg-green-100 text-green-600 rounded text-xs">Không</span>
+                                            class="px-2 py-1 bg-blue-100 text-blue-700 text-xs rounded">Không</span>
                                     @endif
                                 </td>
                                 <td class="px-6 py-4 text-end">
                                     <div class="flex justify-end gap-2">
-                                        
+
                                         <button data-hs-overlay="#modal-detail-{{ $question->QuestionID }}"
                                             class="text-blue-600 hover:text-blue-800" title="Xem chi tiết">
                                             <span class="material-symbols-rounded text-2xl">visibility</span>
@@ -94,9 +94,9 @@
             <!-- Phân trang -->
             <div class="border-t bg-gray-50 px-6 py-4 flex items-center justify-between text-sm">
                 <p class="text-gray-600">
-                    <span class="font-medium">{{ $Questions->firstItem() }}</span> -
-                    <span class="font-medium">{{ $Questions->lastItem() }}</span>
-                    / <span class="font-medium">{{ $Questions->total() }}</span> câu hỏi
+                    Hiển thị <span class="font-semibold">{{ $Questions->firstItem() }}</span> →
+                    <span class="font-semibold">{{ $Questions->lastItem() }}</span> /
+                    <span class="font-semibold">{{ $Questions->total() }}</span> 
                 </p>
                 <div class="flex items-center space-x-1">
                     {{-- Trước --}}
@@ -201,6 +201,8 @@
         @endforeach
     @endif
     <!-- end modal -->
+
+    <!-- modal show -->
     @foreach($Questions as $question)
         <div id="modal-detail-{{ $question->QuestionID }}"
             class="hs-overlay hidden fixed inset-0 z-[99999] overflow-x-hidden overflow-y-auto">
@@ -306,6 +308,7 @@
             </div>
         </div>
     @endforeach
+    <!-- end modal show -->
 
 
 @endsection

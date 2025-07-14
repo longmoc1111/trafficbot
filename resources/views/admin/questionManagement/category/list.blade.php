@@ -70,9 +70,9 @@
         <!-- Phân trang -->
         <div class="border-t bg-gray-50 px-6 py-4 flex items-center justify-between text-sm">
             <p class="text-gray-600">
-                <span class="font-medium">{{ $categories->firstItem() }}</span> -
-                <span class="font-medium">{{ $categories->lastItem() }}</span>
-                / <span class="font-medium">{{ $categories->total() }}</span> loại
+               Hiển thị <span class="font-medium">{{ $categories->firstItem() }}</span> →
+                <span class="font-medium">{{ $categories->lastItem() }}</span> /
+                <span class="font-medium">{{ $categories->total() }}</span> 
             </p>
 
             <div class="flex items-center space-x-1">
