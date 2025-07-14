@@ -264,7 +264,7 @@
                         <!-- Image -->
                         @if(isset($question->ImageDescription))
                             <div class="flex justify-center">
-                                <img src="{{ asset("storage/uploads/imageQuestion/ $question->ImageDescription") }}" alt="Ảnh câu hỏi"
+                                <img src="{{ asset("storage/uploads/imageQuestion/$question->ImageDescription") }}" alt="Ảnh câu hỏi"
                                     class="rounded-lg max-w-xs border">
                             </div>
                         @endif
