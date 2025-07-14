@@ -11,7 +11,7 @@
             </a>
         </div>
 
-        
+
         <div class="card p-4 mb-6 shadow border rounded-lg bg-white">
             <div class="flex flex-col md:flex-row justify-between gap-4">
                 <!-- search -->
@@ -34,7 +34,7 @@
             </div>
         </div>
 
-      
+
         <div class="card p-0 overflow-hidden shadow border rounded-lg bg-white">
             <div class="overflow-x-auto">
                 <table class="min-w-full divide-y divide-gray-200">
@@ -62,8 +62,7 @@
                                     @if($hasCritical)
                                         <span class="px-2 py-1 bg-green-100 text-green-700 text-xs rounded">Có</span>
                                     @else
-                                        <span
-                                            class="px-2 py-1 bg-blue-100 text-blue-700 text-xs rounded">Không</span>
+                                        <span class="px-2 py-1 bg-blue-100 text-blue-700 text-xs rounded">Không</span>
                                     @endif
                                 </td>
                                 <td class="px-6 py-4 text-end">
@@ -96,7 +95,7 @@
                 <p class="text-gray-600">
                     Hiển thị <span class="font-semibold">{{ $Questions->firstItem() }}</span> →
                     <span class="font-semibold">{{ $Questions->lastItem() }}</span> /
-                    <span class="font-semibold">{{ $Questions->total() }}</span> 
+                    <span class="font-semibold">{{ $Questions->total() }}</span>
                 </p>
                 <div class="flex items-center space-x-1">
                     {{-- Trước --}}
@@ -129,7 +128,7 @@
         </div>
     </main>
 
-    
+
 
 
 
@@ -138,66 +137,64 @@
     <!-- modal delete -->
     @if(isset($Questions))
         @foreach ($Questions as $question)
-          
-    <div id="modal-delete-{{ $question->QuestionID }}"
-        class="hs-overlay hidden fixed inset-0 z-[99999] overflow-x-hidden overflow-y-auto">
-        <div
-            class="hs-overlay-open:opacity-100 hs-overlay-open:scale-100 opacity-0 scale-95 ease-out transition-all duration-300 sm:max-w-lg sm:w-full m-3 sm:mx-auto min-h-[calc(100%-3.5rem)] flex items-center">
-            <div class="modal-content w-full bg-white border shadow-xl rounded-xl overflow-hidden">
 
-                <!-- Header -->
-                <div class="bg-gradient-to-r bg-red-600 p-6">
-                    <div class="flex justify-between items-center">
-                        <div class="flex items-center space-x-3">
-                            <div class="w-10 h-10 bg-white/20 rounded-lg flex items-center justify-center">
-                                <i class="ti ti-alert-triangle text-white text-xl"></i>
-                            </div>
-                            <div>
-                                <h3 class="font-bold text-white text-lg">Xác nhận xóa</h3>
-                                <p class="text-white/80 text-sm">Bạn có chắc muốn xóa loại biển báo này?</p>
+            <div id="modal-delete-{{ $question->QuestionID }}"
+                class="hs-overlay hidden fixed inset-0 z-[99999] overflow-x-hidden overflow-y-auto">
+                <div
+                    class="hs-overlay-open:opacity-100 hs-overlay-open:scale-100 opacity-0 scale-95 ease-out transition-all duration-300 sm:max-w-lg sm:w-full m-3 sm:mx-auto min-h-[calc(100%-3.5rem)] flex items-center">
+                    <div class="modal-content w-full bg-white border shadow-xl rounded-xl overflow-hidden">
+
+                        <!-- Header -->
+                        <div class="bg-gradient-to-r bg-red-600 p-6">
+                            <div class="flex justify-between items-center">
+                                <div class="flex items-center space-x-3">
+                                    <div class="w-10 h-10 bg-white/20 rounded-lg flex items-center justify-center">
+                                        <i class="ti ti-alert-triangle text-white text-xl"></i>
+                                    </div>
+                                    <div>
+                                        <h3 class="font-bold text-white text-lg">Xác nhận xóa</h3>
+                                        <p class="text-white/80 text-sm">Bạn có chắc muốn xóa loại biển báo này?</p>
+                                    </div>
+                                </div>
+                                <button type="button"
+                                    class="w-8 h-8 flex items-center justify-center rounded-lg bg-white/20 text-white hover:bg-white/30 transition-colors"
+                                    data-hs-overlay="#modal-delete-{{ $question->QuestionID }}">
+                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            d="M6 18L18 6M6 6l12 12"></path>
+                                    </svg>
+                                </button>
                             </div>
                         </div>
-                        <button type="button"
-                            class="w-8 h-8 flex items-center justify-center rounded-lg bg-white/20 text-white hover:bg-white/30 transition-colors"
-                            data-hs-overlay="#modal-delete-{{ $question->QuestionID }}">
-                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                    d="M6 18L18 6M6 6l12 12"></path>
-                            </svg>
-                        </button>
+
+                        <!-- Body -->
+                        <div class="p-6 space-y-4 text-center">
+                            <p class="text-gray-700 text-sm">Bạn có chắc chắn muốn <strong>xóa</strong> câu hỏi này
+                                không? Hành động này không thể hoàn tác.
+                            </p>
+                        </div>
+
+                        <!-- Footer -->
+                        <div class="border-t bg-gray-50 p-4 flex justify-end gap-3">
+                            <button type="button"
+                                class="px-4 py-2 text-sm font-medium border border-gray-300 rounded-lg bg-white text-gray-700 hover:bg-gray-50 transition-colors"
+                                data-hs-overlay="#modal-delete-{{ $question->QuestionID }}">
+                                Hủy
+                            </button>
+
+                            <form action="{{ route("admintrafficbot.question.delete", $question->QuestionID) }}" method="post">
+                                @csrf
+                                @method("DELETE")
+                                <button type="submit"
+                                    class="px-4 py-2 text-sm font-semibold rounded-lg bg-red-600 text-white hover:bg-red-700 transition-colors">
+                                    Xóa
+                                </button>
+                            </form>
+                        </div>
+
                     </div>
                 </div>
-
-                <!-- Body -->
-                <div class="p-6 space-y-4 text-center">
-                    <p class="text-gray-700 text-sm">Bạn có chắc chắn muốn <strong>xóa</strong> câu hỏi này
-                     không? Hành động này không thể hoàn tác.
-                    </p>
-                </div>
-
-                <!-- Footer -->
-                <div class="border-t bg-gray-50 p-4 flex justify-end gap-3">
-                    <button type="button"
-                        class="px-4 py-2 text-sm font-medium border border-gray-300 rounded-lg bg-white text-gray-700 hover:bg-gray-50 transition-colors"
-                        data-hs-overlay="#modal-delete-{{ $question->QuestionID }}">
-                        Hủy
-                    </button>
-
-                    <form
-                        action="{{ route("admintrafficbot.question.delete", $question->QuestionID) }}"
-                        method="post">
-                        @csrf
-                        @method("DELETE")
-                        <button type="submit"
-                            class="px-4 py-2 text-sm font-semibold rounded-lg bg-red-600 text-white hover:bg-red-700 transition-colors">
-                            Xóa
-                        </button>
-                    </form>
-                </div>
-
             </div>
-        </div>
-    </div>
         @endforeach
     @endif
     <!-- end modal -->
@@ -243,13 +240,20 @@
                                     {{ $question->licenseType_Question->isNotEmpty() ? $question->licenseType_Question->pluck("LicenseTypeName")->join(", ") : "Chưa thuộc giấy phép" }}
                                 </p>
                             </div>
+                            @php
+                                $hasCritical = $question->licenseType_Question->contains(fn($license) => $license->pivot->IsCritical == 1)
+                            @endphp
+                            @if($hasCritical)
+                                <div class="bg-purple-50 border border-purple-100 rounded-lg p-4">
+                                    <p class="text-purple-600 font-medium text-sm">Câu điểm liệt</p>
+                                </div>
+                            @else
+                                <div class="bg-purple-50 border border-purple-100 rounded-lg p-4">
+                                    <p class="text-purple-600 font-medium text-sm">Câu Thường</p>
+                                </div>
 
-                            <div class="bg-green-50 border border-green-100 rounded-lg p-4">
-                                <p class="text-green-600 font-medium text-sm">Thuộc bộ đề</p>
-                                <p class="text-gray-900 font-semibold">
-                                    {{ $question->examSet_Question->isNotEmpty() ? $question->examSet_Question->pluck("ExamSetName")->join(", ") : "Chưa nằm trong bộ đề nào" }}
-                                </p>
-                            </div>
+                            @endif
+
                         </div>
 
                         <!-- Question -->
@@ -257,11 +261,10 @@
                             <h4 class="text-lg font-semibold text-gray-800 mb-2">Câu hỏi:</h4>
                             <p class="text-gray-900">{{ $question->QuestionName }}</p>
                         </div>
-
                         <!-- Image -->
                         @if(isset($question->ImageDescription))
                             <div class="flex justify-center">
-                                <img src="/assets/adminPage/imageQuestion/{{ $question->ImageDescription }}" alt="Ảnh câu hỏi"
+                                <img src="{{ asset("storage/uploads/imageQuestion/ $question->ImageDescription") }}" alt="Ảnh câu hỏi"
                                     class="rounded-lg max-w-xs border">
                             </div>
                         @endif
@@ -270,6 +273,14 @@
                         <div>
                             <h4 class="text-lg font-semibold text-gray-800 mb-3">Đáp án:</h4>
                             <ul class="space-y-3">
+                                @php
+                                    $answer = $question->answer_Question()->get()->keyBy("AnswerLabel");
+                                    $answerA = $answer["A"] ?? null;
+                                    $answerB = $answer["B"] ?? null;
+                                    $answerC = $answer["C"] ?? null;
+                                    $answerD = $answer["D"] ?? null;
+                                    $correctAnswer = $answer->firstWhere("IsCorrect", true)->AnswerLabel ?? null;
+                                @endphp
                                 @foreach (["A", "B", "C", "D"] as $label)
                                     @php
                                         $answerlabel = $answer[$label]->AnswerLabel ?? null;
@@ -278,7 +289,7 @@
                                     @if($answerName)
                                         <li
                                             class="flex items-center justify-between p-3 rounded-md border
-                                                                    {{ $correctAnswer == $answerlabel ? 'bg-green-50 border-green-200' : 'bg-red-50 border-red-200' }}">
+                                                                                                    {{ $correctAnswer == $answerlabel ? 'bg-green-50 border-green-200' : 'bg-red-50 border-red-200' }}">
                                             <div class="text-sm text-gray-800 font-medium">
                                                 {{ $label }}. {{ $answerName }}
                                             </div>
