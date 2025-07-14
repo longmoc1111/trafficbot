@@ -1,275 +1,312 @@
 @extends("admin.adminPageLayout.layout")
 @section("title", "Quản lý câu hỏi")
 @section("main")
-
     <main>
-
-        <!-- Page Title Start -->
-        <div class="flex items-center md:justify-between flex-wrap gap-2 mb-6">
-            <h4 class="text-default-900 text-lg font-medium mb-2">Danh sách câu hỏi</h4>
+        <!-- tiu đề -->
+        <div class="flex items-center justify-between flex-wrap gap-2 mb-6">
+            <h4 class="text-default-900 text-xl font-semibold">📚 Danh sách câu hỏi</h4>
+            <a href="{{ route('admintrafficbot.question.create') }}"
+                class="btn bg-blue-600 text-white hover:bg-blue-700 text-sm px-4 py-2 rounded-md shadow">
+                <i class="i-solar-plus-bold mr-1"></i> Thêm câu hỏi mới
+            </a>
         </div>
-        <!-- Page Title End -->
 
-        <div class=" gap-6 mt-8">
-            <div class="card overflow-hidden">
-                <div class="card-header flex justify-between items-center">
-                    <!-- LEFT: Search input -->
-                    <div class="md:flex hidden items-center relative">
-                        <div class="absolute inset-y-0 start-0 flex items-center ps-3 pointer-events-none">
-                            <i class="i-ph-magnifying-glass text-base"></i>
-                        </div>
-                        <form action="{{ route("admintrafficbot.question.search") }}">
-                            <input type="search" name="search"
-                                class="form-input px-10 rounded-lg bg-gray-500/10 border-transparent focus:border-transparent w-80"
-                                placeholder="Search...">
-                        </form>
+        
+        <div class="card p-4 mb-6 shadow border rounded-lg bg-white">
+            <div class="flex flex-col md:flex-row justify-between gap-4">
+                <!-- search -->
+                <form action="{{ route("admintrafficbot.question.search") }}" class="relative w-full md:w-1/2">
+                    <input type="search" name="search" placeholder="🔍 Tìm kiếm câu hỏi..."
+                        class="form-input w-full rounded-lg border-gray-300 shadow-sm focus:ring-2 focus:ring-blue-400">
+                </form>
 
-                    </div>
-                    <!-- RIGHT: Select + Button -->
-                    <div class="flex items-center gap-3">
-                        <form action="">
-                            <select onchange="this.form.submit()" name="category" class="form-select" id="example-select"
-                                style="max-width: 200px;">
-                                @foreach($questionCategory as $category)
-                                    <option value="{{ $category->CategoryID }}" {{ !empty($categoryKey) && $categoryKey == $category->CategoryID ? "selected" : "" }}>{{ $category->CategoryName }}
-                                    </option>
-                                @endforeach
-                            </select>
-                        </form>
-                        <a href="{{ route('admintrafficbot.question.create') }}" style="white-space: nowrap"
-                            class="btn bg-primary/25 text-primary hover:bg-primary hover:text-white">
-                            Thêm câu hỏi mới
-                        </a>
-                    </div>
-                </div>
+                <!-- lọc -->
+                <form action="" class="w-full md:w-1/3">
+                    <select name="category" onchange="this.form.submit()"
+                        class="form-select w-full rounded-lg border-gray-300 shadow-sm focus:ring-2 focus:ring-blue-400">
+                        @foreach($questionCategory as $category)
+                            <option value="{{ $category->CategoryID }}" {{ !empty($categoryKey) && $categoryKey == $category->CategoryID ? 'selected' : '' }}>
+                                {{ $category->CategoryName }}
+                            </option>
+                        @endforeach
+                    </select>
+                </form>
+            </div>
+        </div>
 
-                <div>
-                    <div class="overflow-x-auto">
-                        <div class="min-w-full inline-block align-middle">
-
-                            <div class="overflow-hidden">
-                                <table class="min-w-full divide-y divide-gray-200">
-                                    <thead>
-                                        <tr>
-                                            <th scope="col" class="px-6 py-3 text-start text-sm text-default-500">
-                                                Tên câu hỏi</th>
-                                            <th scope="col" class="px-6 py-3 text-start text-sm text-default-500">
-                                                Loại câu hỏi</th>
-                                            <th scope="col" class="px-6 py-3 text-start text-sm text-default-500">
-                                                Câu điểm liệt</th>
-
-                                            <th scope="col" class="px-6 py-3 text-end text-sm text-default-500">
-                                                Action</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody class="divide-y divide-gray-200">
-                                        @foreach($Questions as $question)
-                                            <tr>
-                                                <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-default-800"
-                                                    style="white-space: normal; word-wrap: break-word; max-width: 300px;">
-                                                    {{ $question->QuestionName  }}
-                                                </td>
-                                                <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-default-800"
-                                                    style="white-space: normal; word-wrap: break-word; max-width: 230px;">
-                                                    {{ optional($question->categoryQuestion_Question)->CategoryName ?? 'Chưa phân loại' }}
-                                                </td>
-                                                </td>
-
-                                                @php
-                                                    $hasCritical = false;
-                                                    foreach ($question->licenseType_Question as $license) {
-                                                        if ($license->pivot->IsCritical == 1) {
-                                                            $hasCritical = true;
-                                                            break;
-                                                        }
-                                                    }
-                                                @endphp
-                                                
-                                                @if($hasCritical)
-                                                    <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-default-800">
-                                                        <span class="px-2 py-1 bg-success/10 text-success text-xs rounded">có</span>                                             
-                                                    </td>                                                 
-                                                @else
-                                                    <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-default-800">
-                                                     <span class="px-2 py-1 bg-blue-100 text-secondary text-xs rounded">không</span>
-                                                    </td>
-                                                @endif
-                                                <td
-                                                    class="px-6 py-4 whitespace-nowrap text-end text-sm font-medium flex justify-end gap-x-2">
-                                                    <div class="hs-tooltip">
-                                                        <button type="button"
-                                                            class="text-red-500 hover:text-red-800 hs-tooltip-toggle"
-                                                            data-hs-overlay="#modal-{{ $question->QuestionID }}"
-                                                            data-fc-placement="bottom">
-                                                            <span class="material-symbols-rounded text-2xl">
-                                                                delete_forever
-                                                            </span>
-                                                        </button>
-                                                        <span
-                                                            class="hs-tooltip-content hs-tooltip-shown:opacity-100 hs-tooltip-shown:visible opacity-0 transition-opacity inline-block absolute invisible z-10 py-1 px-2 bg-gray-900 text-xs font-medium text-white rounded shadow-sm"
-                                                            role="tooltip">
-                                                            Xóa vĩnh viễn
-                                                        </span>
-                                                    </div>
-                                                    <div class="hs-tooltip">
-                                                        <a href="{{ route("admintrafficbot.question.edit", $question->QuestionID) }}"
-                                                            type="button" class="text-info hover:text-info hs-tooltip-toggle"
-                                                            data-fc-placement="top">
-                                                            <span class="material-symbols-rounded text-2xl">
-                                                                edit
-                                                            </span>
-                                                        </a>
-                                                        <span
-                                                            class="hs-tooltip-content hs-tooltip-shown:opacity-100 hs-tooltip-shown:visible opacity-0 transition-opacity inline-block absolute invisible z-10 py-1 px-2 bg-gray-900 text-xs font-medium text-white rounded shadow-sm"
-                                                            role="tooltip">
-                                                            chỉnh sửa
-                                                        </span>
-                                                    </div>
-                                                    <div class="hs-tooltip">
-                                                        <a href="{{ route("admintrafficbot.question.detail", $question->QuestionID) }}"
-                                                            type="button"
-                                                            class="text-blue-500 hover:text-blue-700 hs-tooltip-toggle"
-                                                            data-fc-placement="top">
-                                                            <span class="material-symbols-rounded text-2xl">
-                                                                arrow_right_alt
-                                                            </span>
-                                                        </a>
-                                                        <span
-                                                            class="hs-tooltip-content hs-tooltip-shown:opacity-100 hs-tooltip-shown:visible opacity-0 transition-opacity inline-block absolute invisible z-10 py-1 px-2 bg-gray-900 text-xs font-medium text-white rounded shadow-sm"
-                                                            role="tooltip">
-                                                            xem chi tiết
-                                                        </span>
-                                                    </div>
-
-                                                </td>
-                                            </tr>
-                                        @endforeach
-                                    </tbody>
-                                </table>
-
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="flex items-center justify-between border-t border-gray-200 bg-white px-4 py-3 sm:px-6">
-                    <!-- Showing -->
-                    <div>
-                        <p class="text-sm text-gray-700">
-                            <span class="font-medium">{{ $Questions->firstItem() }}</span>
-                            ->
-                            <span class="font-medium">{{ $Questions->lastItem() }}</span>
-                            of
-                            <span class="font-medium">{{$Questions->total()}}</span>
-                        </p>
-                    </div>
-
-                    <!-- Pagination -->
-                    <div class="flex flex-wrap items-center gap-1">
-                        <!-- trước -->
-                        @if($Questions->onFirstPage())
-                            <span class="px-3 py-1 text-gray-400 bg-gray-100 rounded border border-gray-300">Trước</span>
-                        @else
-                            <a href="{{ $Questions->previousPageUrl() }}"
-                                class="px-3 py-1 text-gray-700 bg-white rounded border border-gray-300 hover:bg-gray-50">Trước</a>
-                        @endif
-
-                        @php
-                            $start = max($Questions->currentPage() - 2, 1);
-                            $end = min($Questions->currentPage() + 2, $Questions->lastPage());
-                        @endphp
-
-                        <!-- trang đầu tiên -->
-                        @if($start > 1)
-                            <a href="{{ $Questions->url(1) }}"
-                                class="px-3 py-1 text-gray-700 bg-white rounded border border-gray-300 hover:bg-gray-50">1</a>
-                            @if($start > 2)
-                                <span class="px-2 text-gray-500">...</span>
-                            @endif
-                        @endif
-
-                        <!-- link các trang -->
-                        @for($page = $start; $page <= $end; $page++)
-                            @if($page == $Questions->currentPage())
-                                <span
-                                    class="px-3 py-1 bg-primary/25 text-primary rounded border border-indigo-600">{{ $page }}</span>
-                            @else
-                                <a href="{{ $Questions->url($page) }}"
-                                    class="px-3 py-1 text-gray-700 bg-white rounded border border-gray-300 hover:bg-gray-50">{{ $page}}</a>
-                            @endif
-                        @endfor
-
-                        <!-- page cuối -->
-                        @if($end < $Questions->lastPage())
-                            @if($end < $Questions->lastPage() - 1)
-                                <span class="px-2 text-gray-500">...</span>
-                            @endif
-                            <a href="{{ $Questions->url($Questions->lastPage()) }}"
-                                class="px-3 py-1 text-gray-700 bg-white rounded border border-gray-300 hover:bg-gray-50">{{ $Questions->lastPage() }}</a>
-                        @endif
-
-                        <!-- trang tiếp -->
-                        @if($Questions->hasMorePages())
-                            <a href="{{ $Questions->nextPageUrl() }}"
-                                class="px-3 py-1 text-gray-700 bg-white rounded border border-gray-300 hover:bg-gray-50">Sau</a>
-                        @else
-                            <span class="px-3 py-1 text-gray-400 bg-gray-100 rounded border border-gray-300">Sau</span>
-                        @endif
-
-                    </div>
-                </div>
-
-            </div> <!-- end card -->
-            <!-- modal delete -->
-            @if(isset($Questions))
-                @foreach ($Questions as $question)
-                    <div id="modal-{{ $question->QuestionID }}"
-                        class="hs-overlay w-full h-full fixed top-0 left-0 z-70 transition-all duration-500 overflow-y-auto hidden pointer-events-none">
-                        <div
-                            class="translate-y-10 hs-overlay-open:translate-y-0 hs-overlay-open:opacity-100 opacity-0 ease-in-out transition-all duration-500 sm:max-w-lg sm:w-full my-8 sm:mx-auto flex flex-col bg-white shadow-sm rounded">
-                            <div class="flex flex-col border border-default-200 shadow-sm rounded-lg  pointer-events-auto">
-                                <div class="flex justify-between items-center py-3 px-4 border-b border-default-200">
-                                    <h3 class="text-lg font-medium text-default-900">
-                                        Xác nhận
-                                    </h3>
-                                    <button type="button" class="text-default-600 cursor-pointer"
-                                        data-hs-overlay="#modal-{{  $question->QuestionID }}">
-                                        <i class="i-tabler-x text-lg"></i>
-                                    </button>
-                                </div>
-                                <div class="p-4 overflow-y-auto">
-                                    <p class="mt-1 text-default-600">
-                                        Bạn có chắc muốn xóa câu hỏi này ?
-                                    </p>
-
-                                </div>
-                                <div class="flex justify-end items-center gap-x-2 py-3 px-4 border-t border-default-200">
-                                    <button type="button"
-                                        class="py-2 px-5 inline-flex items-center justify-center font-medium tracking-wide border align-middle duration-500 text-sm text-center bg-primary/5 hover:bg-primary border-primary/10 hover:border-primary text-primary hover:text-white rounded-md"
-                                        data-hs-overlay="#modal-{{  $question->QuestionID }}">
-                                        <i class="i-tabler-x me-1"></i>
-                                        Thoát
-                                    </button>
-                                    <form action="{{ route("admintrafficbot.question.delete", $question->QuestionID) }}"
-                                        method="post">
-                                        @csrf
-                                        @method("DELETE")
-                                        <button type="submit"
-                                            class="py-2 px-5 inline-flex items-center justify-center font-medium tracking-wide border align-middle duration-500 text-sm text-center bg-primary hover:bg-primary-700 border-primary hover:border-primary-700 text-white rounded-md">
-                                            Đồng ý
+      
+        <div class="card p-0 overflow-hidden shadow border rounded-lg bg-white">
+            <div class="overflow-x-auto">
+                <table class="min-w-full divide-y divide-gray-200">
+                    <thead class="bg-gray-50 text-left text-sm font-semibold text-gray-600">
+                        <tr>
+                            <th class="px-6 py-3">Tên câu hỏi</th>
+                            <th class="px-6 py-3">Phân loại</th>
+                            <th class="px-6 py-3">Câu điểm liệt</th>
+                            <th class="px-6 py-3 text-end">Thao tác</th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-gray-100 text-sm text-gray-700">
+                        @foreach($Questions as $question)
+                            <tr>
+                                <td class="px-6 py-4 max-w-[300px] whitespace-normal">
+                                    {{ $question->QuestionName }}
+                                </td>
+                                <td class="px-6 py-4">
+                                    {{ optional($question->categoryQuestion_Question)->CategoryName ?? 'Chưa phân loại' }}
+                                </td>
+                                @php
+                                    $hasCritical = $question->licenseType_Question->contains(fn($license) => $license->pivot->IsCritical == 1);
+                                @endphp
+                                <td class="px-6 py-4">
+                                    @if($hasCritical)
+                                        <span class="inline-block px-2 py-1 bg-red-100 text-red-600 rounded text-xs">Có</span>
+                                    @else
+                                        <span
+                                            class="inline-block px-2 py-1 bg-green-100 text-green-600 rounded text-xs">Không</span>
+                                    @endif
+                                </td>
+                                <td class="px-6 py-4 text-end">
+                                    <div class="flex justify-end gap-2">
+                                        
+                                        <button data-hs-overlay="#modal-detail-{{ $question->QuestionID }}"
+                                            class="text-blue-600 hover:text-blue-800" title="Xem chi tiết">
+                                            <span class="material-symbols-rounded text-2xl">visibility</span>
                                         </button>
-                                    </form>
-                                </div>
+
+                                        <a href="{{ route("admintrafficbot.question.edit", $question->QuestionID) }}"
+                                            class="text-yellow-500 hover:text-yellow-700" title="Chỉnh sửa">
+                                            <span class="material-symbols-rounded text-2xl">edit</span>
+                                        </a>
+
+                                        <button data-hs-overlay="#modal-delete-{{ $question->QuestionID }}"
+                                            class="text-red-500 hover:text-red-700" title="Xóa vĩnh viễn">
+                                            <span class="material-symbols-rounded text-2xl">delete_forever</span>
+                                        </button>
+                                    </div>
+                                </td>
+                            </tr>
+                        @endforeach
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Phân trang -->
+            <div class="border-t bg-gray-50 px-6 py-4 flex items-center justify-between text-sm">
+                <p class="text-gray-600">
+                    <span class="font-medium">{{ $Questions->firstItem() }}</span> -
+                    <span class="font-medium">{{ $Questions->lastItem() }}</span>
+                    / <span class="font-medium">{{ $Questions->total() }}</span> câu hỏi
+                </p>
+                <div class="flex items-center space-x-1">
+                    {{-- Trước --}}
+                    @if($Questions->onFirstPage())
+                        <span class="px-3 py-1 text-gray-400 bg-gray-100 rounded border">Trước</span>
+                    @else
+                        <a href="{{ $Questions->previousPageUrl() }}"
+                            class="px-3 py-1 bg-white text-gray-700 hover:bg-gray-100 rounded border">Trước</a>
+                    @endif
+
+                    {{-- Trang --}}
+                    @for($page = max(1, $Questions->currentPage() - 2); $page <= min($Questions->lastPage(), $Questions->currentPage() + 2); $page++)
+                        @if($page == $Questions->currentPage())
+                            <span class="px-3 py-1 bg-blue-600 text-white rounded border">{{ $page }}</span>
+                        @else
+                            <a href="{{ $Questions->url($page) }}"
+                                class="px-3 py-1 bg-white text-gray-700 hover:bg-gray-100 rounded border">{{ $page }}</a>
+                        @endif
+                    @endfor
+
+                    {{-- Sau --}}
+                    @if($Questions->hasMorePages())
+                        <a href="{{ $Questions->nextPageUrl() }}"
+                            class="px-3 py-1 bg-white text-gray-700 hover:bg-gray-100 rounded border">Sau</a>
+                    @else
+                        <span class="px-3 py-1 text-gray-400 bg-gray-100 rounded border">Sau</span>
+                    @endif
+                </div>
+            </div>
+        </div>
+    </main>
+
+    
+
+
+
+    <!-- end modal -->
+
+    <!-- modal delete -->
+    @if(isset($Questions))
+        @foreach ($Questions as $question)
+          
+    <div id="modal-delete-{{ $question->QuestionID }}"
+        class="hs-overlay hidden fixed inset-0 z-[99999] overflow-x-hidden overflow-y-auto">
+        <div
+            class="hs-overlay-open:opacity-100 hs-overlay-open:scale-100 opacity-0 scale-95 ease-out transition-all duration-300 sm:max-w-lg sm:w-full m-3 sm:mx-auto min-h-[calc(100%-3.5rem)] flex items-center">
+            <div class="modal-content w-full bg-white border shadow-xl rounded-xl overflow-hidden">
+
+                <!-- Header -->
+                <div class="bg-gradient-to-r bg-red-600 p-6">
+                    <div class="flex justify-between items-center">
+                        <div class="flex items-center space-x-3">
+                            <div class="w-10 h-10 bg-white/20 rounded-lg flex items-center justify-center">
+                                <i class="ti ti-alert-triangle text-white text-xl"></i>
+                            </div>
+                            <div>
+                                <h3 class="font-bold text-white text-lg">Xác nhận xóa</h3>
+                                <p class="text-white/80 text-sm">Bạn có chắc muốn xóa loại biển báo này?</p>
                             </div>
                         </div>
+                        <button type="button"
+                            class="w-8 h-8 flex items-center justify-center rounded-lg bg-white/20 text-white hover:bg-white/30 transition-colors"
+                            data-hs-overlay="#modal-delete-{{ $question->QuestionID }}">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M6 18L18 6M6 6l12 12"></path>
+                            </svg>
+                        </button>
                     </div>
-                @endforeach
-            @endif
-            <!-- end modal -->
+                </div>
 
+                <!-- Body -->
+                <div class="p-6 space-y-4 text-center">
+                    <p class="text-gray-700 text-sm">Bạn có chắc chắn muốn <strong>xóa</strong> câu hỏi này
+                     không? Hành động này không thể hoàn tác.
+                    </p>
+                </div>
 
+                <!-- Footer -->
+                <div class="border-t bg-gray-50 p-4 flex justify-end gap-3">
+                    <button type="button"
+                        class="px-4 py-2 text-sm font-medium border border-gray-300 rounded-lg bg-white text-gray-700 hover:bg-gray-50 transition-colors"
+                        data-hs-overlay="#modal-delete-{{ $question->QuestionID }}">
+                        Hủy
+                    </button>
+
+                    <form
+                        action="{{ route("admintrafficbot.question.delete", $question->QuestionID) }}"
+                        method="post">
+                        @csrf
+                        @method("DELETE")
+                        <button type="submit"
+                            class="px-4 py-2 text-sm font-semibold rounded-lg bg-red-600 text-white hover:bg-red-700 transition-colors">
+                            Xóa
+                        </button>
+                    </form>
+                </div>
+
+            </div>
         </div>
+    </div>
+        @endforeach
+    @endif
+    <!-- end modal -->
+    @foreach($Questions as $question)
+        <div id="modal-detail-{{ $question->QuestionID }}"
+            class="hs-overlay hidden fixed inset-0 z-[99999] overflow-x-hidden overflow-y-auto">
+            <div
+                class="hs-overlay-open:opacity-100 hs-overlay-open:scale-100 opacity-0 scale-95 ease-out transition-all duration-300 sm:max-w-3xl sm:w-full m-3 sm:mx-auto min-h-[calc(100%-3.5rem)] flex items-center">
+                <div class="modal-content w-full bg-white border shadow-xl rounded-xl overflow-hidden">
 
-    </main>
+                    <!-- Header -->
+                    <div class="bg-gradient-to-r bg-indigo-600 p-6">
+                        <div class="flex justify-between items-center">
+                            <div class="flex items-center space-x-3">
+                                <div class="w-10 h-10 bg-white/20 rounded-lg flex items-center justify-center">
+                                    <i class="i-solar-document-bold-duotone text-white text-xl"></i>
+                                </div>
+                                <div>
+                                    <h3 class="font-bold text-white text-lg">Xem chi tiết câu hỏi</h3>
+                                    <p class="text-white/80 text-sm">Thông tin và đáp án câu hỏi</p>
+                                </div>
+                            </div>
+                            <button type="button"
+                                class="w-8 h-8 flex items-center justify-center rounded-lg bg-white/20 text-white hover:bg-white/30 transition-colors"
+                                data-hs-overlay="#modal-detail-{{ $question->QuestionID }}">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M6 18L18 6M6 6l12 12"></path>
+                                </svg>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Body -->
+                    <div class="p-6 space-y-6 max-h-[70vh] overflow-y-auto">
+                        <!-- Info -->
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div class="bg-blue-50 border border-blue-100 rounded-lg p-4">
+                                <p class="text-blue-600 font-medium text-sm">Thuộc giấy phép</p>
+                                <p class="text-gray-900 font-semibold">
+                                    {{ $question->licenseType_Question->isNotEmpty() ? $question->licenseType_Question->pluck("LicenseTypeName")->join(", ") : "Chưa thuộc giấy phép" }}
+                                </p>
+                            </div>
+
+                            <div class="bg-green-50 border border-green-100 rounded-lg p-4">
+                                <p class="text-green-600 font-medium text-sm">Thuộc bộ đề</p>
+                                <p class="text-gray-900 font-semibold">
+                                    {{ $question->examSet_Question->isNotEmpty() ? $question->examSet_Question->pluck("ExamSetName")->join(", ") : "Chưa nằm trong bộ đề nào" }}
+                                </p>
+                            </div>
+                        </div>
+
+                        <!-- Question -->
+                        <div>
+                            <h4 class="text-lg font-semibold text-gray-800 mb-2">Câu hỏi:</h4>
+                            <p class="text-gray-900">{{ $question->QuestionName }}</p>
+                        </div>
+
+                        <!-- Image -->
+                        @if(isset($question->ImageDescription))
+                            <div class="flex justify-center">
+                                <img src="/assets/adminPage/imageQuestion/{{ $question->ImageDescription }}" alt="Ảnh câu hỏi"
+                                    class="rounded-lg max-w-xs border">
+                            </div>
+                        @endif
+
+                        <!-- Answers -->
+                        <div>
+                            <h4 class="text-lg font-semibold text-gray-800 mb-3">Đáp án:</h4>
+                            <ul class="space-y-3">
+                                @foreach (["A", "B", "C", "D"] as $label)
+                                    @php
+                                        $answerlabel = $answer[$label]->AnswerLabel ?? null;
+                                        $answerName = $answer[$label]->AnswerName ?? null;
+                                    @endphp
+                                    @if($answerName)
+                                        <li
+                                            class="flex items-center justify-between p-3 rounded-md border
+                                                                    {{ $correctAnswer == $answerlabel ? 'bg-green-50 border-green-200' : 'bg-red-50 border-red-200' }}">
+                                            <div class="text-sm text-gray-800 font-medium">
+                                                {{ $label }}. {{ $answerName }}
+                                            </div>
+                                            <div>
+                                                @if($correctAnswer == $answerlabel)
+                                                    <i class="text-green-600 material-symbols-rounded text-xl">done</i>
+                                                @else
+                                                    <i class="text-red-500 material-symbols-rounded text-xl">close</i>
+                                                @endif
+                                            </div>
+                                        </li>
+                                    @endif
+                                @endforeach
+                            </ul>
+                        </div>
+                    </div>
+
+                    <!-- Footer -->
+                    <div class="border-t bg-gray-50 p-4 flex justify-end">
+                        <button type="button"
+                            class="px-4 py-2 text-sm font-medium border border-gray-300 rounded-lg bg-white text-gray-700 hover:bg-gray-50 transition-colors"
+                            data-hs-overlay="#modal-detail-{{ $question->QuestionID }}">
+                            Đóng
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    @endforeach
+
 
 @endsection
 

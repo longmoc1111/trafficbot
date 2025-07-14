@@ -6,16 +6,28 @@
             enctype="multipart/form-data">
             @csrf
             @method("PUT")
-            <input type="text" name = "redirect-back" hidden value = "{{ url()->current() }}">
+    <div class="bg-white border shadow-xl rounded-xl overflow-hidden">
 
-
-            <div class="flex flex-col gap-6">
-                <div class="card border rounded shadow">
-                    <div class="flex items-center justify-between px-6 py-4 border-b">
-                        <h4 class="text-lg font-semibold">Chỉnh sửa câu hỏi</h4>
-                        <button type="submit"
-                            class="btn border-success text-success hover:bg-success hover:text-white">Chỉnh sửa</button>
+     <!-- Header -->
+        <div class="bg-gradient-to-r bg-primary p-6 border-b">
+            <div class="flex justify-between items-center">
+                <div class="flex items-center space-x-3">
+                    <div class="w-10 h-10 bg-white/20 rounded-lg flex items-center justify-center">
+                        <i class="ti ti-edit text-white text-xl"></i>
                     </div>
+                    <div>
+                        <h3 class="font-bold text-white text-lg">Chỉnh sửa câu hỏi</h3>
+                        <p class="text-white/80 text-sm">Nhập nội dung câu hỏi và đáp án bên dưới</p>
+                    </div>
+                </div>
+                <button type="submit"
+                    class="px-4 py-2 text-sm font-semibold rounded-lg bg-white/20 text-white hover:bg-white/30 transition-colors">
+                    Cập nhật
+                </button>
+            </div>
+        </div>
+             <!-- body -->
+                <div class="p-6 space-y-6">
                       @if(session('iscorrect_null'))
                         <div id="dismiss-alert"
                             class="hs-removing:translate-x-5 hs-removing:opacity-0 transition duration-300 bg-red-50 border border-red-200 rounded-md p-4"
@@ -316,7 +328,7 @@
                                         class="text-default-800 text-sm font-medium inline-block mb-2">Ảnh mô tả(đối với câu
                                         hỏi biển báo, sa hình)</label>
                                     <input type="file" name="ImageDescription" id="description_image" accept="image/*"
-                                        class="form-input">
+                                        class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring focus:ring-blue-200 file:mr-4 file:py-2 file:px-4 file:rounded file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100">
                                     <input type="text" hidden name="OldImageDescription">
                                 </div>
 
@@ -383,11 +395,18 @@
                         </div>
                     </div>
                 </div> <!-- end card -->
-            </div>
+            <!-- footer -->
+              <div class="border-t bg-gray-50 p-4 flex justify-end gap-3">
+            <button type="reset"
+                class="px-4 py-2 text-sm font-medium border border-gray-300 rounded-lg bg-white text-gray-700 hover:bg-gray-50 transition-colors">
+                Đặt lại
+            </button>
+        </div>
+             
+        </div>
+       </form>
 
-        </form>
-
-
+    
     </main>
 
 @endsection

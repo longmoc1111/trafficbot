@@ -19,6 +19,8 @@
     <link href="/assets/adminPage/css/app.min.css" rel="stylesheet" type="text/css">
     <link href="/assets/izitoast/css/iziToast.min.css" rel="stylesheet" type="text/css">
     <script src="https://cdn.tailwindcss.com"></script>
+   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css">
+
     
     <!-- Custom Modal Styles -->
     <style>

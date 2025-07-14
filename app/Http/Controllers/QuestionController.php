@@ -17,6 +17,7 @@ class QuestionController extends Controller
 {
     public function listQuestion()
     {
+        
         $categoryKey = request("category");
         $questionCategory = QuestionCategory::all();
         if ($categoryKey) {

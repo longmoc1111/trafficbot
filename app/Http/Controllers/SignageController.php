@@ -37,7 +37,8 @@ class SignageController extends Controller
     // }
     public function storeSignageTypes(Request $request)
     {
-        $validator = Validator::make($request->all(), 
+        $validator = Validator::make(
+            $request->all(),
             [
                 "SignagesTypeName" => "required",
                 "SignagesTypeDescription" => "required"
@@ -47,8 +48,8 @@ class SignageController extends Controller
                 "SignagesTypeDescription.required" => "không được để trông!",
             ]
         );
-        if($validator->fails()){
-            return back()->withErrors($validator,"create")->withInput();
+        if ($validator->fails()) {
+            return back()->withErrors($validator, "create")->withInput();
         }
         $signages = SignageType::create($validator->validated());
         if ($signages) {
@@ -84,9 +85,10 @@ class SignageController extends Controller
     {
         $signageType = SignageType::find($ID);
         if ($signageType) {
-            foreach($signageType->signageType_signage as $signage){
+            foreach ($signageType->signageType_signage as $signage) {
                 $signage->update(["SignageTypeID" => null]);
-            };
+            }
+            ;
             $signageType->delete();
 
             return redirect()->route("admintrafficbot.listsignagetypes")->with("delete_success", "xóa loại biển báo thành công!");
@@ -137,7 +139,8 @@ class SignageController extends Controller
     public function storeSignages(Request $request)
     {
 
-        $validate = $request->validate([
+
+        $validator = Validator::make($request->all(), [
             "SignageName" => "required",
             "SignageTypeID" => "required",
             "SignageImage" => "required",
@@ -148,6 +151,10 @@ class SignageController extends Controller
             "SignageImage.required" => "Không được để trống!",
             "SignagesExplanation.required" => "Không được để trống"
         ]);
+        if ($validator->fails()) {
+            return back()->withErrors($validator, "create");
+        }
+        $validate = $validator->validated();
 
         if ($request->hasFile("SignageImage")) {
             $file = $request->file("SignageImage");
@@ -181,9 +188,9 @@ class SignageController extends Controller
 
     public function updateSignages($ID, Request $request)
     {
-    
 
-        $validate = $request->validate(
+
+        $validator = Validator::make($request->all() ,
             [
                 "SignageTypeID" => "required",
                 "SignageName" => "required",
@@ -195,6 +202,10 @@ class SignageController extends Controller
                 "SignagesExplanation.required" => "Không được để trống!",
             ]
         );
+        if($validator->fails()){
+            return back()->withErrors($validator, "edit");
+        }
+        $validate = $validator->validated();
         if ($request->hasFile("NewImage")) {
 
             if ($request->get("OldImage")) {
@@ -207,8 +218,8 @@ class SignageController extends Controller
             $fileNameWithoutExt = pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME);
             $fileNameExt = $file->getClientOriginalExtension();
             $newFileName = $fileNameWithoutExt . "_" . time() . "." . $fileNameExt;
-     
-            $file->move(storage_path("app/public/uploads/imageSignage"),$newFileName);
+
+            $file->move(storage_path("app/public/uploads/imageSignage"), $newFileName);
             $validate["SignageImage"] = $newFileName;
 
         }

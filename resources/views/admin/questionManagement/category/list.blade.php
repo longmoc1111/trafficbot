@@ -2,236 +2,180 @@
 @section("title", "Quản lý loại câu hỏi")
 @section("main")
 
-    <main>
+  <main>
+    <!-- Tiêu đề trang -->
+    <div class="flex items-center justify-between flex-wrap gap-2 mb-6">
+        <h4 class="text-default-900 text-xl font-semibold">📂 Phân loại câu hỏi</h4>
+        <button id="open_modal_create"
+            class="btn bg-blue-600 text-white hover:bg-blue-700 text-sm px-4 py-2 rounded-md shadow"
+            data-hs-overlay="#modal-create">
+            <i class="i-solar-plus-bold mr-1"></i> Tạo mới
+        </button>
+    </div>
 
-        <!-- Page Title Start -->
-        <div class="flex items-center md:justify-between flex-wrap gap-2 mb-6">
-            <h4 class="text-default-900 text-lg font-medium mb-2">Phân loại câu hỏi</h4>
+    <!-- Tìm kiếm -->
+    <div class="card p-4 mb-6 shadow border rounded-lg bg-white">
+        <form action="{{ route('admintrafficbot.question.category.search') }}" method="get"
+            class="relative w-full md:w-1/2">
+            <input type="search" name="search" placeholder="🔍 Tìm kiếm phân loại câu hỏi..."
+                class="form-input w-full rounded-lg border-gray-300 shadow-sm focus:ring-2 focus:ring-blue-400">
+        </form>
+    </div>
+
+    <!-- Danh sách phân loại -->
+    <div class="card p-0 overflow-hidden shadow border rounded-lg bg-white">
+        <div class="overflow-x-auto">
+            <table class="min-w-full divide-y divide-gray-200">
+                <thead class="bg-gray-50 text-left text-sm font-semibold text-gray-600">
+                    <tr>
+                        <th class="px-6 py-3">Tên loại câu hỏi</th>
+                        <th class="px-6 py-3 text-end">Thao tác</th>
+                    </tr>
+                </thead>
+                <tbody class="divide-y divide-gray-100 text-sm text-gray-700">
+                    @foreach ($categories as $category)
+                        <tr>
+                            <td class="px-6 py-4 max-w-[300px] whitespace-normal">
+                                {{ $category->CategoryName }}
+                            </td>
+                            <td class="px-6 py-4 text-end">
+                                <div class="flex justify-end gap-2">
+                                    <!-- Xem -->
+                                    <a href="#" class="text-blue-600 hover:text-blue-800"
+                                        data-hs-overlay="#modal-show_{{ $category->CategoryID }}" title="Xem chi tiết"
+                                        onclick="event.preventDefault()">
+                                        <span class="material-symbols-rounded text-2xl">visibility</span>
+                                    </a>
+
+                                    <!-- Sửa -->
+                                    <a href="#" class="text-yellow-500 hover:text-yellow-700"
+                                        data-hs-overlay="#modal-edit_{{ $category->CategoryID }}" title="Chỉnh sửa"
+                                        onclick="event.preventDefault()">
+                                        <span class="material-symbols-rounded text-2xl">edit</span>
+                                    </a>
+
+                                    <!-- Xóa -->
+                                    <button type="button" class="text-red-500 hover:text-red-700"
+                                        data-hs-overlay="#modal-delete_{{ $category->CategoryID }}" title="Xóa vĩnh viễn">
+                                        <span class="material-symbols-rounded text-2xl">delete_forever</span>
+                                    </button>
+                                </div>
+                            </td>
+                        </tr>
+                    @endforeach
+                </tbody>
+            </table>
         </div>
-        <!-- Page Title End -->
 
-        <div class=" gap-6 mt-8">
-            <div class="card overflow-hidden">
-                <div class="card-header flex justify-between items-center">
-                    <div class="md:flex hidden items-center relative">
-                        <div class="absolute inset-y-0 start-0 flex items-center ps-3 pointer-events-none">
-                            <i class="i-ph-magnifying-glass text-base"></i>
-                        </div>
-                        <form style="margin-bottom: 0" action="{{ route('admintrafficbot.question.category.search') }}"
-                            method="get">
-                            <input type="search" name="search"
-                                class="form-input px-10 rounded-lg bg-gray-500/10 border-transparent focus:border-transparent w-80"
-                                placeholder="Search...">
-                        </form>
-                    </div>
-                    <div class="flex gap-2">
-                        <button id="open_modal_create"
-                            class="btn bg-primary/25 text-primary hover:bg-primary hover:text-white"
-                            data-hs-overlay="#modal-create" data-fc-placement="bottom">
-                            Tạo mới
-                        </button>
-                    </div>
+        <!-- Phân trang -->
+        <div class="border-t bg-gray-50 px-6 py-4 flex items-center justify-between text-sm">
+            <p class="text-gray-600">
+                <span class="font-medium">{{ $categories->firstItem() }}</span> -
+                <span class="font-medium">{{ $categories->lastItem() }}</span>
+                / <span class="font-medium">{{ $categories->total() }}</span> loại
+            </p>
 
-                </div>
+            <div class="flex items-center space-x-1">
+                {{-- Trước --}}
+                @if ($categories->onFirstPage())
+                    <span class="px-3 py-1 text-gray-400 bg-gray-100 rounded border">Trước</span>
+                @else
+                    <a href="{{ $categories->previousPageUrl() }}"
+                        class="px-3 py-1 bg-white text-gray-700 hover:bg-gray-100 rounded border">Trước</a>
+                @endif
+
+                {{-- Trang --}}
+                @for ($page = max(1, $categories->currentPage() - 2); $page <= min($categories->lastPage(), $categories->currentPage() + 2); $page++)
+                    @if ($page == $categories->currentPage())
+                        <span class="px-3 py-1 bg-blue-600 text-white rounded border">{{ $page }}</span>
+                    @else
+                        <a href="{{ $categories->url($page) }}"
+                            class="px-3 py-1 bg-white text-gray-700 hover:bg-gray-100 rounded border">{{ $page }}</a>
+                    @endif
+                @endfor
+
+                {{-- Sau --}}
+                @if ($categories->hasMorePages())
+                    <a href="{{ $categories->nextPageUrl() }}"
+                        class="px-3 py-1 bg-white text-gray-700 hover:bg-gray-100 rounded border">Sau</a>
+                @else
+                    <span class="px-3 py-1 text-gray-400 bg-gray-100 rounded border">Sau</span>
+                @endif
+            </div>
+        </div>
+    </div>
+</main>
 
 
-                <div>
-                    <div class="overflow-x-auto">
-                        <div class="min-w-full inline-block align-middle">
 
-                            <div class="overflow-hidden">
-                                <table class="min-w-full divide-y divide-gray-200">
-                                    <thead>
-                                        <tr>
-                                            <th scope="col" class="px-6 py-3 text-start text-sm text-default-500">
-                                                Tên loại câu hỏi</th>
 
-                                            <th scope="col" class="px-6 py-3 text-end text-sm text-default-500">
-                                                Action</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody class="divide-y divide-gray-200">
-                                        @foreach ($categories as $category)
 
-                                            <tr>
-                                                <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-default-800"
-                                                    style="white-space: normal; word-wrap: break-word; max-width: 300px;">
-                                                    {{$category->CategoryName}}
-                                                </td>
 
-                                                <td
-                                                    class="px-6 py-4 whitespace-nowrap text-end text-sm font-medium flex justify-end gap-x-2">
-                                                    <div class="hs-tooltip">
-                                                        <button type="button"
-                                                            class="text-red-500 hover:text-red-800 hs-tooltip-toggle"
-                                                            data-hs-overlay="#modal-delete_{{ $category->CategoryID }}"
-                                                            data-fc-placement="bottom">
-                                                            <span class="material-symbols-rounded text-2xl">
-                                                                delete_forever
-                                                            </span>
-                                                        </button>
-                                                        <span
-                                                            class="hs-tooltip-content hs-tooltip-shown:opacity-100 hs-tooltip-shown:visible opacity-0 transition-opacity inline-block absolute invisible z-10 py-1 px-2 bg-gray-900 text-xs font-medium text-white rounded shadow-sm"
-                                                            role="tooltip">
-                                                            Xóa vĩnh viễn
-                                                        </span>
-                                                    </div>
-                                                    <div class="hs-tooltip">
-                                                        <a id="open_modal_edit" href="" type="button"
-                                                            onclick="event.preventDefault()"
-                                                            class="text-info hover:text-info hs-tooltip-toggle"
-                                                            data-fc-placement="top"
-                                                            data-hs-overlay="#modal-edit_{{ $category->CategoryID }}">
-                                                            <span class="material-symbols-rounded text-2xl">
-                                                                edit
-                                                            </span>
-                                                        </a>
-                                                        <span
-                                                            class="hs-tooltip-content hs-tooltip-shown:opacity-100 hs-tooltip-shown:visible opacity-0 transition-opacity inline-block absolute invisible z-10 py-1 px-2 bg-gray-900 text-xs font-medium text-white rounded shadow-sm"
-                                                            role="tooltip">
-                                                            chỉnh sửa
-                                                        </span>
-                                                    </div>
-                                                    <div class="hs-tooltip">
-                                                        <a href="" type="button" onclick="event.preventDefault()"
-                                                            class="text-blue-500 hover:text-blue-700 hs-tooltip-toggle"
-                                                            data-hs-overlay="#modal-show_{{ $category->CategoryID }}"
-                                                            data-fc-placement="top">
-                                                            <span class="material-symbols-rounded text-2xl">
-                                                                visibility
-                                                            </span>
-                                                        </a>
-                                                        <span
-                                                            class="hs-tooltip-content hs-tooltip-shown:opacity-100 hs-tooltip-shown:visible opacity-0 transition-opacity inline-block absolute invisible z-10 py-1 px-2 bg-gray-900 text-xs font-medium text-white rounded shadow-sm"
-                                                            role="tooltip">
-                                                            xem chi tiết
-                                                        </span>
-                                                    </div>
-
-                                                </td>
-                                            </tr>
-                                        @endforeach
-
-                                    </tbody>
-                                </table>
-
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="flex items-center justify-between border-t border-gray-200 bg-white px-4 py-3 sm:px-6">
-                    <!-- Showing -->
-                    <div>
-                        <p class="text-sm text-gray-700">
-                            <span class="font-medium">{{ $categories->firstItem() }}</span>
-                            ->
-                            <span class="font-medium">{{ $categories->lastItem() }}</span>
-                            of
-                            <span class="font-medium">{{ $categories->total() }}</span>
-                        </p>
-                    </div>
-
-                    <!-- Pagination -->
-                    <div class="flex flex-wrap items-center gap-1">
-                        {{-- Previous Page --}}
-                        @if ($categories->onFirstPage())
-                            <span class="px-3 py-1 text-gray-400 bg-gray-100 rounded border border-gray-300">Trước</span>
-                        @else
-                            <a href="{{ $categories->previousPageUrl() }}"
-                                class="px-3 py-1 text-gray-700 bg-white rounded border border-gray-300 hover:bg-gray-50">Trước</a>
-                        @endif
-
-                        {{-- Page Numbers --}}
-                        @php
-                            $start = max($categories->currentPage() - 2, 1);
-                            $end = min($categories->currentPage() + 2, $categories->lastPage());
-                        @endphp
-
-                        {{-- First Page Link --}}
-                        @if ($start > 1)
-                            <a href="{{ $categories->url(1) }}"
-                                class="px-3 py-1 text-gray-700 bg-white rounded border border-gray-300 hover:bg-gray-50">1</a>
-                            @if ($start > 2)
-                                <span class="px-2 text-gray-500">...</span>
-                            @endif
-                        @endif
-
-                        {{-- Page Links --}}
-                        @for ($page = $start; $page <= $end; $page++)
-                            @if ($page == $categories->currentPage())
-                                <span
-                                    class="px-3 py-1 bg-primary/25 text-primary rounded border border-indigo-600">{{ $page }}</span>
-                            @else
-                                <a href="{{ $categories->url($page) }}"
-                                    class="px-3 py-1 text-gray-700 bg-white rounded border border-gray-300 hover:bg-gray-50">{{ $page }}</a>
-                            @endif
-                        @endfor
-
-                        {{-- Last Page Link --}}
-                        @if ($end < $categories->lastPage())
-                            @if ($end < $categories->lastPage() - 1)
-                                <span class="px-2 text-gray-500">...</span>
-                            @endif
-                            <a href="{{ $categories->url($categories->lastPage()) }}"
-                                class="px-3 py-1 text-gray-700 bg-white rounded border border-gray-300 hover:bg-gray-50">{{ $categories->lastPage() }}</a>
-                        @endif
-
-                        {{-- Next Page --}}
-                        @if ($categories->hasMorePages())
-                            <a href="{{ $categories->nextPageUrl() }}"
-                                class="px-3 py-1 text-gray-700 bg-white rounded border border-gray-300 hover:bg-gray-50">Sau</a>
-                        @else
-                            <span class="px-3 py-1 text-gray-400 bg-gray-100 rounded border border-gray-300">Sau</span>
-                        @endif
-                    </div>
-                </div>
-            </div> <!-- end card -->
             @if(!empty($categories))
                 @foreach ($categories as $category)
-                    <div id="modal-delete_{{ $category->CategoryID }}"
-                        class="hs-overlay w-full h-full fixed top-0 left-0 z-70 transition-all duration-500 overflow-y-auto hidden pointer-events-none">
-                        <div
-                            class="translate-y-10 hs-overlay-open:translate-y-0 hs-overlay-open:opacity-100 opacity-0 ease-in-out transition-all duration-500 sm:max-w-lg sm:w-full my-8 sm:mx-auto flex flex-col bg-white shadow-sm rounded">
-                            <div class="flex flex-col border border-default-200 shadow-sm rounded-lg  pointer-events-auto">
-                                <div class="flex justify-between items-center py-3 px-4 border-b border-default-200">
-                                    <h3 class="text-lg font-medium text-default-900">
-                                        Xác nhận
-                                    </h3>
-                                    <button type="button" class="text-default-600 cursor-pointer"
-                                        data-hs-overlay="#modal-delete_{{ $category->CategoryID }}">
-                                        <i class="i-tabler-x text-lg"></i>
-                                    </button>
-                                </div>
-                                <div class="p-4 overflow-y-auto">
-                                    <p class="mt-1 text-default-600">
-                                        Bạn có chắc muốn xóa câu hỏi này ?
-                                    </p>
 
+                    <div id="modal-delete_{{ $category->CategoryID }}"
+                        class="hs-overlay hidden fixed inset-0 z-[99999] overflow-x-hidden overflow-y-auto">
+                        <div
+                            class="hs-overlay-open:opacity-100 hs-overlay-open:scale-100 opacity-0 scale-95 ease-out transition-all duration-300 sm:max-w-lg sm:w-full m-3 sm:mx-auto min-h-[calc(100%-3.5rem)] flex items-center">
+                            <div class="modal-content w-full bg-white border shadow-xl rounded-xl overflow-hidden">
+
+                                <!-- Header -->
+                                <div class="bg-gradient-to-r bg-red-600 p-6">
+                                    <div class="flex justify-between items-center">
+                                        <div class="flex items-center space-x-3">
+                                            <div class="w-10 h-10 bg-white/20 rounded-lg flex items-center justify-center">
+                                                <i class="ti ti-alert-triangle   text-white text-xl"></i>
+                                            </div>
+                                            <div>
+                                                <h3 class="font-bold text-white text-lg">Xác nhận xóa</h3>
+                                                <p class="text-white/80 text-sm">Bạn có chắc muốn xóa loại câu hỏi này?</p>
+                                            </div>
+                                        </div>
+                                        <button type="button"
+                                            class="w-8 h-8 flex items-center justify-center rounded-lg bg-white/20 text-white hover:bg-white/30 transition-colors"
+                                            data-hs-overlay="#modal-delete_{{ $category->CategoryID }}">
+                                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                    d="M6 18L18 6M6 6l12 12"></path>
+                                            </svg>
+                                        </button>
+                                    </div>
                                 </div>
-                                <div class="flex justify-end items-center gap-x-2 py-3 px-4 border-t border-default-200">
+
+                                <!-- Body -->
+                                <div class="p-6 space-y-4 text-center">
+                                    <p class="text-gray-700 text-sm">Bạn có chắc chắn muốn <strong>xóa</strong> loại câu hỏi 
+                                        <strong>{{ $category->CategoryName }}</strong> không? Hành động này không thể hoàn tác.
+                                    </p>
+                                </div>
+
+                                <!-- Footer -->
+                                <div class="border-t bg-gray-50 p-4 flex justify-end gap-3">
                                     <button type="button"
-                                        class="py-2 px-5 inline-flex items-center justify-center font-medium tracking-wide border align-middle duration-500 text-sm text-center bg-primary/5 hover:bg-primary border-primary/10 hover:border-primary text-primary hover:text-white rounded-md"
+                                        class="px-4 py-2 text-sm font-medium border border-gray-300 rounded-lg bg-white text-gray-700 hover:bg-gray-50 transition-colors"
                                         data-hs-overlay="#modal-delete_{{ $category->CategoryID }}">
-                                        <i class="i-tabler-x me-1"></i>
-                                        Thoát
+                                        Hủy
                                     </button>
+
                                     <form
                                         action="{{ route("admintrafficbot.question.deletecategory", ["ID" => $category->CategoryID]) }}"
                                         method="post">
                                         @csrf
                                         @method("DELETE")
                                         <button type="submit"
-                                            class="py-2 px-5 inline-flex items-center justify-center font-medium tracking-wide border align-middle duration-500 text-sm text-center bg-primary hover:bg-primary-700 border-primary hover:border-primary-700 text-white rounded-md">
-                                            Đồng ý
+                                            class="px-4 py-2 text-sm font-semibold rounded-lg bg-red-600 text-white hover:bg-red-700 transition-colors">
+                                            Xóa
                                         </button>
                                     </form>
                                 </div>
+
                             </div>
                         </div>
                     </div>
                 @endforeach
             @endif
-            <!-- modal create -->
+            <!-- modal delte -->
 
 
 
@@ -245,9 +189,9 @@
                         <div class="bg-gradient-to-r bg-primary p-6">
                             <div class="flex justify-between items-center">
                                 <div class="flex items-center space-x-3">
-                                    <!-- <div class="w-10 h-10 bg-white/20 rounded-lg flex items-center justify-center">
-                                                <i class="i-solar-add-circle-bold text-white text-xl"></i>
-                                            </div> -->
+                                    <div class="w-10 h-10 bg-white/20 rounded-lg flex items-center justify-center">
+                                                    <i class="ti ti-library-plus text-white text-xl"></i>
+                                                </div>
                                     <div>
                                         <h3 class="font-bold text-white text-lg">Thêm Dữ Liệu</h3>
                                         <p class="text-white/80 text-sm">Điền thông tin vào các trường bên dưới</p>
@@ -303,9 +247,6 @@
             <!--end modal create -->
 
 
-
-
-
             <!-- modal edit -->
             @if(!empty($categories))
                 @foreach ($categories as $category)
@@ -320,7 +261,7 @@
                                     <div class="flex justify-between items-center">
                                         <div class="flex items-center space-x-3">
                                             <div class="w-10 h-10 bg-white/20 rounded-lg flex items-center justify-center">
-                                                <i class="i-solar-add-circle-bold text-white text-xl"></i>
+                                                <i class="ti ti-edit text-white text-xl"></i>
                                             </div>
                                             <div>
                                                 <h3 class="font-bold text-white text-lg">Chỉnh sửa dữ liệu</h3>
@@ -380,43 +321,66 @@
             @endif
 
             <!-- end modal edit-->
-            @if(!empty($categories))
+           @if(!empty($categories))
                 @foreach ($categories as $category)
                     <div id="modal-show_{{ $category->CategoryID }}"
-                        class="hs-overlay w-full h-full fixed top-0 left-0 z-70 transition-all duration-500 overflow-y-auto hidden pointer-events-none flex items-center justify-center">
+                        class="hs-overlay hidden fixed inset-0 z-[99999] overflow-x-hidden overflow-y-auto">
                         <div
-                            class="translate-y-10 hs-overlay-open:translate-y-0 hs-overlay-open:opacity-100 opacity-0 ease-in-out transition-all duration-500 sm:max-w-lg sm:w-full my-8 sm:mx-auto flex flex-col bg-white shadow-sm rounded">
-                            <div class="flex flex-col border border-default-200 shadow-sm rounded-lg  pointer-events-auto">
-                                <div class="flex justify-between items-center py-3 px-4 border-b border-default-200">
-                                    <h3 class="text-lg font-medium text-default-900 ">
-                                        Chi tiết loại câu hỏi
-                                    </h3>
-                                    <button type="button" class="text-default-600 cursor-pointer"
-                                        data-hs-overlay="#modal-show_{{ $category->CategoryID }}">
-                                        <i class="i-tabler-x text-lg"></i>
-                                    </button>
-                                </div>
-                                <div class="p-4 overflow-y-auto">
-                                    <div class="mb-3">
-                                        <label for="SignageName" class="text-default-800 text-sm font-semibold mb-2 block">
-                                            Tên loại câu hỏi
-                                        </label>
+                            class="hs-overlay-open:opacity-100 hs-overlay-open:scale-100 opacity-0 scale-95 ease-out transition-all duration-300 sm:max-w-lg sm:w-full m-3 sm:mx-auto min-h-[calc(100%-3.5rem)] flex items-center">
+                            <div class="modal-content w-full bg-white border shadow-xl rounded-xl overflow-hidden">
 
-                                        <textarea type="text" id="CategoryName" name="CategoryName"
-                                            class="form-input w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"> {{ $category->CategoryName }}</textarea>
+                                <!-- Header -->
+                                <div class="bg-gradient-to-r bg-primary p-6">
+                                    <div class="flex justify-between items-center">
+                                        <div class="flex items-center space-x-3">
+                                            <div class="w-10 h-10 bg-white/20 rounded-lg flex items-center justify-center">
+                                                <i class="ti ti-eye text-white text-xl"></i>
+                                            </div>
+                                            <div>
+                                                <h3 class="font-bold text-white text-lg">Chi tiết loại câu hỏi</h3>
+                                                <p class="text-white/80 text-sm">Thông tin chi tiết về loại câu hỏi</p>
+                                            </div>
+                                        </div>
+                                        <button type="button"
+                                            class="w-8 h-8 flex items-center justify-center rounded-lg bg-white/20 text-white hover:bg-white/30 transition-colors"
+                                            data-hs-overlay="#modal-show_{{ $category->CategoryID }}">
+                                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                    d="M6 18L18 6M6 6l12 12"></path>
+                                            </svg>
+                                        </button>
                                     </div>
                                 </div>
-                                <div class="flex justify-end items-center gap-x-2 py-3 px-4 border-t border-default-200">
-                                    <button type="button"
-                                        class="py-2 px-5 inline-flex items-center justify-center font-medium tracking-wide border align-middle duration-500 text-sm text-center bg-primary/5 hover:bg-primary border-primary/10 hover:border-primary text-primary hover:text-white rounded-md"
-                                        data-hs-overlay="#modal-show_{{ $category->CategoryID }}">
-                                        đóng
-                                    </button>
-                                    <button type="submit"
-                                        class="py-2 px-5 inline-flex items-center justify-center font-medium tracking-wide border align-middle duration-500 text-sm text-center bg-primary hover:bg-primary-700 border-primary hover:border-primary-700 text-white rounded-md">
-                                        Chỉnh sửa
-                                    </button>
 
+                                <!-- Body -->
+                                <div
+                                    class="p-6 space-y-5">
+                                    @csrf
+
+                                    <!-- Tên -->
+                                    <div>
+                                        <label class="block text-sm font-medium text-gray-700 mb-1" for="name">
+                                            Tên loại câu hỏi</label>
+                                        @error('CategoryName', "edit")
+                                            <div id="edit-error" class="flex items-center bg-red-100 text-red-700 text-sm px-4 mb-2">
+                                                {{ $message }}
+                                            </div>
+                                        @enderror
+                                        <input type="text" id="CategoryName" name="CategoryName"
+                                            value="{{ $category->CategoryName }}" required
+                                            class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring focus:ring-blue-200">
+                                    </div>
+
+
+                                    <!-- Footer -->
+                                    <div class="border-t pt-4 flex justify-end gap-3">
+                                        <button type="button"
+                                            class="px-4 py-2 text-sm font-semibold rounded-lg bg-blue-600 text-white hover:bg-blue-700 transition-colors"
+                                            data-hs-overlay="#modal-show_{{ $category->CategoryID }}">
+                                            Đóng
+                                        </button>
+                                      
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -427,11 +391,6 @@
 
 
 
-
-
-        </div>
-
-    </main>
 
 @endsection
 

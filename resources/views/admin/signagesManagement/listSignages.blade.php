@@ -2,19 +2,12 @@
 @section("title", "quản lý biển báo")
 @section("main")
 
+    
     <main>
 
         <!-- Page Title Start -->
         <div class="flex items-center md:justify-between flex-wrap gap-2 mb-6">
             <h4 class="text-default-900 text-lg font-medium mb-2">Danh sách biển báo</h4>
-
-            <!-- <div class="md:flex hidden items-center gap-3 text-sm font-semibold">
-                                <a href="#" class="text-sm font-medium text-default-700">OpenDash</a>
-                                <i class="material-symbols-rounded text-xl flex-shrink-0 text-default-500">chevron_right</i>
-                                <a href="#" class="text-sm font-medium text-default-700">Tables</a>
-                                <i class="material-symbols-rounded text-xl flex-shrink-0 text-default-500">chevron_right</i>
-                                <a href="#" class="text-sm font-medium text-default-700" aria-current="page">Basic Tables</a>
-                            </div> -->
         </div>
         <!-- Page Title End -->
 
@@ -22,7 +15,7 @@
             <div class="card overflow-hidden">
                 <div class="card overflow-hidden">
                     <div class="card-header flex justify-between items-center">
-                        <div class="items-center relative">
+                        <div class="md:flex hidden items-center relative">
                             <div class="absolute inset-y-0 start-0 flex items-center ps-3 pointer-events-none">
                                 <i class="i-ph-magnifying-glass text-base"></i>
                             </div>
@@ -44,7 +37,8 @@
                             </form>
 
 
-                            <button class="btn bg-primary/25 text-primary hover:bg-primary hover:text-white"
+                            <button id="open_modal_create"
+                                class="btn bg-primary/25 text-primary hover:bg-primary hover:text-white"
                                 data-fc-placement="top" data-hs-overlay="#create_signage">
                                 Thêm biển báo
                             </button>
@@ -110,7 +104,7 @@
                                                             </span>
                                                         </div>
                                                         <div class="hs-tooltip">
-                                                            <a href="#" type="button"
+                                                            <a id ="open_modal_edit" href="#" type="button"
                                                                 class="text-info hover:text-info hs-tooltip-toggle"
                                                                 data-fc-placement="top"
                                                                 data-hs-overlay="#edit_{{ $signage->SignageID }}">
@@ -219,119 +213,142 @@
 
             </div> <!-- end card -->
 
-
-
-
             <!-- modal xóa -->
+           @if(!empty($signages))
+            @foreach ($signages as $signage)
+                <div id="delete_{{ $signage->SignageID }}"
+                    class="hs-overlay hidden fixed inset-0 z-[99999] overflow-x-hidden overflow-y-auto">
+                    <div
+                        class="hs-overlay-open:opacity-100 hs-overlay-open:scale-100 opacity-0 scale-95 ease-out transition-all duration-300 sm:max-w-lg sm:w-full m-3 sm:mx-auto min-h-[calc(100%-3.5rem)] flex items-center">
+                        <div class="modal-content w-full bg-white border shadow-xl rounded-xl overflow-hidden">
+
+                            <!-- Header -->
+                            <div class="bg-gradient-to-r bg-red-600 p-6">
+                                <div class="flex justify-between items-center">
+                                    <div class="flex items-center space-x-3">
+                                        <div class="w-10 h-10 bg-white/20 rounded-lg flex items-center justify-center">
+                                            <i class="ti ti-alert-triangle text-white text-xl"></i>
+                                        </div>
+                                        <div>
+                                            <h3 class="font-bold text-white text-lg">Xác nhận xóa</h3>
+                                            <p class="text-white/80 text-sm">Bạn có chắc muốn xóa biển báo này?</p>
+                                        </div>
+                                    </div>
+                                    <button type="button"
+                                        class="w-8 h-8 flex items-center justify-center rounded-lg bg-white/20 text-white hover:bg-white/30 transition-colors"
+                                        data-hs-overlay="#delete_{{ $signage->SignageID }}">
+                                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                d="M6 18L18 6M6 6l12 12"></path>
+                                        </svg>
+                                    </button>
+                                </div>
+                            </div>
+
+                            <!-- Body -->
+                            <div class="p-6 space-y-4 text-center">
+                                <p class="text-gray-700 text-sm">Bạn có chắc chắn muốn <strong>xóa</strong> biển báo
+                                    <strong>{{ $signage->SignageName }}</strong> không? Hành động này không thể hoàn tác.</p>
+                            </div>
+
+                            <!-- Footer -->
+                            <div class="border-t bg-gray-50 p-4 flex justify-end gap-3">
+                                <button type="button"
+                                    class="px-4 py-2 text-sm font-medium border border-gray-300 rounded-lg bg-white text-gray-700 hover:bg-gray-50 transition-colors"
+                                    data-hs-overlay="#delete_{{ $signage->SignageID }}">
+                                    Hủy
+                                </button>
+
+                                <form action="{{ route("admintrafficbot.signages.delete", ["ID" => $signage->SignageID]) }}"
+                                    method="post">
+                                    @csrf
+                                    @method("DELETE")
+                                    <button type="submit"
+                                        class="px-4 py-2 text-sm font-semibold rounded-lg bg-red-600 text-white hover:bg-red-700 transition-colors">
+                                        Xóa
+                                    </button>
+                                </form>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            @endforeach
+        @endif
+
+            <!-- end modal show -->
             @if(!empty($signages))
                 @foreach ($signages as $signage)
-                    <div id="delete_{{ $signage->SignageID }}"
-                        class="hs-overlay w-full h-full fixed top-0 left-0 z-70 transition-all duration-500 overflow-y-auto hidden pointer-events-none">
+                    <div id="show-{{ $signage->SignageID }}"
+                        class="hs-overlay hidden fixed inset-0 z-[99999] overflow-x-hidden overflow-y-auto">
+                        <!-- Modal Container -->
                         <div
-                            class="translate-y-10 hs-overlay-open:translate-y-0 hs-overlay-open:opacity-100 opacity-0 ease-in-out transition-all duration-500 sm:max-w-lg sm:w-full my-8 sm:mx-auto flex flex-col bg-white shadow-sm rounded">
-                            <div class="flex flex-col border border-default-200 shadow-sm rounded-lg  pointer-events-auto">
-                                <div class="flex justify-between items-center py-3 px-4 border-b border-default-200">
-                                    <h3 class="text-lg font-medium text-default-900">
-                                        Xác nhận
-                                    </h3>
-                                    <button type="button" class="text-default-600 cursor-pointer"
-                                        data-hs-overlay="#delete_{{ $signage->SignageID }}">
-                                        <i class="i-tabler-x text-lg"></i>
-                                    </button>
+                            class="hs-overlay-open:opacity-100 hs-overlay-open:scale-100 opacity-0 scale-95 ease-out transition-all duration-300 sm:max-w-2xl sm:w-full m-3 sm:mx-auto min-h-[calc(100%-3.5rem)] flex items-center">
+                            <div class="modal-content w-full bg-white border shadow-xl rounded-xl overflow-hidden">
+
+                                <!-- Header -->
+                                <div class="bg-gradient-to-r bg-primary p-6">
+                                    <div class="flex justify-between items-center">
+                                        <div class="flex items-center space-x-3">
+                                            <div class="w-10 h-10 bg-white/20 rounded-lg flex items-center justify-center">
+                                                    <i class="ti ti-eye text-white text-xl"></i> 
+
+
+
+                                            </div>
+                                            <div>
+                                                <h3 class="font-bold text-white text-lg">Chi tiết biển báo</h3>
+                                                <p class="text-white/80 text-sm">Thông tin đầy đủ về biển báo</p>
+                                            </div>
+                                        </div>
+                                        <button type="button"
+                                            class="w-8 h-8 flex items-center justify-center rounded-lg bg-white/20 text-white hover:bg-white/30 transition-colors"
+                                            data-hs-overlay="#show-{{ $signage->SignageID }}">
+                                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                    d="M6 18L18 6M6 6l12 12"></path>
+                                            </svg>
+                                        </button>
+                                    </div>
                                 </div>
-                                <div class="p-4 overflow-y-auto">
-                                    <p class="mt-1 text-default-600">
-                                        Bạn có chắc muốn xóa biển báo này?
-                                    </p>
+
+                                <!-- Body -->
+                                <div class="modal-scroll max-h-[60vh] overflow-y-auto p-6 space-y-6">
+                                    <!-- Image and Info -->
+                                    <div class="flex flex-col sm:flex-row items-start sm:items-center gap-6">
+                                        <!-- Image -->
+                                        <div class="flex-shrink-0 border rounded-lg p-2 bg-gray-50 shadow">
+                                            <img src="{{ asset("storage/uploads/imageSignage/$signage->SignageImage") }}"
+                                                alt="Biển báo" class="w-40 h-40 object-contain">
+                                        </div>
+
+                                        <!-- Info -->
+                                        <div class="flex flex-col space-y-2">
+                                            <h4 class="text-xl font-bold text-gray-900">{{ $signage->SignageName }}</h4>
+
+                                            <div class="text-gray-700 text-sm">
+                                                <p><strong>Loại biển báo:</strong>
+                                                    {{ $signage->signage_SignageType->SignagesTypeName ?? 'Không' }}</p>
+                                                <p><strong>Giải thích:</strong> {{ $signage->SignagesExplanation }}</p>
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
-                                <div class="flex justify-end items-center gap-x-2 py-3 px-4 border-t border-default-200">
+
+                                <!-- Footer -->
+                                <div class="border-t bg-gray-50 p-4 flex justify-end gap-3">
                                     <button type="button"
-                                        class="py-2 px-5 inline-flex items-center justify-center font-medium tracking-wide border align-middle duration-500 text-sm text-center bg-primary/5 hover:bg-primary border-primary/10 hover:border-primary text-primary hover:text-white rounded-md"
-                                        data-hs-overlay="#delete_{{ $signage->SignageID }}">
+                                        class="px-4 py-2 text-sm font-medium border border-gray-300 rounded-lg bg-white text-gray-700 hover:bg-gray-50 transition-colors"
+                                        data-hs-overlay="#show-{{ $signage->SignageID }}">
                                         Đóng
                                     </button>
-                                    <form action="{{ route("admintrafficbot.signages.delete", ["ID" => $signage->SignageID]) }}"
-                                        method="post">
-                                        @csrf
-                                        @method("DELETE")
-                                        <button type="submit"
-                                            class="py-2 px-5 inline-flex items-center justify-center font-medium tracking-wide border align-middle duration-500 text-sm text-center bg-primary hover:bg-primary-700 border-primary hover:border-primary-700 text-white rounded-md">
-                                            Đồng ý
-                                        </button>
-                                    </form>
                                 </div>
+
                             </div>
                         </div>
                     </div>
                 @endforeach
             @endif
-            <!-- end modal show -->
-           @if(!empty($signages))
-    @foreach ($signages as $signage)
-        <div id="show-{{ $signage->SignageID }}" class="hs-overlay hidden fixed inset-0 z-[99999] overflow-x-hidden overflow-y-auto">
-            <!-- Modal Container -->
-            <div class="hs-overlay-open:opacity-100 hs-overlay-open:scale-100 opacity-0 scale-95 ease-out transition-all duration-300 sm:max-w-2xl sm:w-full m-3 sm:mx-auto min-h-[calc(100%-3.5rem)] flex items-center">
-                <div class="modal-content w-full bg-white border shadow-xl rounded-xl overflow-hidden">
-
-                    <!-- Header -->
-                    <div class="bg-gradient-to-r bg-primary p-6">
-                        <div class="flex justify-between items-center">
-                            <div class="flex items-center space-x-3">
-                                <div class="w-10 h-10 bg-white/20 rounded-lg flex items-center justify-center">
-                                    <i class="i-solar-road-sign-bold-duotone text-white text-xl"></i>
-                                </div>
-                                <div>
-                                    <h3 class="font-bold text-white text-lg">Chi tiết biển báo</h3>
-                                    <p class="text-white/80 text-sm">Thông tin đầy đủ về biển báo</p>
-                                </div>
-                            </div>
-                            <button type="button" 
-                                    class="w-8 h-8 flex items-center justify-center rounded-lg bg-white/20 text-white hover:bg-white/30 transition-colors" 
-                                    data-hs-overlay="#show-{{ $signage->SignageID }}">
-                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
-                                </svg>
-                            </button>
-                        </div>
-                    </div>
-
-                    <!-- Body --> 
-                    <div class="modal-scroll max-h-[60vh] overflow-y-auto p-6 space-y-6">
-                        <!-- Image and Info -->
-                        <div class="flex flex-col sm:flex-row items-start sm:items-center gap-6">
-                            <!-- Image -->
-                            <div class="flex-shrink-0 border rounded-lg p-2 bg-gray-50 shadow">
-                                <img src="{{ asset("storage/uploads/imageSignage/$signage->SignageImage") }}" 
-                                     alt="Biển báo" 
-                                     class="w-40 h-40 object-contain">
-                            </div>
-
-                            <!-- Info -->
-                            <div class="flex flex-col space-y-2">
-                                <h4 class="text-xl font-bold text-gray-900">{{ $signage->SignageName }}</h4>
-                                
-                                <div class="text-gray-700 text-sm">
-                                    <p><strong>Loại biển báo:</strong> {{ $signage->signage_SignageType->SignagesTypeName ?? 'Không' }}</p>
-                                    <p><strong>Giải thích:</strong> {{ $signage->SignagesExplanation }}</p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Footer -->
-                    <div class="border-t bg-gray-50 p-4 flex justify-end gap-3">
-                        <button type="button" 
-                                class="px-4 py-2 text-sm font-medium border border-gray-300 rounded-lg bg-white text-gray-700 hover:bg-gray-50 transition-colors" 
-                                data-hs-overlay="#show-{{ $signage->SignageID }}">
-                            Đóng
-                        </button>
-                    </div>
-
-                </div>
-            </div>
-        </div>
-    @endforeach
-@endif
 
             <!-- end modal -->
 
@@ -339,160 +356,190 @@
             <!-- modal edit -->
             @if(!empty($signages))
                 @foreach ($signages as $signage)
-                    <form action="{{ route("admintrafficbot.signages.update", ["ID" => $signage->SignageID]) }}" method="post"
-                        enctype="multipart/form-data">
-                        @csrf
-                        <div id="edit_{{ $signage->SignageID }}"
-                            class="hs-overlay w-full h-full fixed top-0 left-0 z-70 transition-all duration-500 overflow-y-auto hidden pointer-events-none flex items-center justify-center">
-                            <div
-                                class="translate-y-10 hs-overlay-open:translate-y-0 hs-overlay-open:opacity-100 opacity-0 ease-in-out transition-all duration-500 sm:max-w-lg sm:w-full my-8 sm:mx-auto flex flex-col bg-white shadow-sm rounded">
-                                <div class="flex flex-col border border-default-200 shadow-sm rounded-lg  pointer-events-auto">
-                                    <div class="flex justify-between items-center py-3 px-4 border-b border-default-200">
-                                        <h3 class="text-lg font-medium text-default-900 ">
-                                            Chỉnh sửa biển báo
-                                        </h3>
-                                        <button type="button" class="text-default-600 cursor-pointer"
+
+                    <div id="edit_{{ $signage->SignageID }}"
+                        class="hs-overlay hidden fixed inset-0 z-[99999] overflow-x-hidden overflow-y-auto">
+                        <div
+                            class="hs-overlay-open:opacity-100 hs-overlay-open:scale-100 opacity-0 scale-95 ease-out transition-all duration-300 sm:max-w-lg sm:w-full m-3 sm:mx-auto min-h-[calc(100%-3.5rem)] flex items-center">
+                            <div class="modal-content w-full bg-white border shadow-xl rounded-xl overflow-hidden">
+
+                                <!-- Header -->
+                                <div class="bg-gradient-to-r bg-primary p-6">
+                                    <div class="flex justify-between items-center">
+                                        <div class="flex items-center space-x-3">
+                                            <div class="w-10 h-10 bg-white/20 rounded-lg flex items-center justify-center">
+                                               <i class="ti ti-edit text-white text-xl"></i> 
+                                            </div>
+                                            <div>
+                                                <h3 class="font-bold text-white text-lg">Chỉnh sửa dữ liệu</h3>
+                                                <p class="text-white/80 text-sm">Điền thông tin vào các trường bên dưới</p>
+                                            </div>
+                                        </div>
+                                        <button type="button"
+                                            class="w-8 h-8 flex items-center justify-center rounded-lg bg-white/20 text-white hover:bg-white/30 transition-colors"
                                             data-hs-overlay="#edit_{{ $signage->SignageID }}">
-                                            <i class="i-tabler-x text-lg"></i>
+                                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                    d="M6 18L18 6M6 6l12 12"></path>
+                                            </svg>
                                         </button>
                                     </div>
-                                    <div class="p-4 overflow-y-auto">
-                                        <div class="mb-3">
-                                            <label for="example-password"
-                                                class="text-default-800 text-sm font-medium inline-block mb-2">
-                                                Loại biển báo</label>
-                                            <select name="SignageTypeID" class="form-select" id="example-select">
-                                                @foreach ($signageTypes as $type)
-                                                    <option value="{{ $type->SignageTypeID }}" {{ $type->SignageTypeID == $signage->SignageTypeID ? "selected" : ''  }}>
+                                </div>
+
+                                <!-- Body -->
+                                <form action="{{ route("admintrafficbot.signages.update", ["ID" => $signage->SignageID]) }}"
+                                    method="post" enctype="multipart/form-data" enctype="multipart/form-data">
+                                    @csrf
+                                    <div class="modal-scroll max-h-[60vh] overflow-y-auto p-6 space-y-6">
+                                        <div>
+                                            <label class="block text-sm font-medium text-gray-700 mb-1" for="signage_type">
+                                                Loại biển báo
+                                            </label>
+                                            @error('SignageTypeID', 'edit')
+                                                <p id="SignageTypeID_error"
+                                                    class="mb-1 text-xs text-sm text-red-600 bg-red-50 rounded-md px-2 py-1">
+                                                    {{ $message }}
+                                                </p>
+                                            @enderror
+                                            <select id="SignageTypeID" name="SignageTypeID" required
+                                                class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring focus:ring-blue-200"
+                                                onfocus="document.getElementById('SignageTypeID')?.classList.add('hidden')">
+                                                @if(empty($signage->signage_SignageType->SignageTypeID))
+                                                    <option value="">Chưa thuộc loại biển báo nào</option>
+                                                @endif
+                                                 @foreach ($signageTypes as $type)
+                                                    <option value="{{ $type->SignageTypeID }}" {{!empty($signage->signage_SignageType->SignageTypeID) && $signage->signage_SignageType->SignageTypeID == $type->SignageTypeID ? "selected" : "" }}>
                                                         {{ $type->SignagesTypeName }}
                                                     </option>
                                                 @endforeach
                                             </select>
                                         </div>
-                                        <div class="mb-3">
-                                            <label for="LicenseName" class="text-gray-700 text-sm font-semibold mb-2 block">
-                                                Tên biển báo
+
+                                        <!-- Tên -->
+                                        <div>
+                                            <label class="block text-sm font-medium text-gray-700 mb-1" for="name">
+                                                Tên biển báo</label>
+                                            @error('SignageName ', 'edit')
+                                                <p id="SignageName_error"
+                                                    class="mb-1 text-xs text-sm text-red-600 bg-red-50 rounded-md px-2 py-1">
+                                                    {{ $message }}
+                                                </p>
+                                            @enderror
+                                            <input type="text" id="SignageName" name="SignageName" required value="{{ $signage->SignageName}}"
+                                                class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring focus:ring-blue-200"
+                                                onfocus="document.getElementById('SignageName_error')?.classList.add('hidden')">
+                                        </div>
+
+                                        <div>
+                                            <label class="block text-sm font-medium text-gray-700 mb-1" for="name">
+                                                Mô tả biển báo</label>
+                                            @error('SignagesExplanation', 'edit')
+                                                <p id="SignagesExplanation_error"
+                                                    class="mb-1 text-xs text-sm text-red-600 bg-red-50 rounded-md px-2 py-1">
+                                                    {{ $message }}
+                                                </p>
+                                            @enderror
+                                            <textarea type="text" id="SignagesExplanation" name="SignagesExplanation" required
+                                                class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring focus:ring-blue-200"
+                                                onfocus="document.getElementById('SignagesExplanation_error')?.classList.add('hidden')">{{ $signage->SignagesExplanation}}</textarea>
+                                        </div>
+
+                                        <div>
+                                            <label for="description_image" class="block text-sm font-medium text-gray-700 mb-1">
+                                                Ảnh mô tả
                                             </label>
-                                            @error('LicenseTypeName')
-                                                <div id="dismiss-alert" role="alert">
-                                                    <div class="flex items-center">
-                                                        <div class="flex-shrink-0">
-                                                            <i class="i-tabler-circle-x text-xl text-red-600"></i>
-                                                        </div>
-                                                        <div class="flex-grow">
-                                                            <div
-                                                                class="flex items-center bg-red-100 text-red-700 text-sm px-4 rounded mb-2">
-                                                                {{ $message }}
-                                                                <button data-hs-remove-element="#dismiss-alert" type="button"
-                                                                    id="dismiss-test"
-                                                                    class="ms-auto h-6 w-6 rounded-full bg-gray-200 flex justify-center items-center">
-                                                                    <i class="i-tabler-x text-red-600"></i>
-                                                                </button>
-                                                            </div>
-                                                        </div>
-
-                                                    </div>
-                                                </div>
+                                            @error('SignageImage', 'edit')
+                                                <p id="SignageImage_error"
+                                                    class="mb-1 text-xs text-sm text-red-600 bg-red-50 rounded-md px-2 py-1">
+                                                    {{ $message }}
+                                                </p>
                                             @enderror
 
-                                            <input type="text" id="SignageName" name="SignageName"
-                                                value="{{ $signage->SignageName }}"
-                                                class="form-input w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
-                                        </div>
-
-                                        <div class="mb-3">
-                                            <label for="example-email"
-                                                class="text-default-800 text-sm font-medium inline-block mb-2">Mô
-                                                Mô tả loại biển báo</label>
-
-                                            @error("LicenseTypeDescription")
-                                                <div id="dismiss-alert_2" role="alert">
-                                                    <div class="flex items-center">
-                                                        <div class="flex-shrink-0">
-                                                            <i class="i-tabler-circle-x text-red-600"></i>
-                                                        </div>
-                                                        <div class="flex-grow">
-                                                            <div
-                                                                class="flex items-center bg-red-100 text-red-700 text-sm px-4 rounded mb-2">
-                                                                {{ $message }}
-                                                                <button data-hs-remove-element="#dismiss-alert_2" type="button"
-                                                                    id="dismiss-test"
-                                                                    class="ms-auto h-6 w-6 rounded-full bg-gray-200 flex justify-center items-center">
-                                                                    <i class="i-tabler-x text-red-600"></i>
-                                                                </button>
-                                                            </div>
-                                                        </div>
-                                                    </div>
+                                            <input type="file" name="SignageImage"
+                                                data-preview-target="preview-{{ $signage->SignageID }}"
+                                                 accept="image/*"
+                                                class="description-image w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring focus:ring-blue-200 file:mr-4 file:py-2 file:px-4 file:rounded file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100"
+                                                onfocus="document.getElementById('SignageImage_error')?.classList.add('hidden')">
+ 
+                                                <div class="flex justify-center mt-3">
+                                                    <img 
+                                                        id="preview-{{ $signage->SignageID }}"
+                                                        src="{{ !empty($signage->SignageImage) ? asset('storage/uploads/imageSignage/' . $signage->SignageImage) : '' }}"
+                                                        alt="Image preview"
+                                                        class="preview-image w-32 h-32 object-contain p-2 border rounded-md shadow-sm">
                                                 </div>
-                                                <div class="mb-3">
-                                                    <label for="description_image"
-                                                        class="text-default-800 text-sm font-semibold mb-2 block">Ảnh mô tả</label>
-                                                    <input type="file" name="SignageImage" id="description_image" accept="image/*"
-                                                        class="form-input">
-                                                </div>
-                                            @enderror
-                                            <textarea type="text" id="example-email" name="SignagesExplanation"
-                                                class="form-input">{{ $signage->SignagesExplanation }}</textarea>
                                         </div>
-                                        <div class="mb-3">
-                                            <label for="description_image"
-                                                class="text-default-800 text-sm font-semibold mb-2 block">Ảnh mô tả</label>
-                                            <input type="file" name="NewImage" id="description_image" accept="image/*"
-                                                class="form-input" value="">
-                                            <input class="hidden" type="text" name="OldImage" id="description_image"
-                                                accept="image/*" class="form-input" value="{{ $signage->SignageImage }}">
-                                            <div class="justify-center flex">
-                                                <img id="preview-image"
-                                                    src="/assets/adminPage/SignagesImage/{{ $signage->SignageImage }}" alt="Image"
-                                                    class="w-32 h-32 object-contain p-2">
-                                            </div>
-
-                                        </div>
-
                                     </div>
-                                    <div class="flex justify-end items-center gap-x-2 py-3 px-4 border-t border-default-200">
+
+                                    <!-- Footer -->
+                                    <div class="border-t p-4 flex justify-end gap-3">
                                         <button type="button"
-                                            class="py-2 px-5 inline-flex items-center justify-center font-medium tracking-wide border align-middle duration-500 text-sm text-center bg-primary/5 hover:bg-primary border-primary/10 hover:border-primary text-primary hover:text-white rounded-md"
+                                            class="px-4 py-2 text-sm font-medium border border-gray-300 rounded-lg bg-white text-gray-700 hover:bg-gray-50 transition-colors"
                                             data-hs-overlay="#edit_{{ $signage->SignageID }}">
-                                            <i class="i-tabler-x me-1"></i>
-                                            Thoát
+                                            Hủy
                                         </button>
                                         <button type="submit"
-                                            class="py-2 px-5 inline-flex items-center justify-center font-medium tracking-wide border align-middle duration-500 text-sm text-center bg-primary hover:bg-primary-700 border-primary hover:border-primary-700 text-white rounded-md">
-                                            Cập nhật
+                                            class="px-4 py-2 text-sm font-semibold rounded-lg bg-blue-600 text-white hover:bg-blue-700 transition-colors">
+                                            Lưu
                                         </button>
-
                                     </div>
-                                </div>
+                                </form>
                             </div>
                         </div>
-                    </form>
+                    </div>
+
                 @endforeach
             @endif
             <!-- end modal-->
+
             <!-- modal create -->
-            <form action="{{ route("admintrafficbot.signages.store") }}" method="post" enctype="multipart/form-data">
-                @csrf
-                <div id="create_signage"
-                    class="hs-overlay w-full h-full fixed top-0 left-0 z-70 transition-all duration-500 overflow-y-auto hidden pointer-events-none flex items-center justify-center">
-                    <div
-                        class="translate-y-10 hs-overlay-open:translate-y-0 hs-overlay-open:opacity-100 opacity-0 ease-in-out transition-all duration-500 sm:max-w-lg sm:w-full my-8 sm:mx-auto flex flex-col bg-white shadow-sm rounded">
-                        <div class="flex flex-col border border-default-200 shadow-sm rounded-lg  pointer-events-auto">
-                            <div class="flex justify-between items-center py-3 px-4 border-b border-default-200">
-                                <h3 class="text-lg font-medium text-default-900 ">
-                                    Thêm biển báo
-                                </h3>
-                                <button type="button" class="text-default-600 cursor-pointer"
+
+            <div id="create_signage" class="hs-overlay hidden fixed inset-0 z-[99999] overflow-x-hidden overflow-y-auto">
+                <div
+                    class="hs-overlay-open:opacity-100 hs-overlay-open:scale-100 opacity-0 scale-95 ease-out transition-all duration-300 sm:max-w-lg sm:w-full m-3 sm:mx-auto min-h-[calc(100%-3.5rem)] flex items-center">
+                    <div class="modal-content w-full bg-white border shadow-xl rounded-xl overflow-hidden">
+
+                        <!-- Header -->
+                        <div class="bg-gradient-to-r bg-primary p-6">
+                            <div class="flex justify-between items-center">
+                                <div class="flex items-center space-x-3">
+                                    <div class="w-10 h-10 bg-white/20 rounded-lg flex items-center justify-center">
+                                            <i class="ti ti-library-plus text-white text-xl"></i>
+                                    </div>
+                                    <div>
+                                        <h3 class="font-bold text-white text-lg">Thêm Dữ Liệu</h3>
+                                        <p class="text-white/80 text-sm">Điền thông tin vào các trường bên dưới</p>
+                                    </div>
+                                </div>
+                                <button type="button"
+                                    class="w-8 h-8 flex items-center justify-center rounded-lg bg-white/20 text-white hover:bg-white/30 transition-colors"
                                     data-hs-overlay="#create_signage">
-                                    <i class="i-tabler-x text-lg"></i>
+                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            d="M6 18L18 6M6 6l12 12"></path>
+                                    </svg>
                                 </button>
                             </div>
-                            <div class="p-4 overflow-y-auto">
-                                <div class="mb-3">
-                                    <label for="example-password"
-                                        class="text-default-800 text-sm font-medium inline-block mb-2">
-                                        Loại biển báo</label>
-                                    <select name="SignageTypeID" class="form-select" id="example-select">
+                        </div>
+
+                        <!-- Body -->
+                        <form action="{{ route("admintrafficbot.signages.store") }}" method="post"
+                            enctype="multipart/form-data">
+                            @csrf
+                            <div class="modal-scroll max-h-[60vh] overflow-y-auto p-6 space-y-6">
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 mb-1" for="signage_type">
+                                        Loại biển báo
+                                    </label>
+                                    @error('SignageTypeID', 'create')
+                                        <p id="SignageTypeID_error"
+                                            class="mb-1 text-xs text-sm text-red-600 bg-red-50 rounded-md px-2 py-1">
+                                            {{ $message }}
+                                        </p>
+                                    @enderror
+                                    <select id="SignageTypeID" name="SignageTypeID" required
+                                        class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring focus:ring-blue-200"
+                                        onfocus="document.getElementById('SignageTypeID')?.classList.add('hidden')">
                                         @foreach ($signageTypes as $type)
                                             <option value="{{ $type->SignageTypeID }}">
                                                 {{ $type->SignagesTypeName }}
@@ -500,102 +547,76 @@
                                         @endforeach
                                     </select>
                                 </div>
-                                <div class="mb-3">
-                                    <label for="LicenseName" class="text-gray-700 text-sm font-semibold mb-2 block">
-                                        Tên biển báo
+
+                                <!-- Tên -->
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 mb-1" for="name">
+                                        Tên biển báo</label>
+                                    @error('SignageName ', 'create')
+                                        <p id="SignageName_error"
+                                            class="mb-1 text-xs text-sm text-red-600 bg-red-50 rounded-md px-2 py-1">
+                                            {{ $message }}
+                                        </p>
+                                    @enderror
+                                    <input type="text" id="SignageName" name="SignageName" required
+                                        class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring focus:ring-blue-200"
+                                        onfocus="document.getElementById('SignageName_error')?.classList.add('hidden')">
+                                </div>
+
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 mb-1" for="name">
+                                        Mô tả biển báo</label>
+                                    @error('SignagesExplanation', 'create')
+                                        <p id="SignagesExplanation_error"
+                                            class="mb-1 text-xs text-sm text-red-600 bg-red-50 rounded-md px-2 py-1">
+                                            {{ $message }}
+                                        </p>
+                                    @enderror
+                                    <textarea type="text" id="SignagesExplanation" name="SignagesExplanation" required
+                                        class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring focus:ring-blue-200"
+                                        onfocus="document.getElementById('SignagesExplanation_error')?.classList.add('hidden')"></textarea>
+                                </div>
+
+                                <div>
+                                    <label for="description_image_create"
+                                        class="block text-sm font-medium text-gray-700 mb-1">
+                                        Ảnh mô tả
                                     </label>
-                                    @error('LicenseTypeName')
-                                        <div id="dismiss-alert" role="alert">
-                                            <div class="flex items-center">
-                                                <div class="flex-shrink-0">
-                                                    <i class="i-tabler-circle-x text-xl text-red-600"></i>
-                                                </div>
-                                                <div class="flex-grow">
-                                                    <div
-                                                        class="flex items-center bg-red-100 text-red-700 text-sm px-4 rounded mb-2">
-                                                        {{ $message }}
-                                                        <button data-hs-remove-element="#dismiss-alert" type="button"
-                                                            id="dismiss-test"
-                                                            class="ms-auto h-6 w-6 rounded-full bg-gray-200 flex justify-center items-center">
-                                                            <i class="i-tabler-x text-red-600"></i>
-                                                        </button>
-                                                    </div>
-                                                </div>
-
-                                            </div>
-                                        </div>
+                                    @error('SignageImage', 'create')
+                                        <p id="SignageImage_error"
+                                            class="mb-1 text-xs text-sm text-red-600 bg-red-50 rounded-md px-2 py-1">
+                                            {{ $message }}
+                                        </p>
                                     @enderror
 
-                                    <input type="text" id="SignageName" name="SignageName" value=""
-                                        class="form-input w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
-                                </div>
-
-                                <div class="mb-3">
-                                    <label for="example-email"
-                                        class="text-default-800 text-sm font-medium inline-block mb-2">Mô
-                                        Mô tả loại biển báo</label>
-
-                                    @error("LicenseTypeDescription")
-                                        <div id="dismiss-alert_2" role="alert">
-                                            <div class="flex items-center">
-                                                <div class="flex-shrink-0">
-                                                    <i class="i-tabler-circle-x text-red-600"></i>
-                                                </div>
-                                                <div class="flex-grow">
-                                                    <div
-                                                        class="flex items-center bg-red-100 text-red-700 text-sm px-4 rounded mb-2">
-                                                        {{ $message }}
-                                                        <button data-hs-remove-element="#dismiss-alert_2" type="button"
-                                                            id="dismiss-test"
-                                                            class="ms-auto h-6 w-6 rounded-full bg-gray-200 flex justify-center items-center">
-                                                            <i class="i-tabler-x text-red-600"></i>
-                                                        </button>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="mb-3">
-                                            <label for="description_image"
-                                                class="text-default-800 text-sm font-semibold mb-2 block">Ảnh mô tả</label>
-                                            <input type="file" name="SignageImage" id="description_image" accept="image/*"
-                                                class="form-input">
-                                        </div>
-                                    @enderror
-                                    <textarea type="text" id="example-email" name="SignagesExplanation"
-                                        class="form-input"></textarea>
-                                </div>
-                                <div class="mb-3">
-                                    <label for="description_image"
-                                        class="text-default-800 text-sm font-semibold mb-2 block">Ảnh mô tả</label>
                                     <input type="file" name="SignageImage" id="description_image_create" accept="image/*"
-                                        class="form-input" value="">
-                                    <div class="justify-center flex">
-                                        <img id="preview-image_create" src="" alt="Image"
-                                            class="hidden w-32 h-32 object-contain p-2">
+                                        class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring focus:ring-blue-200 file:mr-4 file:py-2 file:px-4 file:rounded file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100"
+                                        onfocus="document.getElementById('SignageImage_error')?.classList.add('hidden')">
+
+                                    <div class="flex justify-center mt-3">
+                                        <img id="preview-image_create" src="" alt="Image preview"
+                                            class="hidden w-32 h-32 object-contain p-2 border rounded-md shadow-sm">
                                     </div>
-
                                 </div>
-
                             </div>
-                            <div class="flex justify-end items-center gap-x-2 py-3 px-4 border-t border-default-200">
+
+                            <!-- Footer -->
+                            <div class="border-t p-4 flex justify-end gap-3">
                                 <button type="button"
-                                    class="py-2 px-5 inline-flex items-center justify-center font-medium tracking-wide border align-middle duration-500 text-sm text-center bg-primary/5 hover:bg-primary border-primary/10 hover:border-primary text-primary hover:text-white rounded-md"
+                                    class="px-4 py-2 text-sm font-medium border border-gray-300 rounded-lg bg-white text-gray-700 hover:bg-gray-50 transition-colors"
                                     data-hs-overlay="#create_signage">
-                                    <i class="i-tabler-x me-1"></i>
-                                    Thoát
+                                    Hủy
                                 </button>
                                 <button type="submit"
-                                    class="py-2 px-5 inline-flex items-center justify-center font-medium tracking-wide border align-middle duration-500 text-sm text-center bg-primary hover:bg-primary-700 border-primary hover:border-primary-700 text-white rounded-md">
-                                    Tạo
+                                    class="px-4 py-2 text-sm font-semibold rounded-lg bg-blue-600 text-white hover:bg-blue-700 transition-colors">
+                                    Lưu
                                 </button>
-
                             </div>
-                        </div>
+                        </form>
                     </div>
                 </div>
-            </form>
+            </div>
 
-            <!-- end modal-->
 
 
         </div>
@@ -608,28 +629,48 @@
 
 @section("footer")
     <script>
-        document.getElementById("description_image").addEventListener("change", function (event) {
+        document.querySelectorAll(".description-image").forEach(function(input) {
+        input.addEventListener("change", function (event) {
             const file = event.target.files[0];
-            console.log(file)
-            if (file) {
+            const previewId = input.getAttribute("data-preview-target");
+            const imageElement = document.getElementById(previewId);
+
+            if (file && imageElement) {
                 const imageURL = URL.createObjectURL(file);
-                console.log(imageURL);
-                const imageElement = document.getElementById("preview-image");
                 imageElement.src = imageURL;
-                // imageElement.classList.remove("hidden")
             }
+            });
         });
+
         document.getElementById("description_image_create").addEventListener("change", function (event) {
             const file = event.target.files[0];
             console.log(file)
             if (file) {
                 const imageURL = URL.createObjectURL(file);
-                console.log(imageURL);
                 const imageElement = document.getElementById("preview-image_create");
                 imageElement.src = imageURL;
                 imageElement.classList.remove("hidden")
+            } else {
+                console.log("file k tồn tịa")
             }
         });
+
+
+        @if($errors->create->any())
+            window.addEventListener("load", function () {
+                setTimeout(function () {
+                    document.getElementById("open_modal_create").click();
+                }, 300)
+            });
+        @endif
+
+         @if($errors->edit->any())
+            window.addEventListener("load", function () {
+                setTimeout(function () {
+                    document.getElementById("open_modal_edit").click();
+                }, 300)
+            });
+        @endif
     </script>
 @endsection
 

@@ -28,7 +28,7 @@ class ChatBotController extends Controller
             $validator = Validator::make($request->all(), [
                 "DocumentName" => "required",
                 "DocumentDesciption" => "required",
-                "File" => "required|mimes:pdf|max:2048"
+                "File" => "required|mimes:pdf|max:8096"
             ], [
                 "DocumentName.required" => "Không được để trống!",
                 "DocumentDesciption.required" => "Không được để trống!",
