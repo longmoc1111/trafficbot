@@ -12,6 +12,7 @@ use Str;
 use Illuminate\Support\Facades\Session;
 use App\Models\ChatBot;
 use Smalot\PdfParser\Parser;
+use App\Models\Question;
 class AIchatController extends Controller
 {
 
@@ -20,12 +21,31 @@ class AIchatController extends Controller
         $dataURL = [];
         $chatHistory = [];
         $pdfContent = "";
+        $dataQuestions = "";
+
+        $questions = Question::all();
+        foreach($questions as $index => $question){
+            $dataQuestions .= "câu ". ($index + 1) . ":" . $question->QuestionName . "\n";
+            $answers = $question->answer_Question;
+            $labelCorrect = "";
+            foreach($answers as $answer){
+               $dataQuestions .= $answer->AnswerLabel . ": " . $answer->AnswerName . "\n";
+               if($answer->IsCorrect == true){
+                    $labelCorrect = $answer->AnswerLabel;
+               }
+            }
+            $dataQuestions .= "đáp án đúng là: " . $labelCorrect . "\n" . "Giải thích: ". $question->QuestionExplain . "\n\n";
+
+        }
+    
+
         $Pdfs = Chatbot::whereHas("category_Chatbot", function ($query) {
             $query->where("CategoryName", "PDF");
         })->get();
         $Urls = ChatBot::whereHas("category_Chatbot", function ($query) {
             $query->where("CategoryName", "URL");
         })->get();
+
         \Log::info("url", $dataURL);
         try {
             \Log::info('sendMessage:', $request->all());
@@ -33,10 +53,10 @@ class AIchatController extends Controller
             $textFromWeb = '';
             //duyệt url để lấy name và file
             $textFromWeb = $this->GetContentFromURL($Urls);
-            $pdfContent = $this->Pdfcontent($Pdfs);
+            $pdfContent = $this->getContentPDF($Pdfs);
             $userMessage = $request->input('message', 'Giải thích nội dung.');
             // Chuẩn bị prompt
-            $prompt = $this->buildPrompt($userMessage, $textFromWeb, $pdfContent);
+            $prompt = $this->buildPrompt($userMessage, $textFromWeb, $pdfContent, $dataQuestions);
             foreach (Session::get("chat_history", []) as $item) {
                 $chatHistory[] = [
                     "role" => "user",
@@ -115,7 +135,7 @@ class AIchatController extends Controller
         return $contentPDF;
     }
     // Chuẩn bị prompt
-    private function buildPrompt($userMessage, $textFromWeb, $pdfContent): string
+    private function buildPrompt($userMessage, $textFromWeb, $pdfContent, $dataQuestions): string
     {
         return <<<PROMPT
             Bạn là trafficbot một trợ lý ảo thân thiện, được tích hợp trên website cung cấp thông tin về **Luật Giao thông Đường bộ Việt Nam**.
@@ -171,6 +191,12 @@ class AIchatController extends Controller
             - Không liệt kê hết tất cả các mẹo để tránh dài và khô cứng.
             - Nên khuyến khích người học đọc luật.
 
+            8. Không được phép lấy các nguồn thông tin bên ngoài, chỉ được lấy thông tin từ các nguồn mà tôi đã cung cấp dưới đây để tránh gây sai lệch về thông tin
+            
+            9 Khi tôi cung cấp một câu hỏi và các đáp án, bạn hãy:
+            - Xác định đáp án đúng.
+            - Viết câu trả lời một cách rõ ràng, thân thiện, giống như đang hướng dẫn người học.
+            - Tránh trả lời khô khan hoặc chỉ nói "Đáp án đúng là C".
 
             **các nguồn thông tin từ hệ thống:**
             $textFromWeb
@@ -178,6 +204,9 @@ class AIchatController extends Controller
             **Nguồn thông tin từ PDF**
             $pdfContent
             ---
+
+            **Nguồn thông tin về các câu hỏi về luật giao thông đường bộ**
+            $dataQuestions
 
              **Câu hỏi của người dùng**: "$userMessage"
 
@@ -190,12 +219,12 @@ class AIchatController extends Controller
     private function Pdfcontent($fileName)
     {
         \Log::info("tên file: " . $fileName);
-        if (!Storage::disk("public")->exists("filePDF/" . $fileName)) {
+        $filePath = storage_path("app/public/filePDF/" . $fileName);
+        if (!file_exists($filePath)) {
             \Log::warning("File PDF không tồn tại");
             return null;
         }
         try {
-            $filePath = storage_path("app/public/filePDF/" . $fileName);
             $parser = new Parser();
             $pdf = $parser->parseFile($filePath);
             $content = $pdf->getText();
