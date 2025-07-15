@@ -27,7 +27,11 @@ class UserPageController extends Controller
     public function signages($SignageTypeID)
     {
         $signagesType = SignageType::find($SignageTypeID);
+        if($signagesType){
         return view("userPage.trafficSigns.signages", compact("signagesType"));
+        }else{
+            return abort(404);
+        }
     }
 
 

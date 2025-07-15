@@ -25,7 +25,7 @@ class ProfileController extends Controller
             }
             return view("userPage.profile.profile", compact("information", "passed", "failed", "resultExam"));
         } else {
-            return abort(404);
+            return abort(403);
         }
     }
 }
