@@ -103,10 +103,17 @@ route::controller(QuizzController::class)->name("userpage")->group(function() {
     route::get("/quiz-practice/start-random/{licenseID}","PracticeStartRandom")->name(".practice.start.random");
     route::post("/quiz-practice/finish/{licenseTypeID}","PracticeFinish")->name(".practicefinish");
 
-    route::get("/quiz-chapters/{ID}","chapters")->name(".chapters");
+    route::get("/quiz/chapters/{ID}","chapters")->name(".chapters");
 
-    route::get("/quiz-collection/250-A1/{ID}","collectionA")->name(".collectionA");
-    route::get("/quiz-collection/300-B1/{ID}","collectionBOne")->name(".collectionBone");
+    route::get("/quiz/collection/type-a/{ID}","collectionA")->name(".collectionA");
+    route::get("/quiz/collection/type-b/{ID}","collectionBOne")->name(".collectionBone");
+
+    route::get("/quiz/critical/full", "isCriticalFull")->name(".criticalfull");
+    route::get("/quiz/critical/type-b", "criticalTypeB")->name(".criticaltypeb");
+    route::get("/quiz/critical/type-a", "criticalTypeA")->name(".criticaltypea");
+
+
+    
 
 });
 

@@ -243,12 +243,13 @@ class QuizzController extends Controller
 
     public function chapters($ID)
     {
+        $checkQuiz = "fullQuestion";
         $chapter = QuestionCategory::find($ID);
         $chapters = QuestionCategory::all();
         $questions = $chapter->question_QuestionCategory;
         $answers = ["A" => "", "B" => "", "C" => "", "D" => ""];
         $labels = ["A", "B", "C", "D"];
-        return view("userPage.quiz.chapter", compact("chapter", "questions", "answers", "labels", "chapters"));
+        return view("userPage.quiz.chapter", compact("chapter","checkQuiz", "questions", "answers", "labels", "chapters"));
     }
 
     public function collectionA($ID)
@@ -289,11 +290,61 @@ class QuizzController extends Controller
             $answers = ["A" => "", "B" => "", "C" => "", "D" => ""];
             $labels = ["A", "B", "C", "D"];
             return view("userPage.quiz.collection", data: compact("chapter", "licenseType", "chapters", "questions", "answers", "labels"));
-        }else{
+        } else {
             return abort(404);
         }
 
     }
+    public function isCriticalFull()
+    {
+        $checkQuiz = "Iscritical";
+            // $chapters = Question::whereHas("licenseType_Question", function($query))
+            $questions = Question::whereHas("licenseType_Question", function ($query) {
+                $query->where("question_license_types.Iscritical", 1);
+            })->get();
+        if($questions){
+            $answers = ["A" => "", "B" => "", "C" => "", "D" => ""];
+            $labels = ["A", "B", "C", "D"];
+            return view("userPage.quiz.chapter", data: compact("checkQuiz", "questions", "answers", "labels"));
+        } else {
+            return abort(404);
+        }
+    }
+     public function criticalTypeB()
+    {
+        $checkQuiz = "Iscritical";
+        $licenseType = LicenseType::where("LicenseTypeName", "B1")->first();
+        if ($licenseType) {
+            $questions = Question::whereHas("licenseType_Question", function ($query)use($licenseType)   {
+                $query->where("question_license_types.Iscritical", 1)
+                      ->where("question_license_types.LicenseTypeID", $licenseType->LicenseTypeID);
+            })->get();
+            $answers = ["A" => "", "B" => "", "C" => "", "D" => ""];
+            $labels = ["A", "B", "C", "D"];
+            return view("userPage.quiz.chapter", data: compact( "checkQuiz", "questions", "answers", "labels"));
+        } else {
+            return abort(404);
+        }
+    }
+     public function criticalTypeA()
+    {
+        $checkQuiz = "Iscritical";
+        $licenseType = LicenseType::where("LicenseTypeName", "A1")->first();
+        if ($licenseType) {
+            $questions = Question::whereHas("licenseType_Question", function ($query)use($licenseType)   {
+                $query->where("question_license_types.Iscritical", 1)
+                      ->where("question_license_types.LicenseTypeID", $licenseType->LicenseTypeID);
+            })->get();
+            $answers = ["A" => "", "B" => "", "C" => "", "D" => ""];
+            $labels = ["A", "B", "C", "D"];
+            return view("userPage.quiz.chapter", data: compact( "checkQuiz", "questions", "answers", "labels"));
+        } else {
+            return abort(404);
+        }
+    }
+    
+
+    
 
 
 

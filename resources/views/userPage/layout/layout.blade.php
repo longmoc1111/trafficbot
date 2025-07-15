@@ -156,14 +156,21 @@
                         <div class="dropdown-menu bg-light rounded-0 rounded-bottom m-0">
 
                             <a href="{{ route("userpage.chapters", ["ID" => $chapter->CategoryID]) }}"
-                                class="dropdown-item">Ôn tập nhanh với 600 câu</a>
+                                class="dropdown-item">600 câu lý thuyết ô tô 2025</a>
 
                             <a href="{{ route("userpage.collectionA", ["ID" => $chapter->CategoryID]) }}"
-                                class="dropdown-item">Ôn tập nhanh 250 câu lý
-                                thuyết - A1,A</a>
+                                class="dropdown-item">250 câu lý
+                                thuyết A1 A</a>
                             <a href="{{ route("userpage.collectionBone", ["ID" => $chapter->CategoryID]) }}"
-                                class="dropdown-item">Ôn tập nhanh 300 câu lý
-                                thuyết - B1</a>
+                                class="dropdown-item">300 câu lý
+                                thuyết B1</a>
+                                 <a href="{{ route("userpage.criticalfull") }}"
+                                class="dropdown-item">60 câu điểm liệt tổng hợp</a>
+                                <a href="{{ route("userpage.criticaltypeb") }}"
+                                class="dropdown-item">30 câu điểm liệt hạng B1</a>
+                                <a href="{{ route("userpage.criticaltypea") }}"
+                                class="dropdown-item">20 câu điểm liệt hạng A1 A</a>
+
 
                         </div>
                     </div>
