@@ -42,7 +42,6 @@ Route::middleware(["auth","admin"])->controller(QuestionController::class)->pref
 Route::middleware(["auth","admin"])->controller(QuestionCategoryController::class)->prefix("admintrafficbot")->name("admintrafficbot")->group(function(){
      route::get("question/category","questionCategory")->name(".question.category");
      route::get("question/category/search","searchCategory")->name(".question.category.search");
-     route::get("question/category/create","createCategory")->name(".question.createcategory");
      route::post("question/category/store","storeCategory")->name(".question.storecategory");
      route::post("question/category/update/{ID}","updateCategory")->name(".question.updatecategory");
      route::delete("question/category/delete/{ID}","deleteCategory")->name(".question.deletecategory");

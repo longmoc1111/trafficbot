@@ -24,10 +24,7 @@ class QuestionCategoryController extends Controller
 
         }
     }
-    public function createCategory()
-    {
-        return view("admin.questionManagement.category.create");
-    }
+
     public function storeCategory(Request $request)
     {
         $validate = Validator::make(

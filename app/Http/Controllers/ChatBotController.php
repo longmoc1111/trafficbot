@@ -13,7 +13,7 @@ class ChatBotController extends Controller
 {
     public function dataList()
     {
-        $dataList = ChatBot::orderBy("created_at","ASC")->paginate(10);
+        $dataList = ChatBot::orderBy("created_at", "ASC")->paginate(10);
         $categories = ChatCategory::all();
         $optionFile = ChatCategory::where("CategoryName", "PDF")->first();
         $optionURL = ChatCategory::where("CategoryName", "URL")->first();
@@ -28,34 +28,34 @@ class ChatBotController extends Controller
             $validator = Validator::make($request->all(), [
                 "DocumentName" => "required",
                 "DocumentDesciption" => "required",
-                "File" => "required|mimes:pdf|max:8096"
+                "File" => "required|mimes:pdf|max:5120"
             ], [
                 "DocumentName.required" => "Không được để trống!",
                 "DocumentDesciption.required" => "Không được để trống!",
                 "File.required" => "Bạn phải chọn file updload!",
-                "File.max" => "file vượt quá 2MB!",
+                "File.max" => "file vượt quá 5MB!",
                 "File.mimes" => "File phải có định dạng là PDF!",
             ]);
             if ($validator->fails()) {
                 return back()->withErrors($validator, "create_file")->withInput();
             }
             $data = [
-                "DocumentName"=> $request->DocumentName,
-                "DocumentDesciption"=> $request->DocumentDesciption,
-                "CategoryID"=>$dataID,
+                "DocumentName" => $request->DocumentName,
+                "DocumentDesciption" => $request->DocumentDesciption,
+                "CategoryID" => $dataID,
             ];
-            if($request->hasFile("File")){
+            if ($request->hasFile("File")) {
                 $file = $request->file("File");
                 $fileNameWithoutExt = pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME);
                 $fileNameExt = $file->getClientOriginalExtension();
-                $newFileName = $fileNameWithoutExt. "_". time() . ".".$fileNameExt;
+                $newFileName = $fileNameWithoutExt . "_" . time() . "." . $fileNameExt;
                 $data["File"] = $newFileName;
                 $file->move(storage_path("app/public/filePDF"), $newFileName);
             }
             $createData = ChatBot::create($data);
-            if($createData){
+            if ($createData) {
                 return redirect()->route("admintrafficbot.chatbot")->with("create_success", "thêm mới file thành công !");
-            }else{
+            } else {
                 return redirect()->route("admintrafficbot.chatbot")->with("create_fail", "Đã có lỗi xãy ra hay thử tạo lại sau!");
             }
         } else if ($dataType->CategoryName == "URL") {
@@ -64,7 +64,7 @@ class ChatBotController extends Controller
                 "URLName" => "required",
                 "LinkURL" => "required|url",
                 "DescriptionURL" => "required",
-                "selectorURL"=>"required"
+                "selectorURL" => "required"
             ], [
                 "URLName.required" => "Không được để trống!",
                 "LinkURL.required" => "Không được để trống!",
@@ -74,106 +74,105 @@ class ChatBotController extends Controller
 
 
             ]);
+
             if ($validator->fails()) {
                 return back()->withErrors($validator, "create_url")->withInput();
             }
             $data = [
-                "DocumentName"=> $request->URLName,
-                "DocumentDesciption"=>$request->DescriptionURL,
-                "LinkURL"=>$request->LinkURL,
-                "CategoryID"=>$dataID,
-                "SelectorURL"=>$request->selectorURL
+                "DocumentName" => $request->URLName,
+                "DocumentDesciption" => $request->DescriptionURL,
+                "LinkURL" => $request->LinkURL,
+                "CategoryID" => $dataID,
+                "SelectorURL" => $request->selectorURL
             ];
-                 $createData = ChatBot::create($data);
-            if($createData){
+            $createData = ChatBot::create($data);
+            if ($createData) {
                 return redirect()->route("admintrafficbot.chatbot")->with("create_success", "thêm mới URL thành công !");
-            }else{
+            } else {
                 return redirect()->route("admintrafficbot.chatbot")->with("create_fail", "Đã có lỗi xãy ra hay thử tạo lại sau!");
             }
         }
-
-        // $validator = Validator::make($request->all(), [
-        //     "FileName" => "required",
-        //     "FileDesciption" => "required",
-        //     "File" => "required|mimes:pdf"
-        // ], [
-        //     "FileName.required" => "Không được để trống!",
-        //     "FileDesciption.required" => "Không được để trống!",
-        //     "File.required" => "Bạn phải chọn file updload!",
-        //     "File.mimes" => "File phải có định dạng là PDF!",
-
-        // ]);
-        // if ($validator->fails()) {
-        //     return back()->withErrors($validator, "create");
-        // }
-        // $validate = $validator->validated();
-
-        // if ($request->hasFile("File")) {
-        //     $file = $request->file("File");
-        //     $fileWithoutExt = pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME);
-        //     $fileNameExt = $file->getClientOriginalExtension();
-        //     $newFileName = $fileWithoutExt . "_" . time() . "." . $fileNameExt;
-        //     $validate["File"] = $newFileName;
-        //     $file->move(public_path("assets/chatbot/data"), $newFileName);
-        // }
-
-        // $dataFile = ChatBot::create($validate);
-        // if ($dataFile) {
-        //     return redirect()->route("admintrafficbot.chatbot")->with("create_success", "Thêm mới dữ liệu thành công");
-        // } else {
-        //     return redirect()->route("admintrafficbot.chatbot")->with("create_fails", "Thêm mới dữ liệu không thành công");
-
-        // }
     }
 
     public function updateChatBot($ID, Request $request)
     {
-        $rules = [
-            "FileName" => "required",
-            "FileDesciption" => "required",
-        ];
-        if (!$request->get("oldFile")) {
-            $rules["File"] = "required|mimes:pdf";
-        }
-        $validator = Validator::make(
-            $request->all(),
-            $rules,
-            [
-                "FileName.required" => "Không được để trống!",
-                "FileDesciption.required" => "Không được để trống!",
-                "File.required" => "Bạn phải chọn file updload!",
-                "File.mimes" => "File phải có định dạng là PDF!",
-            ]
-        );
-
-        if ($validator->fails()) {
-            return back()->withErrors($validator, "update");
-        }
-        $validate = $validator->validated();
-
-        if ($request->hasFile("File")) {
-            if ($request->get("oldFile")) {
-                $oldFile = public_path("/assets/chatbot/data/" . $request->get("oldFile"));
-                if (File::exists($oldFile)) {
-                    File::delete($oldFile);
-                }
+        //   dd($request->all());
+        $chatbot = ChatBot::find($ID);
+        $dataID = request("DataType");
+        $data = [];
+        $dataType = ChatCategory::where("CategoryID", $dataID)->first();
+        if ($dataType->CategoryName == "PDF") {
+            $validator = Validator::make($request->all(), [
+                "DocumentName" => "required",
+                "DocumentDesciption" => "required",
+                "File" => "max:5120"
+            ], [
+                "DocumentName.required" => "Không được để trống!",
+                "DocumentDesciption.required" => "Không được để trống!",
+                "File.max" => "file vượt quá 5MB!",
+            ]);
+            if ($validator->fails()) {
+                return back()->withErrors($validator, "update_file")->withInput()->with("edit_chatbotID", $chatbot->ChatbotID);
             }
-            $file = $request->file("File");
-            $fileWithoutExt = pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME);
-            $fileNameExt = $file->getClientOriginalExtension();
-            $newFileName = $fileWithoutExt . "_" . time() . "." . $fileNameExt;
-            $validate["File"] = $newFileName;
-            $file->move(public_path("assets/chatbot/data"), $newFileName);
-        }
+            $data = [
+                "DocumentName" => $request->DocumentName,
+                "DocumentDesciption" => $request->DocumentDesciption,
+                "CategoryID" => $dataID,
+            ];
+            if ($request->hasFile("File")) {
+                if ($request->get("oldFile")) {
+                    $oldfile = storage_path("app/public/filePDF/" . $request->get("oldFile"));
+                    if (File::exists($oldfile)) {
+                        File::delete($oldfile);
+                    }
+                }
+                $file = $request->file("File");
+                $fileNameWithoutExt = pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME);
+                $fileNameExt = $file->getClientOriginalExtension();
+                $newFileName = $fileNameWithoutExt . "_" . time() . "." . $fileNameExt;
+                $data["File"] = $newFileName;
+                $file->move(storage_path("app/public/filePDF"), $newFileName);
+            }
+            $updateData = $chatbot->update($data);
+            if ($updateData) {
+                return redirect()->route("admintrafficbot.chatbot")->with("update_success", "cập nhật file thành công !");
+            } else {
+                return redirect()->route("admintrafficbot.chatbot")->with("update_fail", "Đã có lỗi xãy ra hay thử lại sau!");
+            }
+        }else if ($dataType->CategoryName == "URL") {
+            // dd($request->all());
+            $validator = Validator::make($request->all(), [
+                "URLName" => "required",
+                "LinkURL" => "required|url",
+                "DescriptionURL" => "required",
+                "selectorURL" => "required"
+            ], [
+                "URLName.required" => "Không được để trống!",
+                "LinkURL.required" => "Không được để trống!",
+                "LinkURL.url" => "Hãy nhập đúng định dang url!",
+                "DescriptionURL.required" => "Không được để trống!",
+                "selectorURL.required" => "Không được để trống!",
 
-        $datalist = ChatBot::find($ID);
-        if ($datalist) {
-            $datalist->update($validate);
-            return redirect()->route("admintrafficbot.chatbot")->with("update_success", "Cập nhật dữ liệu thành công");
-        } else {
-            return redirect()->route("admintrafficbot.chatbot")->with("update_fails", "Cập nhật dữ liệu không thành công");
-        }
 
+            ]);
+
+            if ($validator->fails()) {
+                return back()->withErrors($validator, "update_url")->withInput()->with("edit_chatbotID", $chatbot->ChatbotID);
+            }
+            $data = [
+                "DocumentName" => $request->URLName,
+                "DocumentDesciption" => $request->DescriptionURL,
+                "LinkURL" => $request->LinkURL,
+                "CategoryID" => $dataID,
+                "SelectorURL" => $request->selectorURL
+            ];
+            $createData = $chatbot->update($data);
+            if ($createData) {
+                return redirect()->route("admintrafficbot.chatbot")->with("update_success", "Cập nhật URL thành công !");
+            } else {
+                return redirect()->route("admintrafficbot.chatbot")->with("update_fail", "Đã có lỗi xãy ra hay thử lại sau!");
+            }
+        }
 
 
     }
@@ -183,7 +182,7 @@ class ChatBotController extends Controller
         $datalist = ChatBot::find($ID);
         $FileName = $datalist->File;
         if ($FileName) {
-            $file = storage_path("app/public/filePDF/".$FileName);
+            $file = storage_path("app/public/filePDF/" . $FileName);
             if (File::exists($file)) {
                 File::delete($file);
             }

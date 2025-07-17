@@ -17,6 +17,7 @@ route::get("/reset_password/{token}",[ForgotPasswordController::class,"resetPass
 route::post("/reset_password",[ForgotPasswordController::class,"updatePassword"])->name("password.update");
 });
 route::post("/change-password/{ID}", [AuthController::class, "changePassword"])->name("password.change");
+route::put("/profile/update/{ID}",[AuthController::class,"updateProfile"] )->name("profile.update");
 
 
 route::post("/logout",[AuthController::class,"logoutPost"])->name("logout.post");
@@ -28,6 +29,7 @@ route::middleware("admin")->controller(AuthController::class)->prefix("admintraf
     route::post("/account/create","createAccount")->name(".account.create");
     route::post("/account/update{ID}","updateAccount")->name(".account.update");
     route::delete("/account/delete{ID}","deleteAccount")->name(".account.delete");
+    
 
 
 });

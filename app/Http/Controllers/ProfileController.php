@@ -15,15 +15,17 @@ class ProfileController extends Controller
         $failed = 0;
         $information = Auth::user();
         if ($information && $information->userID == $ID) {
-            $resultExam = ExamResult::where("userID", $ID)->get();
-            foreach ($resultExam as $result) {
+            $resultExam = ExamResult::where("userID", $ID)->paginate(5);
+            $statistical = ExamResult::where("userID", $ID)->get();
+            
+            foreach ($statistical as $result) {
                 if ($result->passed == true || $result->passed == 1) {
                     $passed++;
                 } else {
                     $failed++;
                 }
-            }
-            return view("userPage.profile.profile", compact("information", "passed", "failed", "resultExam"));
+            } 
+            return view("userPage.profile.profile", compact("information", "passed", "failed", "resultExam","statistical"));
         } else {
             return abort(403);
         }

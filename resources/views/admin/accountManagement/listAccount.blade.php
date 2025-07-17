@@ -393,7 +393,7 @@
                                     {{ $message }}
                                 </p>
                                 @enderror
-                                <input type="text" id="name" name="name" value="{{ $account->name }}"
+                                <input readonly type="text" id="name" name="name" value="{{ $account->name }}"
                                     class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring focus:ring-blue-200"
                                     onfocus="document.getElementById('name_error')?.classList.add('hidden')">
                             </div>
@@ -406,7 +406,7 @@
                                     {{ $message }}
                                 </p>
                                 @enderror
-                                <input type="email" id="email" name="email" value="{{ $account->email }}"
+                                <input readonly type="email" id="email" name="email" value="{{ $account->email }}"
                                     class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring focus:ring-blue-200"
                                     onfocus="document.getElementById('email_error')?.classList.add('hidden')">
                             </div>

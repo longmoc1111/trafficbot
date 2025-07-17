@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 use App;
 use App\Mail\ActivationMail;
+use File;
 use Illuminate\Support\Facades\Mail;
 use Auth;
 use Hash;
@@ -34,13 +35,13 @@ class AuthController extends Controller
         // if (!$check) {
         //     return back();
         // }
-          if (!$check) {
+        if (!$check) {
             return redirect()->back()->with("err_login", "Email chưa được đăng ký !");
         }
         if ($check->status != "active") {
-            return redirect()->route("login")->with("err_login" , "Tài khoản chưa được kích hoạt !");
+            return redirect()->route("login")->with("err_login", "Tài khoản chưa được kích hoạt !");
         }
-    
+
         $credentials = $request->only("email", "password");
         if (Auth::attempt($credentials)) {
             $user = Auth::user();
@@ -49,7 +50,7 @@ class AuthController extends Controller
             } elseif ($user->role_User->roleName == "user") {
                 return redirect()->route("userpage.home");
             } else {
-                dd("co loi");
+                return abort(404);
             }
         } else {
             return redirect()->route("login")->with("err_login", "Thông tin tài khoản hoặc mật khẩu không chính xác !");
@@ -63,10 +64,10 @@ class AuthController extends Controller
     public function registerPost(Request $request)
     {
         $oldUser = User::where("email", $request->email)->first();
-        if($oldUser && $oldUser->status != "active"){
+        if ($oldUser && $oldUser->status != "active") {
             $hours = $oldUser->created_at->diffInHours(now());
-            if($hours > 24){
-                $oldUser->delete(); 
+            if ($hours > 24) {
+                $oldUser->delete();
             }
         }
         $validate = $request->validate(
@@ -108,7 +109,7 @@ class AuthController extends Controller
 
     public function activateMail($token)
     {
-        
+
         $user = User::where("activation_token", $token)->first();
         if ($user) {
             $user->status = "active";
@@ -260,7 +261,7 @@ class AuthController extends Controller
         }
 
     }
-    
+
     public function deleteAccount($ID)
     {
         $user = User::find($ID);
@@ -274,35 +275,77 @@ class AuthController extends Controller
     }
     //end quản lý tài khoản
 
-    function changePassword($ID, Request $request){
-        $validator = Validator::make($request->all(),[
-            "currentPassword"=>"required",
-            "newPassword"=>"required|min:6",
-            "newPasswordConfirm"=>"required|same:newPassword"
-        ],[
-            "currentPassword.required"=>"vui lòng điền mật khẩu hiện tại!",
-            "newPassword.required"=>"vui lòng điền mật khẩu mới!",
-            "newPassword.min"=>"Mật khẩu chứa ít nhất 6 ký tự!",
-            "newPasswordConfirm.required" =>"vui lòng điền mật khẩu xác nhận!",
+    function changePassword($ID, Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            "currentPassword" => "required",
+            "newPassword" => "required|min:6",
+            "newPasswordConfirm" => "required|same:newPassword"
+        ], [
+            "currentPassword.required" => "vui lòng điền mật khẩu hiện tại!",
+            "newPassword.required" => "vui lòng điền mật khẩu mới!",
+            "newPassword.min" => "Mật khẩu chứa ít nhất 6 ký tự!",
+            "newPasswordConfirm.required" => "vui lòng điền mật khẩu xác nhận!",
             "newPasswordConfirm.same" => "Mật khẩu xác nhận không trùng khớp!",
         ]);
-        if($validator->fails()){
+        if ($validator->fails()) {
             return back()->withErrors($validator)
-                        ->with("active_tab", "account-change-password");
+                ->with("active_tab", "account-change-password");
         }
         $user = User::find($ID);
-        if(!Hash::check($request->currentPassword,$user->password)){
+        if (!Hash::check($request->currentPassword, $user->password)) {
             return back()->withErrors(["current_password" => "Mật khẩu cũ không chính xác!"])
-                            ->with("active_tab", "account-change-password");
+                ->with("active_tab", "account-change-password");
         }
         $user->password = Hash::make($request->newPassword);
         $user->save();
-        if($user){
-        return redirect()->route("userpage.profile",["ID"=>$user->userID])->with("change_succes","Thay đổi mật khẩu thành công!");
-        }else{
-        return redirect()->route("userpage.profile",["ID"=>$user->userID])->with("change_fails","Thay đổi mật khẩu thành công!");
+        if ($user) {
+            return redirect()->route("userpage.profile", ["ID" => $user->userID])->with("change_succes", "Thay đổi mật khẩu thành công!");
+        } else {
+            return redirect()->route("userpage.profile", ["ID" => $user->userID])->with("change_fails", "Thay đổi mật khẩu thành công!");
 
         }
+
+    }
+    public function updateProfile($ID, Request $request)
+    {
+        $validator = Validator::make(
+            $request->all(),
+            [
+                "name" => "required",
+            ],
+            [
+                "name.required" => "Vui lòng nhập tên của bạn!",
+            ]
+        );
+        if ($validator->fails()) {
+            return back()->withErrors($validator, "update_profile");
+        }
+        $datas = $validator->validated();
+        if ($request->hasFile("avatar")) {
+            if($request->get("oldAvatar")){
+                $oldAvatar = storage_path("app/public/uploads/avatar/".$request->get("oldAvatar"));
+                if(File::exists($oldAvatar)){
+                    File::delete($oldAvatar);
+                }
+            }
+            $file = $request->file("avatar");
+            $fileNameWithoutExt = pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME);
+            $fileNameExt = $file->getClientOriginalExtension();
+            $newFileName = $fileNameWithoutExt . "_" . time() . "." . $fileNameExt;
+            $file->move(storage_path("app/public/uploads/avatar"), $newFileName);
+            $datas["avatar"] = $newFileName;
+        }
+
+        $user = User::find($ID);
+        if ($user) {
+            $user->update($datas);
+            return redirect()->route("userpage.profile", ["ID" => $user->userID])->with("update_profile_success", "Cập nhật thông tin thành công!");
+        }else{
+            return redirect()->route("userpage.profile", ["ID" => $user->userID])->with("update_profile_fails", "Cập nhật thông tin thất bại!");
+
+        }
+
 
     }
 
