@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('exam_results', function (Blueprint $table) {
             $table->id("ResultID");
-            $table->unsignedBigInteger("userID");
+            $table->unsignedBigInteger("userID")->nullable();
             $table->unsignedBigInteger("LicenseTypeID");
             $table->float("score");
             $table->boolean("passed");

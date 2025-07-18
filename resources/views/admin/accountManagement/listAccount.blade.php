@@ -477,8 +477,9 @@
                                 <label for="avatar" class="block text-sm font-medium text-gray-700 mb-1">Ảnh đại diện</label>
                                 <input type="file" name="avatar" id="avatar" accept="image/*"
                                     class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring focus:ring-blue-200 file:mr-4 file:py-2 file:px-4 file:rounded file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100">
+                                <input type="text" class = "hidden" name = "oldAvatar" value="{{ $account->avatar }}">
                                 <div class="flex justify-center mt-3">
-                                    <img id="preview-avatar-{{ $account->userID }}" src="{{ asset('storage/path-to-avatar/'.$account->avatar) }}"
+                                    <img id="preview-avatar-{{ $account->userID }}" src="{{ asset('storage/uploads/avatar/'.$account->avatar) }}"
                                         alt="Avatar preview" class="w-32 h-32 object-contain p-2 border rounded-md shadow-sm">
                                 </div>
                             </div>
@@ -732,17 +733,6 @@
                 position: "topRight"
             })
         @endif
-        @if(session("delete_success"))
-            iziToast.success({
-                message: "{{ session("delete_success") }}",
-                position: "topRight"
-            })
-        @endif
-        @if(session("delete_fails"))
-            iziToast.warning({
-                message: "{{ session("delete_fails") }}",
-                position: "topRight"
-            })
-        @endif
+         
     </script>
 @endsection

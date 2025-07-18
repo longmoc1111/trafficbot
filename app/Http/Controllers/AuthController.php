@@ -147,6 +147,7 @@ class AuthController extends Controller
     public function createAccount(Request $request)
     {
         // dd($request->all());
+        $newFileName = "";
         $validate = $request->validate(
             [
                 "name" => "required",
@@ -166,23 +167,25 @@ class AuthController extends Controller
 
             ]
         );
+        if ($validate["password"] != $validate["confirmPassword"]) {
+            return back()->withErrors(["confirmPassword" => "Mật khẩu xác nhận không trùng khớp !"]);
+        }
         if ($request->hasFile("avatar")) {
             $file = $request->file("avatar");
             $fileNameWithoutExt = "user";
             $fileNameExt = $file->getClientOriginalExtension();
             $newFileName = $fileNameWithoutExt . "_" . time() . "." . $fileNameExt;
-            $file->move(public_path("assets/adminPage/avatar_user"), $newFileName);
+            $file->move(storage_path("app/public/uploads/avatar"), $newFileName);
             $validate["avatar"] = $newFileName;
         }
-        if ($validate["password"] != $validate["confirmPassword"]) {
-            return back()->withErrors(["confirmPassword" => "Mật khẩu xác nhận không trùng khớp !"]);
-        }
+
         $token = Str::random(64);
         $user = User::create([
             "name" => $validate["name"],
             "email" => $validate["email"],
             "password" => Hash::make($validate["password"]),
             "roleID" => $validate["roleID"],
+            "avatar" =>  $validate["avatar"],
             "status" => "pending",
             "activation_token" => $token
         ]);
@@ -213,8 +216,22 @@ class AuthController extends Controller
                 "status.required" => "vui lòng xét trạng thái cho tài khoản!"
             ]
         );
+        if ($request->hasFile("avatar")) {
+
+            if ($request->get("oldAvatar")) {
+                $oldfile = storage_path("app/public/uploads/avatar/" . $request->get("oldAvatar"));
+                if (File::exists($oldfile)) {
+                    File::delete($oldfile);
+                }
+            }
+            $file = $request->file("avatar");
+            $fileNameWithoutExt = "user";
+            $fileNameExt = $file->getClientOriginalExtension();
+            $newFileName = $fileNameWithoutExt . "_" . time() . "." . $fileNameExt;
+            $file->move(storage_path("app/public/uploads/avatar"), $newFileName);
+            $validate["avatar"] = $newFileName;
+        }
         if (!empty($request->get("password"))) {
-            echo "123243";
             $validate = $request->validate([
                 "password" => "min:6",
                 "confirmPassword" => "required"
@@ -225,17 +242,29 @@ class AuthController extends Controller
             if ($validate["password"] != $validate["confirmPassword"]) {
                 return back()->withErrors(["confirmPassword" => "Mật khẩu xác nhận không trùng khớp !"]);
             }
-
             $user = User::find($ID);
             if ($user) {
-                $user->update([
-                    "name" => $validate["name"],
-                    "email" => $validate["email"],
-                    "roleID" => $validate["roleID"],
-                    "password" => Hash::make($validate["password"]),
-                    "status" => $validate["status"],
-                    // "activation_token" => $token
-                ]);
+                if ($validate["status"] == "active") {
+                    $user->update([
+                        "name" => $validate["name"],
+                        "email" => $validate["email"],
+                        "roleID" => $validate["roleID"],
+                        "password" => Hash::make($validate["password"]),
+                        "avatar" => $validate["avatar"],
+                        "status" => $validate["status"],
+                        "activation_token" => null,
+                    ]);
+                } else {
+                    $user->update([
+                        "name" => $validate["name"],
+                        "email" => $validate["email"],
+                        "roleID" => $validate["roleID"],
+                        "avatar" => $validate["avatar"],
+                        "password" => Hash::make($validate["password"]),
+                        "status" => $validate["status"],
+                    ]);
+                }
+
                 return redirect()->route("admintrafficbot.listaccount")->with("update_success", "tài khoản được cập nhật thành công!");
             } else {
                 return redirect()->route("admintrafficbot.listaccount")->with("update_success", "đã có lỗi xảy ra, vui lòng cập nhật sau!");
@@ -245,13 +274,25 @@ class AuthController extends Controller
         } else {
             $user = User::find($ID);
             if ($user) {
-                $user->update([
-                    "name" => $validate["name"],
-                    "email" => $validate["email"],
-                    "roleID" => $validate["roleID"],
-                    "status" => $validate["status"],
+                if ($validate["status"] == "active") {
+                    $user->update([
+                        "name" => $validate["name"],
+                        "email" => $validate["email"],
+                        "roleID" => $validate["roleID"],
+                        "status" => $validate["status"],
+                        "avatar" => $validate["avatar"],
+                        "activation_token" => null,
+                    ]);
+                } else {
+                    $user->update([
+                        "name" => $validate["name"],
+                        "email" => $validate["email"],
+                        "roleID" => $validate["roleID"],
+                        "status" => $validate["status"],
+                        "avatar" => $validate["avatar"],
+                    ]);
+                }
 
-                ]);
 
                 return redirect()->route("admintrafficbot.listaccount")->with("update_success", "tài khoản được cập nhật thành công!");
             } else {
@@ -266,6 +307,12 @@ class AuthController extends Controller
     {
         $user = User::find($ID);
         if ($user) {
+            $results = $user->result_User()->get();
+            foreach ($results as $result) {
+                $result->update([
+                    "userID" => null,
+                ]);
+            }
             $user->delete();
             return redirect()->route("admintrafficbot.listaccount")->with("delete_success", "Xóa tài khoản thành công!");
         } else {
@@ -323,9 +370,9 @@ class AuthController extends Controller
         }
         $datas = $validator->validated();
         if ($request->hasFile("avatar")) {
-            if($request->get("oldAvatar")){
-                $oldAvatar = storage_path("app/public/uploads/avatar/".$request->get("oldAvatar"));
-                if(File::exists($oldAvatar)){
+            if ($request->get("oldAvatar")) {
+                $oldAvatar = storage_path("app/public/uploads/avatar/" . $request->get("oldAvatar"));
+                if (File::exists($oldAvatar)) {
                     File::delete($oldAvatar);
                 }
             }
@@ -341,7 +388,7 @@ class AuthController extends Controller
         if ($user) {
             $user->update($datas);
             return redirect()->route("userpage.profile", ["ID" => $user->userID])->with("update_profile_success", "Cập nhật thông tin thành công!");
-        }else{
+        } else {
             return redirect()->route("userpage.profile", ["ID" => $user->userID])->with("update_profile_fails", "Cập nhật thông tin thất bại!");
 
         }
