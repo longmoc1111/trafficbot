@@ -17,7 +17,7 @@ class QuestionController extends Controller
 {
     public function listQuestion()
     {
-        
+
         $categoryKey = request("category");
         $questionCategory = QuestionCategory::all();
         if ($categoryKey) {
@@ -151,33 +151,38 @@ class QuestionController extends Controller
         $questionCategory = QuestionCategory::all();
         $licenseTypes = LicenseType::all();
         $question = Question::find($id);
-        $questionID = $question->QuestionID;
+        if ($question) {
+            $questionID = $question->QuestionID;
 
-        $licenseWithCritical = $question->licenseType_Question->map(function ($licenseType) {
-            return [
-                'LicenseTypeID' => $licenseType->LicenseTypeID,
-                'licenseTypeName' => $licenseType->LicenseTypeName,
-                'IsCritical' => (bool) $licenseType->pivot->IsCritical,
-            ];
-        })->toArray();
-        $appliedLicenseIDs = array_column($licenseWithCritical, "LicenseTypeID");
-        $criticalLicenseIDs = array_column(array_filter($licenseWithCritical, function ($item) {
-            return $item["IsCritical"];
-        }), "LicenseTypeID");
-        $answers = $question->answer_Question()->get()->keyBy("AnswerLabel");
-        foreach ($answers as $index => $answer) {
-            $arrAnswers[] = [
-                "AnswerID" => $answer->AnswerID,
-                "AnswerName" => $answer->AnswerName,
-                "AnswerLabel" => $answer->AnswerLabel,
-                "IsCorrect" => $answer->IsCorrect
-            ];
+            $licenseWithCritical = $question->licenseType_Question->map(function ($licenseType) {
+                return [
+                    'LicenseTypeID' => $licenseType->LicenseTypeID,
+                    'licenseTypeName' => $licenseType->LicenseTypeName,
+                    'IsCritical' => (bool) $licenseType->pivot->IsCritical,
+                ];
+            })->toArray();
+            $appliedLicenseIDs = array_column($licenseWithCritical, "LicenseTypeID");
+            $criticalLicenseIDs = array_column(array_filter($licenseWithCritical, function ($item) {
+                return $item["IsCritical"];
+            }), "LicenseTypeID");
+            $answers = $question->answer_Question()->get()->keyBy("AnswerLabel");
+            foreach ($answers as $index => $answer) {
+                $arrAnswers[] = [
+                    "AnswerID" => $answer->AnswerID,
+                    "AnswerName" => $answer->AnswerName,
+                    "AnswerLabel" => $answer->AnswerLabel,
+                    "IsCorrect" => $answer->IsCorrect
+                ];
+            }
+            return view("admin.questionManagement.question.editQuestion", compact("question", "licenseTypes", "appliedLicenseIDs", "criticalLicenseIDs", "questionCategory", "arrAnswers"));
+        }else{
+            abort(404);
         }
-        return view("admin.questionManagement.question.editQuestion", compact("question", "licenseTypes", "appliedLicenseIDs", "criticalLicenseIDs", "questionCategory", "arrAnswers"));
+
     }
     public function updateQuestion(string $id, Request $request)
     {
-         
+
         $licenseTypes = $request->input("licenseTypes", []);
         $critical = $request->input("criticalTypes", []);
         $answerIDs = $request->input("AnswerIDs", []);
@@ -348,8 +353,8 @@ class QuestionController extends Controller
                         $query->where('question_license_types.LicenseTypeID', $licenseTypeID)
                             ->where("question_license_types.Iscritical", 1);
                     })
-                    ->whereDoesntHave("examSet_Question", function($q1) use($licenseTypeID){
-                        $q1->whereHas("licenseType_Examset", function($q2) use($licenseTypeID){
+                    ->whereDoesntHave("examSet_Question", function ($q1) use ($licenseTypeID) {
+                        $q1->whereHas("licenseType_Examset", function ($q2) use ($licenseTypeID) {
                             $q2->where("exam_set_license_type.LicenseTypeID", $licenseTypeID);
                         });
                     })
@@ -369,8 +374,8 @@ class QuestionController extends Controller
                         $query->where("question_license_types.LicenseTypeID", $licenseTypeID)
                             ->where("question_license_types.Iscritical", 0);
                     })
-                    ->whereDoesntHave("examSet_Question", function($q1) use($licenseTypeID){
-                        $q1->whereHas("licenseType_Examset", function($q2) use($licenseTypeID){
+                    ->whereDoesntHave("examSet_Question", function ($q1) use ($licenseTypeID) {
+                        $q1->whereHas("licenseType_Examset", function ($q2) use ($licenseTypeID) {
                             $q2->where("exam_set_license_type.LicenseTypeID", $licenseTypeID);
                         });
                     })
@@ -382,13 +387,13 @@ class QuestionController extends Controller
 
             }
         }
-        if(isset($isCriticalQuestion)){
+        if (isset($isCriticalQuestion)) {
             $maxInsertIndex = floor(count($questionIdToAttach) / 2);
             $insertIndex = rand(0, $maxInsertIndex);
-            array_splice($questionIdToAttach, $insertIndex, 0 , $isCriticalQuestion);
+            array_splice($questionIdToAttach, $insertIndex, 0, $isCriticalQuestion);
         }
         // dd($questionIdToAttach);
-      
+
         foreach ($questionIdToAttach as $index => $item) {
             $questionCreated += $item;
         }

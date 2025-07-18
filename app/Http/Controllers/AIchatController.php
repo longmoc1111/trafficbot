@@ -23,21 +23,24 @@ class AIchatController extends Controller
         $pdfContent = "";
         $dataQuestions = "";
 
-        $questions = Question::all();
-        foreach($questions as $index => $question){
-            $dataQuestions .= "câu ". ($index + 1) . ":" . $question->QuestionName . "\n";
+        $total = Question::count();
+        $limit = ceil($total / 6);
+        $questions = Question::take($limit)->get();
+        foreach ($questions as $index => $question) {
+            $dataQuestions .= "câu " . ($index + 1) . ":" . $question->QuestionName . "\n";
             $answers = $question->answer_Question;
             $labelCorrect = "";
-            foreach($answers as $answer){
-               $dataQuestions .= $answer->AnswerLabel . ": " . $answer->AnswerName . "\n";
-               if($answer->IsCorrect == true){
+            foreach ($answers as $answer) {
+                $dataQuestions .= $answer->AnswerLabel . ": " . $answer->AnswerName . "\n";
+                if ($answer->IsCorrect == true) {
                     $labelCorrect = $answer->AnswerLabel;
-               }
+                }
             }
-            $dataQuestions .= "đáp án đúng là: " . $labelCorrect . "\n" . "Giải thích: ". $question->QuestionExplain . "\n\n";
+            $dataQuestions .= "đáp án đúng là: " . $labelCorrect . "\n" . "Giải thích: " . $question->QuestionExplain . "\n\n";
 
         }
-    
+       
+
 
         $Pdfs = Chatbot::whereHas("category_Chatbot", function ($query) {
             $query->where("CategoryName", "PDF");

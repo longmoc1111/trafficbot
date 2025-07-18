@@ -73,19 +73,19 @@
                                     <!-- Xem -->
                                     <a href="#" class="text-blue-500 hover:text-blue-700"
                                         data-hs-overlay="#show-{{ $signage->SignageID }}">
-                                        <span class="material-symbols-rounded text-xl">visibility</span>
+                                        <span class="material-symbols-rounded text-2xl">visibility</span>
                                     </a>
 
                                     <!-- Sửa -->
                                     <a href="#" class="text-yellow-500 hover:text-yellow-700"
                                         data-hs-overlay="#edit_{{ $signage->SignageID }}">
-                                        <span class="material-symbols-rounded text-xl">edit</span>
+                                        <span class="material-symbols-rounded text-2xl">edit</span>
                                     </a>
 
                                     <!-- Xóa -->
                                     <button type="button" class="text-red-500 hover:text-red-700"
                                         data-hs-overlay="#delete_{{ $signage->SignageID }}">
-                                        <span class="material-symbols-rounded text-xl">delete_forever</span>
+                                        <span class="material-symbols-rounded text-2xl">delete_forever</span>
                                     </button>
                                 </div>
                             </td>

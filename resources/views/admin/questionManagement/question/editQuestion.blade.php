@@ -339,19 +339,19 @@
                                         Áp dụng cho giấy phép
                                     </label>
                                       <div
-                                        class="flex items-center justify-between bg-gray-50 rounded-md border border-gray-200 shadow-sm  mb-3 p-3">
-                                        <div class="flex justify-end w-full gap-6">
+                                        class="flex items-center justify-center bg-gray-50 rounded-md border border-gray-200 shadow-sm  mb-3 p-3">
+                                        <div class="flex justify-center w-full gap-6">
                                             <!-- Chọn tất cả Áp dụng -->
-                                            <label style="margin-right: 4px;" class="inline-flex items-center text-sm text-gray-600 font-semibold">
-                                                <span style="margin-right: 10px;">chọn Tất cả</span>
+                                            <label style="margin-left: 45px;" class="inline-flex items-center text-sm text-gray-600 font-semibold">
+                                                <span style="margin-right: 10px;"> Tất cả</span>
                                                 <input type="checkbox" id="select-all-license"
                                                     class="form-checkbox text-blue-600 rounded-sm">
 
                                             </label>
 
                                             <!-- Chọn tất cả Là điểm liệt -->
-                                            <label  class="inline-flex items-center text-sm text-red-600 font-semibold">
-                                                <span style="margin-right: 10px;">chọn Tất cả</span>
+                                            <label  style="margin-left: 45px;"  class="inline-flex items-center text-sm text-red-600 font-semibold">
+                                                <span style="margin-right: 10px;"> Tất cả</span>
 
                                                 <input type="checkbox" id="select-all-critical"
                                                     class="form-checkbox text-red-500 rounded-sm">

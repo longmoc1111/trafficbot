@@ -279,8 +279,8 @@
 
     <!-- practice Start -->
     <!-- <div class="text-center mb-4">
-                                                                                                                                                                                <button id="start-btn" class="btn btn-success">Bắt đầu làm bài</button>
-                                                                                                                                                                            </div> -->
+                                                                                                                                                                                    <button id="start-btn" class="btn btn-success">Bắt đầu làm bài</button>
+                                                                                                                                                                                </div> -->
 
     <div class="container-lg d-none p-4" id="exam-section" style="box-shadow: 0 0 45px rgba(0, 0, 0, .06)">
 
@@ -319,11 +319,11 @@
                                 @endforeach
                             </div>
                         </div>
-                           <button class="btn btn-primary mt-3 w-100" data-bs-toggle="modal" data-bs-target="#endtestModal"
+                        <button class="btn btn-primary mt-3 w-100" data-bs-toggle="modal" data-bs-target="#endtestModal"
                             id="end-test">Nộp bài</button>
-                            <button class="btn btn-primary mt-3 w-100" hidden id="preview">Xem kết quả</button>
+                        <button class="btn btn-primary mt-3 w-100" hidden id="preview">Xem kết quả</button>
                     </div>
-                 
+
 
                 </div>
             </div>
@@ -440,19 +440,21 @@
                             <i class="fas fa-trophy fs-1 mb-2"></i>
                             <h4 class="modal-title fw-bold mb-0" id="modalResultsLabel">Kết quả thi</h4>
                         </div>
-                        <button type="button" class="btn-close btn-close-white position-absolute top-0 end-0 m-3" 
-                                data-bs-dismiss="modal" aria-label="Close">
+                        <button type="button" class="btn-close btn-close-white position-absolute top-0 end-0 m-3"
+                            data-bs-dismiss="modal" aria-label="Close">
                         </button>
                     </div>
-                    
+
                     <div class="modal-body p-4">
                         <div class="text-center mb-4">
                             <div class="row g-3">
                                 <div class="col-12">
                                     <div class="card border-0 bg-light">
                                         <div class="card-body py-3">
-                                            <div id="modal-correct" class="d-flex align-items-center justify-content-between">
-                                                <span class="fw-semibold"><i class="fas fa-check-circle text-success me-2"></i>Câu đúng:</span>
+                                            <div id="modal-correct"
+                                                class="d-flex align-items-center justify-content-between">
+                                                <span class="fw-semibold"><i
+                                                        class="fas fa-check-circle text-success me-2"></i>Câu đúng:</span>
                                                 <span class="badge bg-success fs-6" id="correct-count">0</span>
                                             </div>
                                         </div>
@@ -461,8 +463,10 @@
                                 <div class="col-12">
                                     <div class="card border-0 bg-light">
                                         <div class="card-body py-3">
-                                            <div id="modal-notCorrect" class="d-flex align-items-center justify-content-between">
-                                                <span class="fw-semibold"><i class="fas fa-times-circle text-danger me-2"></i>Câu sai:</span>
+                                            <div id="modal-notCorrect"
+                                                class="d-flex align-items-center justify-content-between">
+                                                <span class="fw-semibold"><i
+                                                        class="fas fa-times-circle text-danger me-2"></i>Câu sai:</span>
                                                 <span class="badge bg-danger fs-6" id="wrong-count">0</span>
                                             </div>
                                         </div>
@@ -481,7 +485,7 @@
                             </div>
                         </div>
                     </div>
-                    
+
                     <div class="modal-footer border-0 justify-content-center pb-4">
                         <a href="{{ route('userpage.home') }}" class="btn btn-outline-primary me-2">
                             <i class="fas fa-home me-2"></i>Trang chủ
@@ -504,7 +508,7 @@
                             <h4 class="modal-title fw-bold mb-0" id="endtestModalLabel">Xác nhận kết thúc</h4>
                         </div>
                     </div>
-                    
+
                     <div class="modal-body p-4 text-center">
                         <div class="mb-4">
                             <p class="fs-5 mb-3 text-muted">Bạn có chắc chắn muốn kết thúc bài thi không?</p>
@@ -514,7 +518,7 @@
                             </div>
                         </div>
                     </div>
-                    
+
                     <div class="modal-footer border-0 justify-content-center pb-4">
                         <button data-bs-dismiss="modal" aria-label="Close" class="btn btn-outline-secondary me-2">
                             <i class="fas fa-arrow-left me-2"></i>Tiếp tục thi
@@ -582,20 +586,20 @@
             fetch(`/practice-test/${licenseID}`)
                 .then(response => response.json())
                 .then(data => {
-
+                    const random = document.createElement("option")
                     if (Array.isArray(data) && data.length > 0) {
-                        const random = document.createElement("option")
+
                         data.forEach(function (examset) {
                             const option = document.createElement("option")
                             option.value = examset.ExamSetID
                             option.text = examset.ExamSetName
                             examSetSelect.appendChild(option)
                         })
-                       
-                    } 
+
+                    }
                      random.value = "random"
-                        random.text = "Đề ngẫu nhiên"
-                        examSetSelect.appendChild(random)
+                    random.text = "Đề ngẫu nhiên"
+                    examSetSelect.appendChild(random)
                 })
                 .catch(error => {
                     // console.error('Error fetching exam sets:', error);

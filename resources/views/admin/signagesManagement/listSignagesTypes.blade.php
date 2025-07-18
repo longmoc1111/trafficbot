@@ -49,25 +49,25 @@
                                         <!-- Xem -->
                                         <a href="#" class="text-blue-500 hover:text-blue-700"
                                             data-hs-overlay="#show-{{ $signage->SignageTypeID }}">
-                                            <span class="material-symbols-rounded text-xl">visibility</span>
+                                            <span class="material-symbols-rounded text-2xl">visibility</span>
                                         </a>
 
                                         <!-- Sửa -->
                                         <a href="#" class="text-yellow-500 hover:text-yellow-700"
                                             data-hs-overlay="#edit-{{ $signage->SignageTypeID }}">
-                                            <span class="material-symbols-rounded text-xl">edit</span>
+                                            <span class="material-symbols-rounded text-2xl">edit</span>
                                         </a>
 
                                         <!-- Xóa -->
                                         <button type="button" class="text-red-500 hover:text-red-700"
                                             data-hs-overlay="#delete-{{ $signage->SignageTypeID }}">
-                                            <span class="material-symbols-rounded text-xl">delete_forever</span>
+                                            <span class="material-symbols-rounded text-2xl">delete_forever</span>
                                         </button>
 
                                         <!-- Đến liên kết -->
                                         <a href="{{ route('admintrafficbot.listsignages') }}"
                                             class="text-indigo-500 hover:text-indigo-700">
-                                            <span class="material-symbols-rounded text-xl">arrow_right_alt</span>
+                                            <span class="material-symbols-rounded text-2xl">arrow_right_alt</span>
                                         </a>
                                     </div>
                                 </td>

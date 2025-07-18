@@ -9,10 +9,10 @@
 
         <!-- Bảng dữ liệu -->
         <div class="card overflow-hidden border rounded-lg bg-white shadow">
-            <div class="card-header flex justify-between items-center gap-2 px-4 py-3">
-                <select name="" class="form-select w-48 text-sm">
+            <div class="card-header flex justify-end items-center gap-2 px-4 py-3">
+                <!-- <select name="" class="form-select w-48 text-sm">
                     <option value="chưa có giấy phép">update later</option>
-                </select>
+                </select> -->
 
                 <button id="open_modal_create" data-hs-overlay="#modal-create" data-fc-placement="bottom"
                     class="btn bg-blue-600 text-white hover:bg-blue-700 px-4 py-2 rounded-md shadow text-sm">
