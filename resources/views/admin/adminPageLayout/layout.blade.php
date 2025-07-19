@@ -19,9 +19,9 @@
     <link href="/assets/adminPage/css/app.min.css" rel="stylesheet" type="text/css">
     <link href="/assets/izitoast/css/iziToast.min.css" rel="stylesheet" type="text/css">
     <script src="https://cdn.tailwindcss.com"></script>
-   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css">
 
-    
+
     <!-- Custom Modal Styles -->
     <style>
         /* Modal CSS - Simplified and Fixed */
@@ -30,37 +30,41 @@
             backdrop-filter: blur(8px);
             -webkit-backdrop-filter: blur(8px);
         }
-        
+
         #modal-profile.hs-overlay-open {
             background: rgba(0, 0, 0, 0.7) !important;
         }
-        
+
         /* Custom Scrollbar */
         .modal-scroll::-webkit-scrollbar {
             width: 6px;
         }
+
         .modal-scroll::-webkit-scrollbar-track {
             background: #f1f5f9;
             border-radius: 4px;
         }
+
         .modal-scroll::-webkit-scrollbar-thumb {
             background: #cbd5e1;
             border-radius: 4px;
         }
+
         .modal-scroll::-webkit-scrollbar-thumb:hover {
             background: #94a3b8;
         }
-        
+
         /* Animation */
         .modal-content {
             animation: modalFadeIn 0.3s ease-out;
         }
-        
+
         @keyframes modalFadeIn {
             from {
                 opacity: 0;
                 transform: scale(0.9) translateY(-20px);
             }
+
             to {
                 opacity: 1;
                 transform: scale(1) translateY(0);
@@ -264,12 +268,12 @@
                                 style="width: 150px;">
                                 <button type="button" class="hs-dropdown-toggle focus:outline-none">
                                     @if(!empty(Auth::user()->avatar))
-                                    <img src="{{ asset('storage/uploads/avatar/' . Auth::user()->avatar)}}"
-                                        alt="user-image"
-                                        class="rounded-full h-10 w-10 object-cover border-2 border-red-500">
+                                        <img src="{{ asset('storage/uploads/avatar/' . Auth::user()->avatar)}}"
+                                            alt="user-image"
+                                            class="rounded-full h-10 w-10 object-cover border-2 border-red-500">
                                     @else
-                                    <img src="/assets/avatar_default/avatar_default.png" alt="user-image"
-                                        class="rounded-full h-10 w-10 object-cover border-2 border-gray-300">
+                                        <img src="/assets/avatar_default/avatar_default.png" alt="user-image"
+                                            class="rounded-full h-10 w-10 object-cover border-2 border-gray-300">
                                     @endif
                                 </button>
                                 <p class="text-gray-800 font-semibold truncate">{{ Auth::user()->name }}</p>
@@ -302,9 +306,10 @@
             <!-- Modal Profile Start -->
             <div id="modal-profile" class="hs-overlay hidden fixed inset-0 z-[99999] overflow-x-hidden overflow-y-auto">
                 <!-- Modal Container -->
-                <div class="hs-overlay-open:opacity-100 hs-overlay-open:scale-100 opacity-0 scale-95 ease-out transition-all duration-300 sm:max-w-lg sm:w-full m-3 sm:mx-auto min-h-[calc(100%-3.5rem)] flex items-center">
+                <div
+                    class="hs-overlay-open:opacity-100 hs-overlay-open:scale-100 opacity-0 scale-95 ease-out transition-all duration-300 sm:max-w-lg sm:w-full m-3 sm:mx-auto min-h-[calc(100%-3.5rem)] flex items-center">
                     <div class="modal-content w-full bg-white border shadow-xl rounded-xl overflow-hidden">
-                        
+
                         <!-- Header -->
                         <div class="bg-gradient-to-r bg-primary p-6">
                             <div class="flex justify-between items-center">
@@ -317,11 +322,12 @@
                                         <p class="text-white/80 text-sm">Quản lý thông tin tài khoản</p>
                                     </div>
                                 </div>
-                                <button type="button" 
-                                        class="w-8 h-8 flex items-center justify-center rounded-lg bg-white/20 text-white hover:bg-white/30 transition-colors" 
-                                        data-hs-overlay="#modal-profile">
+                                <button type="button"
+                                    class="w-8 h-8 flex items-center justify-center rounded-lg bg-white/20 text-white hover:bg-white/30 transition-colors"
+                                    data-hs-overlay="#modal-profile">
                                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            d="M6 18L18 6M6 6l12 12"></path>
                                     </svg>
                                 </button>
                             </div>
@@ -329,20 +335,20 @@
 
                         <!-- Body -->
                         <div class="modal-scroll max-h-[60vh] overflow-y-auto p-6 space-y-6">
-                            
+
                             <!-- Avatar Section -->
                             <div class="flex flex-col items-center">
                                 <div class="relative">
                                     @if(!empty(Auth::user()->avatar))
-                                    <img src="{{ asset('storage/uploads/avatar/' . Auth::user()->avatar)}}" 
-                                         alt="avatar" 
-                                         class="w-24 h-24 rounded-full object-cover border-4 border-gray-100 shadow-lg">
+                                        <img src="{{ asset('storage/uploads/avatar/' . Auth::user()->avatar)}}" alt="avatar"
+                                            class="w-24 h-24 rounded-full object-cover border-4 border-gray-100 shadow-lg">
                                     @else
-                                    <img src="/assets/avatar_default/avatar_default.png" 
-                                         alt="avatar" 
-                                         class="w-24 h-24 rounded-full object-cover border-4 border-gray-100 shadow-lg">
+                                        <img src="/assets/avatar_default/avatar_default.png" alt="avatar"
+                                            class="w-24 h-24 rounded-full object-cover border-4 border-gray-100 shadow-lg">
                                     @endif
-                                    <div class="absolute -bottom-1 -right-1 w-6 h-6 bg-green-500 border-2 border-white rounded-full"></div>
+                                    <div
+                                        class="absolute -bottom-1 -right-1 w-6 h-6 bg-green-500 border-2 border-white rounded-full">
+                                    </div>
                                 </div>
                                 <div class="mt-4 text-center">
                                     <h4 class="text-xl font-bold text-gray-900">{{ Auth::user()->name }}</h4>
@@ -355,7 +361,8 @@
                                 <!-- Name Card -->
                                 <div class="bg-blue-50 border border-blue-100 rounded-lg p-4">
                                     <div class="flex items-center">
-                                        <div class="w-10 h-10 bg-blue-500 rounded-lg flex items-center justify-center mr-3">
+                                        <div
+                                            class="w-10 h-10 bg-blue-500 rounded-lg flex items-center justify-center mr-3">
                                             <i class="ti ti-user text-white"></i>
                                         </div>
                                         <div>
@@ -368,12 +375,14 @@
                                 <!-- Email Card -->
                                 <div class="bg-green-50 border border-green-100 rounded-lg p-4">
                                     <div class="flex items-center">
-                                        <div class="w-10 h-10 bg-green-500 rounded-lg flex items-center justify-center mr-3">
+                                        <div
+                                            class="w-10 h-10 bg-green-500 rounded-lg flex items-center justify-center mr-3">
                                             <i class="ti ti-mail text-white"></i>
                                         </div>
                                         <div class="min-w-0 flex-1">
                                             <p class="text-green-600 font-medium text-sm">Email</p>
-                                            <p class="text-gray-900 font-semibold truncate">{{ Auth::user()->email }}</p>
+                                            <p class="text-gray-900 font-semibold truncate">{{ Auth::user()->email }}
+                                            </p>
                                         </div>
                                     </div>
                                 </div>
@@ -381,12 +390,14 @@
                                 <!-- Role Card -->
                                 <div class="bg-purple-50 border border-purple-100 rounded-lg p-4">
                                     <div class="flex items-center">
-                                        <div class="w-10 h-10 bg-purple-500 rounded-lg flex items-center justify-center mr-3">
+                                        <div
+                                            class="w-10 h-10 bg-purple-500 rounded-lg flex items-center justify-center mr-3">
                                             <i class="ti ti-shield text-white"></i>
                                         </div>
                                         <div>
                                             <p class="text-purple-600 font-medium text-sm">Vai trò</p>
-                                            <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-purple-100 text-purple-800">
+                                            <span
+                                                class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-purple-100 text-purple-800">
                                                 {{ Auth::user()->role_User->roleName ?? 'Người dùng' }}
                                             </span>
                                         </div>
@@ -397,13 +408,14 @@
 
                         <!-- Footer -->
                         <div class="border-t bg-gray-50 p-4 flex justify-end gap-3">
-                            <button type="button" 
-                                    class="px-4 py-2 text-sm font-medium border border-gray-300 rounded-lg bg-white text-gray-700 hover:bg-gray-50 transition-colors" 
-                                    data-hs-overlay="#modal-profile">
+                            <button type="button"
+                                class="px-4 py-2 text-sm font-medium border border-gray-300 rounded-lg bg-white text-gray-700 hover:bg-gray-50 transition-colors"
+                                data-hs-overlay="#modal-profile">
                                 Đóng
                             </button>
-                            <button type="button" 
-                                    class="px-4 py-2 text-sm font-semibold rounded-lg bg-blue-600 text-white hover:bg-blue-700 transition-colors">
+                            <button type="button" id="open_modal_edit_{{ Auth::user()->userID }}"
+                                class="px-4 py-2 text-sm font-semibold rounded-lg bg-blue-600 text-white hover:bg-blue-700 transition-colors"
+                                data-hs-overlay="#modal-edit_{{ Auth::user()->userID }}">
                                 Chỉnh sửa
                             </button>
                         </div>
@@ -411,6 +423,90 @@
                 </div>
             </div>
             <!-- Modal Profile End -->
+
+            <!-- modal update profile -->
+            <!-- Modal Edit Profile Start -->
+            <div id="modal-edit_{{ Auth::user()->userID }}"
+                class="hs-overlay hidden fixed inset-0 z-[99999] overflow-x-hidden overflow-y-auto">
+                <!-- Modal Container -->
+                <div
+                    class="hs-overlay-open:opacity-100 hs-overlay-open:scale-100 opacity-0 scale-95 ease-out transition-all duration-300 sm:max-w-lg sm:w-full m-3 sm:mx-auto min-h-[calc(100%-3.5rem)] flex items-center">
+                    <div class="modal-content w-full bg-white border shadow-xl rounded-xl overflow-hidden">
+
+                        <!-- Header -->
+                        <div class="bg-gradient-to-r from-blue-600 to-blue-500 p-6">
+                            <div class="flex justify-between items-center">
+                                <div class="flex items-center space-x-3">
+                                    <div class="w-10 h-10 bg-white/20 rounded-lg flex items-center justify-center">
+                                        <i class="ti ti-pencil text-white text-xl"></i>
+                                    </div>
+                                    <div>
+                                        <h3 class="font-bold text-white text-lg">Chỉnh sửa thông tin</h3>
+                                        <p class="text-white/80 text-sm">Cập nhật tên và ảnh đại diện</p>
+                                    </div>
+                                </div>
+                                <button type="button"
+                                    class="w-8 h-8 flex items-center justify-center rounded-lg bg-white/20 text-white hover:bg-white/30 transition-colors"
+                                    data-hs-overlay="#modal-edit_{{ Auth::user()->userID }}">
+                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            d="M6 18L18 6M6 6l12 12"></path>
+                                    </svg>
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Form Body -->
+                        <form action="{{ route("admintrafficbot.profile.update", ["ID" => Auth::user()->userID]) }}"
+                            method="POST" enctype="multipart/form-data">
+                            @csrf
+                            @method('PUT')
+                            <div class="p-6 space-y-4">
+                                <!-- Tên -->
+                                <div>
+                                    <label for="name" class="block text-sm font-medium text-gray-700 mb-1">
+                                        Họ và tên
+                                    </label>
+                                    @error('name', "update_profile")
+                                        <p id="name_error"
+                                            class="mb-1 text-xs text-sm text-red-600 bg-red-50 rounded-md px-2 py-1">
+                                            {{ $message }}
+                                        </p>
+                                    @enderror
+                                    <input type="text" id="name" name="name" required
+                                        value="{{ old('name', Auth::user()->name) }}"
+                                        class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring focus:ring-blue-200">
+                                </div>
+
+                                <!-- Ảnh đại diện -->
+                                <div>
+                                    <label for="avatar" class="block text-sm font-medium text-gray-700 mb-1">
+                                        Ảnh đại diện
+                                    </label>
+                                    <input type="file" id="avatar" name="avatar"
+                                        class="w-full px-4 py-2 border border-gray-300 rounded-lg bg-white file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:bg-blue-600 file:text-white hover:file:bg-blue-700">
+                                </div>
+                            </div>
+
+                            <!-- Footer -->
+                            <div class="border-t bg-gray-50 p-4 flex justify-end gap-3">
+                                <button type="button"
+                                    class="px-4 py-2 text-sm font-medium border border-gray-300 rounded-lg bg-white text-gray-700 hover:bg-gray-50 transition-colors"
+                                    data-hs-overlay="#modal-edit_{{ Auth::user()->userID }}">
+                                    Hủy
+                                </button>
+                                <button type="submit"
+                                    class="px-4 py-2 text-sm font-semibold rounded-lg bg-blue-600 text-white hover:bg-blue-700 transition-colors">
+                                    Cập nhật
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            <!-- Modal Edit Profile End -->
+
+            <!-- end update profile -->
 
             <!-- Footer Start -->
             <footer class="footer bg-white h-16 flex items-center px-6 border-t border-gray-200">
@@ -450,6 +546,17 @@
     <script src="/assets/adminPage/js/pages/dashboard.js"></script>
 </body>
 @yield("footer")
+
+<script>
+    @if($errors->update_profile->any())
+        window.addEventListener("load", function () {
+            setTimeout(function () {
+                document.getElementById("open_modal_edit_{{ Auth::user()->userID }}").click()
+            }, 300)
+        })
+    @endif
+</script>
 @yield("izitoast")
+
 
 </html>

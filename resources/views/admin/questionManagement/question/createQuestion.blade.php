@@ -18,16 +18,15 @@
                                 <p class="text-white/80 text-sm">Nhập nội dung câu hỏi và đáp án bên dưới</p>
                             </div>
                         </div>
-                        <button type="submit"
+
+                        <a href="{{ route("admintrafficbot.question") }}"
                             class="px-4 py-2 text-sm font-semibold rounded-lg bg-white/20 text-white hover:bg-white/30 transition-colors">
-                            Tạo
-                        </button>
+                            Quay lại</a>
                     </div>
                 </div>
 
                 <!-- Body -->
                 <div class="p-6 space-y-6">
-                    <!-- Alert nếu có -->
                     @foreach (['iscorrect_null', 'answer_null'] as $key)
                         @if(session($key))
                             <div class="flex items-center gap-3 bg-red-50 border border-red-200 rounded-md p-4">
@@ -46,7 +45,6 @@
                     <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
                         <!-- Left column -->
                         <div class="space-y-4">
-                            <!-- Loại câu hỏi -->
                             <div>
                                 <label for="CategoryID" class="text-sm font-medium text-gray-700 mb-1 block">Loại câu
                                     hỏi</label>
@@ -68,7 +66,6 @@
                                     class="form-input w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring focus:ring-blue-200">
                             </div>
 
-                            <!-- Đáp án A - D -->
                             @foreach (['A', 'B', 'C', 'D'] as $index => $label)
                                 <div>
                                     <div class="flex items-center gap-4 mb-1">
@@ -154,13 +151,9 @@
 
                 <!-- Footer -->
                 <div class="border-t bg-gray-50 p-4 flex justify-end gap-3">
-                    <button type="reset"
-                        class="px-4 py-2 text-sm font-medium border border-gray-300 rounded-lg bg-white text-gray-700 hover:bg-gray-50 transition-colors">
-                        Đặt lại
-                    </button>
                     <button type="submit"
                         class="px-4 py-2 text-sm font-semibold rounded-lg bg-blue-600 text-white hover:bg-blue-700 transition-colors">
-                        Lưu
+                        Tạo
                     </button>
                 </div>
             </div>

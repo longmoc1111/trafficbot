@@ -6,10 +6,10 @@
     <div class="flex items-center justify-between flex-wrap gap-2 mb-6">
         <h4 class="text-default-900 text-xl font-semibold">📄 Danh sách câu hỏi</h4>
         <div>
-             <a href="{{ route('admintrafficbot.examset_question.create', $ExamSetID->ExamSetID) }}"
+             <!-- <a href="{{ route('admintrafficbot.examset_question.create', $ExamSetID->ExamSetID) }}"
             class="btn bg-red-500 text-white hover:bg-red-700 text-sm px-4 py-2 rounded-md shadow">
             <i class="i-solar-plus-bold mr-1"></i> Xóa toàn bộ
-        </a>
+        </a> -->
             <a href="{{ route('admintrafficbot.examset_question.create', $ExamSetID->ExamSetID) }}"
             class="btn bg-blue-600 text-white hover:bg-blue-700 text-sm px-4 py-2 rounded-md shadow">
             <i class="i-solar-plus-bold mr-1"></i> Tạo 

@@ -248,3 +248,21 @@
 
 @section("footer")
 @endsection
+@section("izitoast")
+    <script>
+        @if(session("update_profile_success"))
+            iziToast.success({
+                message: "{{ session("update_profile_success") }}",
+                position: "topRight"
+            })
+        @endif
+
+        @if(session("update_profile_fails"))
+            iziToast.warning({
+                message: "{{ session("update_profile_fails") }}",
+                position: "topRight"
+            })
+        @endif
+    </script>
+
+@endsection

@@ -25,17 +25,17 @@ class LicenseTypeController extends Controller
 
         $categories = $request->input("questionCategory");
         $sysData = [];
-        if ($sysData) {
+        $sum = 0;
+        if ($categories) {
             foreach ($categories as $ID => $quantity) {
                 if ($quantity > 0) {
                     $sysData[$ID] = ["Quantity" => $quantity];
+                    $sum += $quantity;
                 }
             }
         } else {
             $sysData = [];
         }
-
-
         $validator = Validator::make(
             $request->all(),
             [
@@ -43,7 +43,7 @@ class LicenseTypeController extends Controller
                 "LicenseTypeDescription" => "required",
                 "LicenseTypeDuration" => "required|numeric",
                 "LicenseTypeQuantity" => "required|numeric",
-                "LicenseTypePassCount" => "required|numeric",
+                "LicenseTypePassCount" => "required|numeric|lt:LicenseTypeQuantity",
             ],
             [
                 "LicenseTypeName.required" => "vui lòng không để trống !",
@@ -55,13 +55,20 @@ class LicenseTypeController extends Controller
                 "LicenseTypeQuantity.numeric" => "Dữ liệu phải là số !",
                 "LicenseTypePassCount.required" => "vui lòng không để trống !",
                 "LicenseTypePassCount.numeric" => "Dữ liệu phải là số !",
+                "LicenseTypePassCount.lt" => "Số lượng câu đúng tối thiểu phải nhỏ hơn số lượng câu hỏi!",
+
 
             ]
         );
         if ($validator->fails()) {
-            return back()->withErrors($validator, "create");
+            return back()->withErrors($validator, "create")->withInput();
         }
+
         $validatedData = $validator->validated();
+        if($sum >= $validatedData["LicenseTypeQuantity"]){
+            $validateQuantity =  $validatedData['LicenseTypeQuantity'];
+            return back()->withErrors(["sum_questionCategory"=>"Tổng sô lượng loại câu hỏi không được vượt quá $validateQuantity câu"]);
+        }
         $licenseTypeName = $validatedData["LicenseTypeName"];
         $LicenseType = LicenseType::create($validator->validated());
         if ($LicenseType) {
@@ -97,9 +104,11 @@ class LicenseTypeController extends Controller
 
         $categories = $request->input("questionCategory", []);
         $datasync = [];
+         $sum = 0;
         foreach ($categories as $index => $item) {
             if ($item != null) {
                 $datasync[$index] = ["Quantity" => $item];
+                $sum += $item;
             }
         }
         $validator = Validator::make(
@@ -109,8 +118,7 @@ class LicenseTypeController extends Controller
                 "LicenseTypeDescription" => "required",
                 "LicenseTypeDuration" => "required|numeric",
                 "LicenseTypeQuantity" => "required|numeric",
-                "LicenseTypePassCount" => "required|numeric",
-
+                "LicenseTypePassCount" => "required|numeric|lt:LicenseTypeQuantity",
             ],
             [
                 "LicenseTypeName.required" => "vui lòng không để trống !",
@@ -122,6 +130,7 @@ class LicenseTypeController extends Controller
                 "LicenseTypeQuantity.numeric" => "Dữ liệu phải là số !",
                 "LicenseTypePassCount.required" => "vui lòng không để trống !",
                 "LicenseTypePassCount.numeric" => "Dữ liệu phải là số !",
+                 "LicenseTypePassCount.lt" => "Số lượng câu đúng tối thiểu phải nhỏ hơn số lượng câu hỏi!",
 
             ]
         );
@@ -129,6 +138,10 @@ class LicenseTypeController extends Controller
             return back()->withErrors($validator, "edit");
         }
         $validatedata = $validator->validated();
+         if($sum >= $validatedata["LicenseTypeQuantity"]){
+            $validateQuantity =  $validatedata['LicenseTypeQuantity'];
+            return back()->withErrors(["sum_questionCategory"=>"Tổng sô lượng loại câu hỏi không được vượt quá $validateQuantity câu"]);
+        }
         $license = LicenseType::find($ID);
         if ($license) {
             $license->update($validatedata);

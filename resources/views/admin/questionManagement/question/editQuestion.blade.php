@@ -20,10 +20,9 @@
                         <p class="text-white/80 text-sm">Nhập nội dung câu hỏi và đáp án bên dưới</p>
                     </div>
                 </div>
-                <button type="submit"
-                    class="px-4 py-2 text-sm font-semibold rounded-lg bg-white/20 text-white hover:bg-white/30 transition-colors">
-                    Cập nhật
-                </button>
+               <a href="{{ route("admintrafficbot.question") }}"
+                            class="px-4 py-2 text-sm font-semibold rounded-lg bg-white/20 text-white hover:bg-white/30 transition-colors">
+                            Quay lại</a>
             </div>
         </div>
              <!-- body -->
@@ -397,10 +396,10 @@
                 </div> <!-- end card -->
             <!-- footer -->
               <div class="border-t bg-gray-50 p-4 flex justify-end gap-3">
-            <button type="reset"
-                class="px-4 py-2 text-sm font-medium border border-gray-300 rounded-lg bg-white text-gray-700 hover:bg-gray-50 transition-colors">
-                Đặt lại
-            </button>
+              <button type="submit"
+                    class="px-4 py-2 text-sm font-semibold rounded-lg bg-blue-600 text-white hover:bg-blue-700 transition-colors">
+                    Cập nhật
+                </button>
         </div>
              
         </div>

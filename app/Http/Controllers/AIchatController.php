@@ -49,9 +49,7 @@ class AIchatController extends Controller
             $query->where("CategoryName", "URL");
         })->get();
 
-        \Log::info("url", $dataURL);
         try {
-            \Log::info('sendMessage:', $request->all());
             $contents = '';
             $textFromWeb = '';
             //duyệt url để lấy name và file
@@ -81,7 +79,6 @@ class AIchatController extends Controller
             $reply = $this->processResponse($geminiResponse);
 
             $history = $this->UpdateChatHistory($userMessage, $reply);
-            \Log::info("Full chat history", $history);
             return response()->json(['reply' => $reply]);
         } catch (\Throwable $e) {
             \Log::error('sendMessage Exception', [
@@ -221,10 +218,8 @@ class AIchatController extends Controller
     }
     private function Pdfcontent($fileName)
     {
-        \Log::info("tên file: " . $fileName);
         $filePath = storage_path("app/public/filePDF/" . $fileName);
         if (!file_exists($filePath)) {
-            \Log::warning("File PDF không tồn tại");
             return null;
         }
         try {
@@ -235,7 +230,6 @@ class AIchatController extends Controller
                 "data" => $content,
             ];
         } catch (Exception $e) {
-            \Log::error("lỗi khi đọc PDF", ["message" => $e->getMessage()]);
             return null;
         }
     }

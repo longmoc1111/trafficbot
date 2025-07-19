@@ -140,7 +140,8 @@ class AuthController extends Controller
 
     public function listAccount()
     {
-        $accounts = User::orderBy("created_at", "ASC")->paginate(10);
+        $currentAccount = Auth::user()->userID;
+        $accounts = User::where("userID", "!=" , $currentAccount)->orderBy("created_at", "ASC")->paginate(10);
         $roles = Role::get();
         return view("admin.accountManagement.listAccount", compact("accounts", "roles"));
     }
@@ -392,9 +393,48 @@ class AuthController extends Controller
             return redirect()->route("userpage.profile", ["ID" => $user->userID])->with("update_profile_fails", "Cập nhật thông tin thất bại!");
 
         }
-
+      
 
     }
+      public function updateProfileAdmin($ID, Request $request){
+             $validator = Validator::make(
+            $request->all(),
+            [
+                "name" => "required",
+            ],
+            [
+                "name.required" => "Vui lòng nhập tên của bạn!",
+            ]
+        );
+        if ($validator->fails()) {
+            return back()->withErrors($validator, "update_profile");
+        }
+        $datas = $validator->validated();
+        if ($request->hasFile("avatar")) {
+            if ($request->get("oldAvatar")) {
+                $oldAvatar = storage_path("app/public/uploads/avatar/" . $request->get("oldAvatar"));
+                if (File::exists($oldAvatar)) {
+                    File::delete($oldAvatar);
+                }
+            }
+            $file = $request->file("avatar");
+            $fileNameWithoutExt = pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME);
+            $fileNameExt = $file->getClientOriginalExtension();
+            $newFileName = $fileNameWithoutExt . "_" . time() . "." . $fileNameExt;
+            $file->move(storage_path("app/public/uploads/avatar"), $newFileName);
+            $datas["avatar"] = $newFileName;
+        }
+
+        $user = User::find($ID);
+        if ($user) {
+            $user->update($datas);
+            return redirect()->route("admintrafficbot.dashboard")->with("update_profile_success", "Cập nhật thông tin thành công!");
+        } else {
+            return redirect()->route("admintrafficbot.dashboard")->with("update_profile_fails", "Cập nhật thông tin thất bại!");
+
+        }
+        }
+
 
 
 
