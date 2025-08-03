@@ -97,7 +97,7 @@ class AIchatController extends Controller
     {
         $textFormWeb = "";
         foreach ($Urls as $url) {
-            if ($url->Content === null) {
+            if ($url->Content == null || trim($url->Content) == "") {
                 $urlToget = $url->LinkURL;
                 $selector = $url->SelectorURL;
 
